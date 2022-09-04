@@ -1,0 +1,30 @@
+$node-color: #353535;
+$node-color-selected: #282828;
+$node-color-selected-border: #2962FF;
+$node-color-hover: #474747;
+
+$socket-color: #2962FF;
+
+$connection-color: #656565;
+.node {
+  background: $node-color !important;
+  border: 1px solid black !important;
+
+  &:hover {
+    background: $node-color-hover !important;
+  }
+
+  &.selected {
+    background: $node-color-selected !important;
+    border-color: $node-color-selected-border !important;
+  }
+
+}
+
+.socket {
+  background: $socket-color !important;
+}
+
+.connection path {
+  stroke: $connection-color !important
+}
