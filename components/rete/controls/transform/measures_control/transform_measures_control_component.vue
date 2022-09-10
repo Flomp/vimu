@@ -29,7 +29,7 @@ import { Vue, Component, Prop, Watch } from "nuxt-property-decorator";
 import { NodeEditor } from "rete";
 
 @Component({})
-export default class StreamMeasuresControlComponent extends Vue {
+export default class TransformMeasuresControlComponent extends Vue {
   @Prop() readonly!: boolean;
   @Prop() emitter!: NodeEditor;
   @Prop() ikey!: String;

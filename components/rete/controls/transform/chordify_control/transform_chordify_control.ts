@@ -1,10 +1,10 @@
 import Rete, { NodeEditor } from "rete";
-export default class StreamTransposeControl extends Rete.Control {
+export default class TransformChordifyControl extends Rete.Control {
   component: any;
   props: { emitter: NodeEditor; ikey: string; readonly: boolean };
   constructor(emitter: NodeEditor, key: string, readonly: boolean) {
     super(key);
-    this.component = require("./stream_transpose_control_component.vue").default;
+    this.component = require("./transform_chordify_control_component.vue").default;
     this.props = { emitter, ikey: key, readonly };
   }
 

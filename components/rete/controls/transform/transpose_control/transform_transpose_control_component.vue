@@ -15,7 +15,7 @@ import { NodeEditor } from "rete";
 
 
 @Component({})
-export default class StreamTransposeControlComponent extends Vue {
+export default class TransformTransposeControlComponent extends Vue {
   @Prop() readonly!: boolean;
   @Prop() emitter!: NodeEditor;
   @Prop() ikey!: String;

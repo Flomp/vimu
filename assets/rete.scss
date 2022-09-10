@@ -6,25 +6,48 @@ $node-color-hover: #474747;
 $socket-color: #2962FF;
 
 $connection-color: #656565;
+
 .node {
-  background: $node-color !important;
+  background: $node-color  !important;
   border: 1px solid black !important;
 
   &:hover {
-    background: $node-color-hover !important;
+    background: $node-color-hover  !important;
   }
 
   &.selected {
-    background: $node-color-selected !important;
-    border-color: $node-color-selected-border !important;
+    background: $node-color-selected  !important;
+    border-color: $node-color-selected-border  !important;
   }
 
 }
 
 .socket {
-  background: $socket-color !important;
+  background: $socket-color  !important;
 }
 
 .connection path {
-  stroke: $connection-color !important
+  stroke: $connection-color  !important
+}
+
+.rete-background {
+  background:
+    linear-gradient(-90deg, rgba(0, 0, 0, .1) 1px, transparent 1px),
+    linear-gradient(rgba(0, 0, 0, .1) 1px, transparent 1px),
+    linear-gradient(-90deg, rgba(0, 0, 0, .09) 1px, transparent 1px),
+    linear-gradient(rgba(0, 0, 0, .09) 1px, transparent 1px),
+    linear-gradient(transparent 3px, #363636 3px, #363636 78px, transparent 78px),
+    linear-gradient(-90deg, rgb(85, 85, 85) 1px, transparent 1px),
+    linear-gradient(-90deg, transparent 3px, #363636 3px, #363636 78px, transparent 78px),
+    linear-gradient(rgb(85, 85, 85) 1px, transparent 1px),
+    #363636;
+  background-size:
+    40px 40px,
+    40px 40px,
+    80px 80px,
+    80px 80px,
+    80px 80px,
+    80px 80px,
+    80px 80px,
+    80px 80px;
 }

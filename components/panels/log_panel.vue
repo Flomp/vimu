@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h5 class="text-button grey darken-4 px-3">Log</h5>
     <div class="pa-4">
       <p
         style="font-family: monospace; font-size: 0.8rem"

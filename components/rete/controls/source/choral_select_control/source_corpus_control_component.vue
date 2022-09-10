@@ -13,10 +13,8 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from "nuxt-property-decorator";
+import { Component, Prop, Vue } from "nuxt-property-decorator";
 import { NodeEditor } from "rete";
-import { sourceStore } from "~/store";
-import { PyProxy } from "~/types/pyodide";
 
 @Component({})
 export default class SourceCorpusControlComponent extends Vue {
@@ -28,9 +26,7 @@ export default class SourceCorpusControlComponent extends Vue {
 
   value: string = "bach/bwv350.mxl";
 
-  items: string[] = ["bach/bwv350.mxl", "bach/bwv272.mxl"];
-
-  stream! : PyProxy;
+  items: string[] = ["bach/bwv66.6.mxl", "bach/bwv350.mxl", "bach/bwv272.mxl"];
 
   mounted() {
     this.value = this.getData(this.ikey);
@@ -38,13 +34,12 @@ export default class SourceCorpusControlComponent extends Vue {
 
   async change(value: string) {
     this.value = value;
-    this.stream = await sourceStore.load(value);
     this.update();
   }
 
   update() {
     if (this.ikey) {
-      this.putData(this.ikey, this.stream);
+      this.putData(this.ikey, this.value);
     }
     this.emitter.trigger("process");
   }

@@ -1,11 +1,10 @@
 import Rete, { Node, NodeEditor } from "rete";
 import { NodeData, WorkerInputs, WorkerOutputs } from "rete/types/core/data";
 import { streamStore } from "~/store";
-import { PyProxy } from "~/types/pyodide";
-import StreamTransposeControl from "../../controls/stream/transpose_control/stream_transpose_control";
+import TransformTransposeControl from "../../controls/transform/transpose_control/transform_transpose_control";
 import { sockets } from "../../sockets/sockets";
 
-export default class StreamTransposeComponent extends Rete.Component {
+export default class TransformTransposeComponent extends Rete.Component {
   editor!: NodeEditor;
   constructor(editor: NodeEditor) {
     super("transform_transpose");
@@ -21,7 +20,7 @@ export default class StreamTransposeComponent extends Rete.Component {
     node
       .addInput(in0)
       .addOutput(out0)
-      .addControl(new StreamTransposeControl(this.editor, "steps", true));
+      .addControl(new TransformTransposeControl(this.editor, "steps", true));
   }
 
   async worker(nodeData: NodeData, inputs: WorkerInputs, outputs: WorkerOutputs) {
@@ -31,16 +30,16 @@ export default class StreamTransposeComponent extends Rete.Component {
       return;
     }
 
-    const in0 = inputs["in_0"][0] as PyProxy
+    const in0 = inputs["in_0"][0] as number
     if (in0) {
-      const steps: number = (node.controls.get("steps") as StreamTransposeControl)?.getData("steps") as number;
+      const steps: number = (node.controls.get("steps") as TransformTransposeControl)?.getData("steps") as number;
 
-      const data = await streamStore.transpose({ stream: in0, steps: steps })
+      const data = await streamStore.transpose({ nodeId: nodeData.id, inputNodeId: in0, steps: steps })
       nodeData.data['data'] = data;
     }
 
     for (let key of node.outputs.keys()) {
-      outputs[key] = nodeData.data.data;
+      outputs[key] = nodeData.id
     }
   }
 }

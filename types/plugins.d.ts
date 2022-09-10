@@ -3,6 +3,6 @@ import { PyodideInterface } from './pyodide'
 
 declare module 'vue/types/vue' {
   interface Vue {
-    $pyodide: PyodideInterface
+    
   }
 }

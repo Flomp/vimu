@@ -1,9 +1,10 @@
 import Rete, { Node, NodeEditor } from "rete";
 import { NodeData, WorkerInputs, WorkerOutputs } from "rete/types/core/data";
-import ChoralSelectControl from "../../controls/source/choral_select_control/choral_select_control";
+import { sourceStore } from "~/store";
+import ChoralSelectControl from "../../controls/source/choral_select_control/source_corpus_control";
 import { sockets } from "../../sockets/sockets";
 
-export default class ChoralSelectComponent extends Rete.Component {
+export default class SourceCorpusComponent extends Rete.Component {
   editor!: NodeEditor;
   constructor(editor: NodeEditor) {
     super("source_corpus");
@@ -21,16 +22,17 @@ export default class ChoralSelectComponent extends Rete.Component {
 
   }
 
-  worker(nodeData: NodeData, inputs: WorkerInputs, outputs: WorkerOutputs) {
+  async worker(nodeData: NodeData, inputs: WorkerInputs, outputs: WorkerOutputs) {
     const node = this.editor.nodes.find(n => n.id == nodeData.id);
-
-  
-    if (!node) {
-        return;
+    
+    if (!node || !node.data.data) {
+      return;
     }
+      
+    await sourceStore.load({id: nodeData.id, path: nodeData.data.data as string});
 
     for (let key of node.outputs.keys()) {
-        outputs[key] = nodeData.data.data;
+      outputs[key] = nodeData.id;
     }
   }
 }

@@ -1,6 +1,5 @@
-import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
-import { PyProxy } from '~/types/pyodide';
-import { $axios, $pyodide } from '.'
+import { Action, Module, VuexModule } from 'vuex-module-decorators';
+import { pyodideStore } from '.';
 
 @Module({
   name: 'source',
@@ -9,12 +8,14 @@ import { $axios, $pyodide } from '.'
 })
 export default class SourceStore extends VuexModule {
   @Action({ rawError: true })
-  async load(path: string): Promise<PyProxy> {
-    const result = await $pyodide.runPythonAsync(`
+  async load(data: { id: number, path: string }): Promise<string> {
+    const result = await pyodideStore.asyncRun({
+      id: data.id, python: `
     from music21 import corpus
-    corpus.parse('${path}')
-  `)
-  
+    corpus.parse('${data.path}')
+  `, writeNodeData: true
+    })
+
     return result;
   }
 }

@@ -1,13 +1,11 @@
 <template>
   <div>
-    <v-list-item style="height: 64px">
-      <v-list-item-content>
-        <v-list-item-title class="text-h5"> Details </v-list-item-title>
-      </v-list-item-content>
+    <div class="d-flex justify-space-between grey darken-4">
+      <h5 class="text-button px-3">Details</h5>
       <v-btn icon @click="removeNode()" v-if="selectedNode">
         <v-icon>mdi-delete-circle</v-icon>
       </v-btn>
-    </v-list-item>
+    </div>
 
     <div v-if="selectedNode">
       <v-list-item>
@@ -63,13 +61,15 @@
 <script lang="ts">
 import { Vue, Component } from "nuxt-property-decorator";
 import Rete, { Node, Output } from "rete";
+import { LogLevel } from "~/models/log";
+import { logStore } from "~/store";
 import { reteStore } from "~/store/rete";
 import { sockets } from "../rete/sockets/sockets";
 
 @Component({})
 export default class DetailsPanel extends Vue {
   reteStore = reteStore;
-  
+
   get selectedNode(): Node | undefined {
     return reteStore.editor?.selected.list[0];
   }
@@ -111,6 +111,11 @@ export default class DetailsPanel extends Vue {
 
   removeNode() {
     if (this.selectedNode && reteStore.editor) {
+      logStore.log({
+        level: LogLevel.info,
+        text: `Removed node ${this.selectedNode.name}`,
+      });
+
       reteStore.editor?.removeNode(this.selectedNode);
       reteStore.editor.selected.clear();
     }

@@ -15,7 +15,8 @@
 import { Vue, Component, Watch, Prop } from "nuxt-property-decorator";
 import { OpenSheetMusicDisplay } from "opensheetmusicdisplay";
 import { Node } from "rete";
-import { streamStore } from "~/store";
+import { LogLevel } from "~/models/log";
+import { logStore, streamStore } from "~/store";
 import { reteStore } from "~/store/rete";
 import { PyProxy } from "~/types/pyodide";
 
@@ -27,7 +28,7 @@ export default class OSMDPanel extends Vue {
 
   loading: boolean = false;
 
-  selectedNodeData: string = "";
+  displayedNode: Node = <Node>{};
 
   get selectedNode(): Node | undefined {
     return reteStore.editor?.selected.list[0];
@@ -46,28 +47,23 @@ export default class OSMDPanel extends Vue {
     if (!node || !node.data.data || !this.osmd) {
       return;
     }
-    // if (!(node.data.data as PyProxy).toString().startsWith("<music21.stream")) {
-    //   try {
-    //     this.osmd.clear();
-    //   } catch (e) {}
-    // }
-
-    const nodeDataString: string = (node.data.data as PyProxy).toString();
-
-    if (this.selectedNodeData == nodeDataString) {
-      return;
-    }
 
     this.loading = true;
-    this.selectedNodeData = (node.data.data as PyProxy).toString();
+    this.displayedNode = node;
     const musicXML: string = await streamStore.streamToString({
-      stream: node.data.data as PyProxy,
+      nodeId: node.id,
     });
 
-    await this.osmd.load(musicXML).catch((e) => console.log(e));
-
-    this.osmd.zoom = 0.5;
-    this.osmd.render();
+    try {
+      await this.osmd.load(musicXML);
+      this.osmd.zoom = 0.5;
+      this.osmd.render();
+    } catch (e: any) {
+      logStore.log({
+        level: LogLevel.error,
+        text: "Failed to load Score: " + e.toString(),
+      });
+    }
 
     this.loading = false;
   }

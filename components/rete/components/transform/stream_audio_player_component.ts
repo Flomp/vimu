@@ -1,6 +1,6 @@
 import Rete, { Node, NodeEditor } from "rete";
 import { NodeData, WorkerInputs, WorkerOutputs } from "rete/types/core/data";
-import StreamAudioPlayerControl from "../../controls/stream/audio_player_control/stream_audio_player_control";
+import StreamAudioPlayerControl from "../../controls/transform/audio_player_control/stream_audio_player_control";
 import { sockets } from "../../sockets/sockets";
 
 export default class StreamAudioPlayerComponent extends Rete.Component {
