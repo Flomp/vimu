@@ -1,6 +1,6 @@
 import Rete, { NodeEditor } from 'rete';
 
-export default class ChoralSelectControl extends Rete.Control {
+export default class CorpusSelectControl extends Rete.Control {
   component: any;
   props: { emitter: NodeEditor; ikey: string; readonly: boolean };
   constructor(emitter: NodeEditor, key: string, readonly: boolean) {

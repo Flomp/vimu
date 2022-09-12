@@ -45,16 +45,18 @@ import { MenuItem, menuItems } from "~/components/palette/menu_item";
 import SubMenu from "~/components/palette/sub_menu.vue";
 import AnalysisKeyComponent from "~/components/rete/components/analysis/analysis_key_component";
 import AnalysisRomanNumeralComponent from "~/components/rete/components/analysis/analysis_roman_numeral_component";
-
+import SelectMeasuresComponent from "~/components/rete/components/select/select_measures_component";
+import SelectPartComponent from "~/components/rete/components/select/select_part_component";
 import SourceCorpusComponent from "~/components/rete/components/source/source_corpus_component";
 import TransformChordifyComponent from "~/components/rete/components/transform/transform_chordify_component";
 import TransformFlattenComponent from "~/components/rete/components/transform/transform_flatten_component";
-import TransformMeasuresComponent from "~/components/rete/components/transform/transform_measures_component";
 import TransformTransposeComponent from "~/components/rete/components/transform/transform_transpose_component";
-
 import { LogLevel } from "~/models/log";
 import { logStore, pyodideStore } from "~/store";
 import { reteStore } from "~/store/rete";
+
+
+
 
 @Component({
   components: {
@@ -151,7 +153,8 @@ export default class IndexPage extends Vue {
 
     const components = [
       new SourceCorpusComponent(editor),
-      new TransformMeasuresComponent(editor),
+      new SelectMeasuresComponent(editor),
+      new SelectPartComponent(editor),
       new AnalysisKeyComponent(editor),
       new AnalysisRomanNumeralComponent(editor),
 

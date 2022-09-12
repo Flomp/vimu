@@ -13,7 +13,7 @@ export default class StreamAudioPlayerComponent extends Rete.Component {
   }
 
   async builder(node: Node) {
-    var inp1 = new Rete.Input("in_0", "Stream", sockets.stream);
+    var inp1 = new Rete.Input("in_0", "Score", sockets.score);
 
 
     node

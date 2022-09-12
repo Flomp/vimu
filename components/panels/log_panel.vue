@@ -1,12 +1,23 @@
 <template>
   <div>
-    <div class="pa-4">
+    <div class="pa-4" style="font-size: 0.8rem">
+      <pre>
+        _                 
+ __   _(_)_ __ ___  _   _ 
+ \ \ / / | '_ ` _ \| | | |
+  \ V /| | | | | | | |_| |
+   \_/ |_|_| |_| |_|\__,_|
+      </pre>
+      <pre>
+Welcome to vimu 0.0.1-beta 
+Documentation: https://docs.vimu.app
+      </pre>
       <p
-        style="font-family: monospace; font-size: 0.8rem"
+        style="font-family: monospace"
         v-for="(log, i) in logs"
         :key="i"
       >
-        <span>[{{ formatLogLevel(log) }}]</span>
+        <span :class="logLevelColor(log)">[{{ formatLogLevel(log) }}]</span>
 
         <span>[{{ formatDate(log) }}]</span>
         {{ log.text }}
@@ -24,6 +35,17 @@ import { logStore } from "~/store";
 export default class LogPanel extends Vue {
   get logs() {
     return logStore.logs;
+  }
+
+  logLevelColor(log: Log) {
+    switch (log.level) {
+      case LogLevel.error:
+        return "error--text";
+      case LogLevel.warning:
+        return "warning--text";
+      default:
+        return "";
+    }
   }
 
   formatLogLevel(log: Log) {

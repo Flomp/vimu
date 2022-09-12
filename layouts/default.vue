@@ -20,7 +20,13 @@
           </div>
           <h5 class="text-button grey darken-4 px-3">Log</h5>
           <div
-            style="height: calc(30vh - 36px); overflow-y: scroll; background-color: #101010"
+            style="
+              height: calc(30vh - 36px);
+              overflow-y: scroll;
+              background-color: #101010;
+              display: flex;
+              flex-direction: column-reverse;
+            "
           >
             <log-panel></log-panel>
           </div>

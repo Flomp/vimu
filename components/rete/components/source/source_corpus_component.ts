@@ -1,7 +1,7 @@
 import Rete, { Node, NodeEditor } from "rete";
 import { NodeData, WorkerInputs, WorkerOutputs } from "rete/types/core/data";
 import { sourceStore } from "~/store";
-import ChoralSelectControl from "../../controls/source/choral_select_control/source_corpus_control";
+import CorpusSelectControl from "../../controls/source/corpus_select_control/source_corpus_control";
 import { sockets } from "../../sockets/sockets";
 
 export default class SourceCorpusComponent extends Rete.Component {
@@ -13,11 +13,11 @@ export default class SourceCorpusComponent extends Rete.Component {
   }
 
   async builder(node: Node) {
-    var out = new Rete.Output("out_0", "Choral", sockets.stream);
+    var out = new Rete.Output("out_0", "Score", sockets.score);
 
 
     node
-      .addControl(new ChoralSelectControl(this.editor, "data", true))
+      .addControl(new CorpusSelectControl(this.editor, "data", true))
       .addOutput(out);
 
   }

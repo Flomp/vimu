@@ -7,9 +7,7 @@ export default function ({ $axios }: { $axios: NuxtAxiosInstance }) {
     $axios.onError(error => {
         const message = error.response && error.response.data.data ? error.response.data.data.error : error.message;
         //store.commit('notifications/sendNotification', { text: message, color: "error", duration: 3000 })
-
-        console.log(message);
-        
+       
 
         return Promise.resolve(false);
     })

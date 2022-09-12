@@ -12,13 +12,12 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch, Prop } from "nuxt-property-decorator";
+import { Component, Vue, Watch } from "nuxt-property-decorator";
 import { OpenSheetMusicDisplay } from "opensheetmusicdisplay";
 import { Node } from "rete";
 import { LogLevel } from "~/models/log";
 import { logStore, streamStore } from "~/store";
 import { reteStore } from "~/store/rete";
-import { PyProxy } from "~/types/pyodide";
 
 @Component({})
 export default class OSMDPanel extends Vue {
@@ -45,6 +44,10 @@ export default class OSMDPanel extends Vue {
   @Watch("selectedNode")
   async onValueChanged(node: Node) {
     if (!node || !node.data.data || !this.osmd) {
+      return;
+    }
+
+    if(this.displayedNode.id == node.id) {
       return;
     }
 

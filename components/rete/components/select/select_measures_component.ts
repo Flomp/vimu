@@ -1,14 +1,13 @@
 import Rete, { Node, NodeEditor } from "rete";
 import { NodeData, WorkerInputs, WorkerOutputs } from "rete/types/core/data";
 import { streamStore } from "~/store";
-import { PyProxy } from "~/types/pyodide";
-import TransformMeasuresControl from "../../controls/transform/measures_control/transform_measures_control";
+import SelectMeasuresControl from "../../controls/select/measures_control/select_measures_control";
 import { sockets } from "../../sockets/sockets";
 
-export default class TransformMeasuresComponent extends Rete.Component {
+export default class SelectMeasuresComponent extends Rete.Component {
   editor!: NodeEditor;
   constructor(editor: NodeEditor) {
-    super("transform_measures");
+    super("select_measures");
     this.editor = editor;
 
   }
@@ -21,7 +20,7 @@ export default class TransformMeasuresComponent extends Rete.Component {
     node
       .addInput(in0)
       .addOutput(out0)
-      .addControl(new TransformMeasuresControl(this.editor, "stream", true));
+      .addControl(new SelectMeasuresControl(this.editor, "stream", true));
   }
 
   async worker(nodeData: NodeData, inputs: WorkerInputs, outputs: WorkerOutputs) {
@@ -33,7 +32,7 @@ export default class TransformMeasuresComponent extends Rete.Component {
 
     const in0 = inputs["in_0"][0] as number
     if (in0) {
-      const measures: number[] = (node.controls.get("stream") as TransformMeasuresControl)?.getData("stream") as number[];
+      const measures: number[] = (node.controls.get("stream") as SelectMeasuresControl)?.getData("stream") as number[];
 
       const data = await streamStore.measures({ nodeId: nodeData.id, inputNodeId: in0, start: measures[0], end: measures[1]})
       nodeData.data['data'] = data;

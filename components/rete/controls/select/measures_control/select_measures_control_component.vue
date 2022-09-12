@@ -29,7 +29,7 @@ import { Vue, Component, Prop, Watch } from "nuxt-property-decorator";
 import { NodeEditor } from "rete";
 
 @Component({})
-export default class TransformMeasuresControlComponent extends Vue {
+export default class SelectMeasuresControlComponent extends Vue {
   @Prop() readonly!: boolean;
   @Prop() emitter!: NodeEditor;
   @Prop() ikey!: String;
@@ -44,6 +44,7 @@ export default class TransformMeasuresControlComponent extends Vue {
 
   change() {
     if (this.ikey) this.putData(this.ikey, this.measures);
+    
     this.emitter.trigger("process");
   }
 

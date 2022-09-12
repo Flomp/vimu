@@ -38,7 +38,7 @@ self.onmessage = async (event) => {
         self.postMessage({ id: id, result: result.toString() });
 
     } catch (error) {
-        console.log(error);
+        console.error(error);
 
         self.postMessage({ id: id, error: error.message });
     }
