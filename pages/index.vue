@@ -134,6 +134,7 @@ export default class IndexPage extends Vue {
         if (editor.selected.list.length) {
           editor.selectNode(editor.selected.list[0]);
         }
+                
         osmdStore.setNeedsUpdate(true);
       }
     );

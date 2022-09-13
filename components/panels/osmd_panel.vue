@@ -27,7 +27,7 @@ export default class OSMDPanel extends Vue {
 
   loading: boolean = false;
 
-  displayedNode: Node = <Node>{ id: 1 };
+  displayedNode: Node = <Node>{};
 
   get selectedNode(): Node | undefined {
     return reteStore.editor?.selected.list[0];
@@ -47,26 +47,29 @@ export default class OSMDPanel extends Vue {
 
   @Watch("needsUpdate")
   onNeedsUpdateChange(needsUpdate: boolean) {
-    if (!needsUpdate || !this.displayedNode.data.hasData) {
+    osmdStore.setNeedsUpdate(false);
+
+    if (
+      !needsUpdate ||
+      !this.displayedNode.data ||
+      !this.displayedNode.data.hasData
+    ) {
       return;
     }
     this.loadScore(this.displayedNode);
-    osmdStore.setNeedsUpdate(false);
   }
 
   @Watch("selectedNode")
   onSelectedNodeChange(node: Node) {
-    if (!node) {
+    if (!node || this.displayedNode.id == node.id) {
       return;
     }
 
     this.displayedNode = node;
 
-    if (this.displayedNode.id == node.id || !node.data.hasData) {
-      return;
+    if (node.data.hasData) {
+      this.loadScore(this.displayedNode);
     }
-
-    this.loadScore(this.displayedNode);
   }
 
   async loadScore(node: Node) {
