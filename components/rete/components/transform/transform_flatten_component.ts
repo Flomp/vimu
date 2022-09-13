@@ -34,6 +34,8 @@ export default class TransformFlattenComponent extends Rete.Component {
     if (in0) {
       const data = await streamStore.flatten({ nodeId: nodeData.id, inputNodeId: in0 })
       nodeData.data['data'] = data;
+      node.data.hasData = true;
+
     }
 
     for (let key of node.outputs.keys()) {

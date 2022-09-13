@@ -11,7 +11,11 @@
     v-model="menuOpened"
   >
     <template v-slot:activator="{ on }">
-      <v-list-item class="d-flex justify-space-between" v-on="on" v-if="isSubMenu">
+      <v-list-item
+        class="d-flex justify-space-between"
+        v-on="on"
+        v-if="isSubMenu"
+      >
         {{ name }}
         <div class="flex-grow-1"></div>
         <v-icon> mdi-chevron-right </v-icon>
@@ -45,16 +49,15 @@
 </template>
 
 <script lang="ts">
-import {
-  Vue,
-  Component,
-  Prop,
-  Emit,
-  VModel,
-} from "nuxt-property-decorator";
+import { Vue, Component, Prop, Emit, VModel } from "nuxt-property-decorator";
 import { MenuItem } from "./menu_item";
 
-@Component({})
+@Component({
+  name: "SubMenu",
+  components: {
+    SubMenu,
+  },
+})
 export default class SubMenu extends Vue {
   @Prop() name!: string;
   @Prop() items!: MenuItem[];
@@ -70,7 +73,7 @@ export default class SubMenu extends Vue {
   @Emit()
   menuClick(item: MenuItem) {
     this.menuOpened = false;
-    
+
     return item;
   }
 }

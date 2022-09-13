@@ -36,7 +36,7 @@
         </v-col>
       </v-row>
     </v-navigation-drawer>
-    <div class="d-flex flex-row fill-height">
+    <div class="d-flex flex-row" style="height: 100%">
       <v-main>
         <nuxt />
       </v-main>

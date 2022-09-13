@@ -16,7 +16,7 @@ import { Component, Vue, Watch } from "nuxt-property-decorator";
 import { OpenSheetMusicDisplay } from "opensheetmusicdisplay";
 import { Node } from "rete";
 import { LogLevel } from "~/models/log";
-import { logStore, streamStore } from "~/store";
+import { logStore, pyodideStore, streamStore } from "~/store";
 import { reteStore } from "~/store/rete";
 
 @Component({})
@@ -29,7 +29,7 @@ export default class OSMDPanel extends Vue {
 
   displayedNode: Node = <Node>{};
 
-  get selectedNode(): Node | undefined {
+  get selectedNode(): Node | undefined {   
     return reteStore.editor?.selected.list[0];
   }
 
@@ -41,18 +41,19 @@ export default class OSMDPanel extends Vue {
     });
   }
 
+
   @Watch("selectedNode")
-  async onValueChanged(node: Node) {
+  async onValueChanged(node: Node) {   
     if (!node || !node.data.data || !this.osmd) {
       return;
     }
 
-    if(this.displayedNode.id == node.id) {
+    if (this.displayedNode.id == node.id || !node.data.hasData) {
       return;
     }
+    this.displayedNode = node;
 
     this.loading = true;
-    this.displayedNode = node;
     const musicXML: string = await streamStore.streamToString({
       nodeId: node.id,
     });

@@ -35,6 +35,8 @@ export default class SelectPartComponent extends Rete.Component {
       const part: number = (node.controls.get("part") as SelectPartControl)?.getData("part") as number;
 
       const data = await streamStore.part({ nodeId: nodeData.id, inputNodeId: in0, part: part})
+      node.data.hasData = true;
+
       nodeData.data['data'] = data;
     }
 

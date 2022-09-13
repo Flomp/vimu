@@ -35,6 +35,8 @@ export default class AnalysisRomanNumeralComponent extends Rete.Component {
 
     if (in0 && in1) {          
       const data = await streamStore.romanNumeral({ nodeId: nodeData.id, input0NodeId: in0, input1NodeId: in1 })
+      node.data.hasData = true;
+
       nodeData.data['data'] = data;
     }
   }

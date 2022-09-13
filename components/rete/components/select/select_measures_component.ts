@@ -35,6 +35,8 @@ export default class SelectMeasuresComponent extends Rete.Component {
       const measures: number[] = (node.controls.get("stream") as SelectMeasuresControl)?.getData("stream") as number[];
 
       const data = await streamStore.measures({ nodeId: nodeData.id, inputNodeId: in0, start: measures[0], end: measures[1]})
+      node.data.hasData = true;
+
       nodeData.data['data'] = data;
     }
 

@@ -18,4 +18,16 @@ export default class SourceStore extends VuexModule {
 
     return result;
   }
+
+  @Action({ rawError: true })
+  async tinynotation(data: { id: number, tinynotation: string }): Promise<string> {
+    const result = await pyodideStore.asyncRun({
+      id: data.id, python: `
+    from music21 import converter
+    converter.parse('tinyNotation: ${data.tinynotation}')
+  `, writeNodeData: true
+    })
+
+    return result;
+  }
 }

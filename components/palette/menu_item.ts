@@ -9,26 +9,35 @@ interface MenuItem {
 
 const menuItems: MenuItem[] = [
     {
-        name: "Analysis", children: [
-            { name: "Key", key: "analysis_key" },
-            { name: "Roman numeral", key: "analysis_roman_numeral" }
-        ]
+        name: "Analysis", children:
+            [
+                { name: "Key", key: "analysis_key" },
+                { name: "Roman numeral", key: "analysis_roman_numeral" }
+            ]
     },
     {
         name: "Select",
-        children: [
-            { name: "Measures", key: "select_measures" },
-            { name: "Part", key: "select_part" },
-        ]
+        children:
+            [
+                { name: "Measures", key: "select_measures" },
+                { name: "Part", key: "select_part" },
+            ]
     },
-    { name: "Source", children: [{ name: "Corpus", key: "source_corpus" }] },
+    {
+        name: "Source", children:
+            [
+                { name: "Corpus", key: "source_corpus" },
+                { name: "Tinynotation", key: "source_tinynotation" }
+            ]
+    },
     {
         name: "Transform",
-        children: [
-            { name: "Chordify", key: "transform_chordify" },
-            { name: "Flatten", key: "transform_flatten" },
-            { name: "Transpose", key: "transform_transpose" },
-        ],
+        children:
+            [
+                { name: "Chordify", key: "transform_chordify" },
+                { name: "Flatten", key: "transform_flatten" },
+                { name: "Transpose", key: "transform_transpose" },
+            ],
     },
 
 ];

@@ -1,13 +1,13 @@
 import Rete, { Node, NodeEditor } from "rete";
 import { NodeData, WorkerInputs, WorkerOutputs } from "rete/types/core/data";
 import { sourceStore } from "~/store";
-import SourceCorpusControl from "../../controls/source/corpus_control/source_corpus_control";
+import SourceTinynotationControl from "../../controls/source/tinynotation_control/source_tinynotation_control";
 import { sockets } from "../../sockets/sockets";
 
-export default class SourceCorpusComponent extends Rete.Component {
+export default class SourceTinynotationComponent extends Rete.Component {
   editor!: NodeEditor;
   constructor(editor: NodeEditor) {
-    super("source_corpus");
+    super("source_tinynotation");
     this.editor = editor;
 
   }
@@ -17,20 +17,19 @@ export default class SourceCorpusComponent extends Rete.Component {
 
 
     node
-      .addControl(new SourceCorpusControl(this.editor, "data", true))
+      .addControl(new SourceTinynotationControl(this.editor, "data", true))
       .addOutput(out);
 
   }
 
   async worker(nodeData: NodeData, inputs: WorkerInputs, outputs: WorkerOutputs) {
     const node = this.editor.nodes.find(n => n.id == nodeData.id);
-
+    
     if (!node || !node.data.data) {
       return;
     }
-
-    await sourceStore.load({ id: nodeData.id, path: nodeData.data.data as string });
-
+      
+    await sourceStore.tinynotation({id: nodeData.id, tinynotation: nodeData.data.data as string});
     node.data.hasData = true;
 
     for (let key of node.outputs.keys()) {

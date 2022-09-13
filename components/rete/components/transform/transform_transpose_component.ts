@@ -36,6 +36,8 @@ export default class TransformTransposeComponent extends Rete.Component {
 
       const data = await streamStore.transpose({ nodeId: nodeData.id, inputNodeId: in0, steps: steps })
       nodeData.data['data'] = data;
+      node.data.hasData = true;
+
     }
 
     for (let key of node.outputs.keys()) {

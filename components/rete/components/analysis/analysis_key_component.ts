@@ -33,6 +33,7 @@ export default class AnalysisKeyComponent extends Rete.Component {
     if (in0) {
       const data = await streamStore.analyze({ nodeId: nodeData.id, inputNodeId: in0 })
       nodeData.data['data'] = data;
+      node.data.hasData = true;
 
       for (let key of node.outputs.keys()) {
         outputs[key] = nodeData.id;
