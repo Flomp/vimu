@@ -5,6 +5,7 @@ import source from '~/store/source';
 import stream from '~/store/stream';
 import log from '~/store/log';
 import pyodide from '~/store/pyodide'
+import osmd from '~/store/osmd'
 
 import { PyodideInterface } from '~/types/pyodide';
 
@@ -12,16 +13,12 @@ let sourceStore: source;
 let streamStore: stream;
 let logStore: log;
 let pyodideStore: pyodide;
+let osmdStore: osmd;
 
 let $axios: NuxtAxiosInstance;
-let $pyodide: PyodideInterface;
 
 function initialiseAxios(axiosInstance: NuxtAxiosInstance) {
     $axios = axiosInstance;
-}
-
-function initialisePyodide(pyodideInstance: any) {
-    $pyodide = pyodideInstance;
 }
 
 function initialiseStores(store: Store<any>): void {
@@ -29,8 +26,8 @@ function initialiseStores(store: Store<any>): void {
     streamStore = getModule(stream, store)
     logStore = getModule(log, store)
     pyodideStore = getModule(pyodide, store)
-
+    osmdStore = getModule(osmd, store)
     pyodideStore.init();
 }
 
-export { initialiseStores, initialiseAxios, initialisePyodide, $axios, $pyodide, sourceStore, streamStore, logStore, pyodideStore }
+export { initialiseStores, initialiseAxios, $axios, sourceStore, streamStore, logStore, pyodideStore, osmdStore }

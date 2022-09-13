@@ -10,7 +10,7 @@
       </pre>
       <pre>
 Welcome to vimu 0.0.1-beta 
-Documentation: https://docs.vimu.app
+Rightclick in the editor area to get started!
       </pre>
       <p
         style="font-family: monospace"

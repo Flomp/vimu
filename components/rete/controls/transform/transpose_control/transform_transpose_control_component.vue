@@ -2,7 +2,7 @@
   <v-text-field
     label="Half steps"
     v-model="steps"
-    @blur="change"
+    @input="change"
     dark
     type="number"
     :rules="[numberRule]"

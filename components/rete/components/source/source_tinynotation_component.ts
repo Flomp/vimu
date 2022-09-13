@@ -13,7 +13,7 @@ export default class SourceTinynotationComponent extends Rete.Component {
   }
 
   async builder(node: Node) {
-    var out = new Rete.Output("out_0", "Score", sockets.score);
+    var out = new Rete.Output("out_0", "Part", sockets.part);
 
 
     node

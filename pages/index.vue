@@ -53,7 +53,7 @@ import TransformChordifyComponent from "~/components/rete/components/transform/t
 import TransformFlattenComponent from "~/components/rete/components/transform/transform_flatten_component";
 import TransformTransposeComponent from "~/components/rete/components/transform/transform_transpose_component";
 import { LogLevel } from "~/models/log";
-import { logStore, pyodideStore } from "~/store";
+import { logStore, osmdStore, pyodideStore } from "~/store";
 import { reteStore } from "~/store/rete";
 
 @Component({
@@ -134,6 +134,7 @@ export default class IndexPage extends Vue {
         if (editor.selected.list.length) {
           editor.selectNode(editor.selected.list[0]);
         }
+        osmdStore.setNeedsUpdate(true);
       }
     );
 

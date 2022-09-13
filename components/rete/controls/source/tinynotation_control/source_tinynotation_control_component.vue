@@ -3,7 +3,7 @@
     <v-text-field
       class="pr-5"
       v-model="value"
-      @blur="update"
+      @input="update"
       dark
       solo
       style="max-width: 200px"

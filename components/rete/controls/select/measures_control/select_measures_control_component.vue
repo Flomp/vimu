@@ -4,7 +4,7 @@
       <v-text-field
         label="Start"
         v-model="measures[0]"
-        @blur="change"
+        @input="change"
         dark
         type="number"
         :rules="[numberRule]"
@@ -14,7 +14,7 @@
       <v-text-field
         label="End"
         v-model="measures[1]"
-        @blur="change"
+        @input="change"
         dark
         type="number"
         :rules="[numberRule]"

@@ -16,7 +16,7 @@ import { Component, Vue, Watch } from "nuxt-property-decorator";
 import { OpenSheetMusicDisplay } from "opensheetmusicdisplay";
 import { Node } from "rete";
 import { LogLevel } from "~/models/log";
-import { logStore, pyodideStore, streamStore } from "~/store";
+import { logStore, osmdStore, pyodideStore, streamStore } from "~/store";
 import { reteStore } from "~/store/rete";
 
 @Component({})
@@ -27,10 +27,14 @@ export default class OSMDPanel extends Vue {
 
   loading: boolean = false;
 
-  displayedNode: Node = <Node>{};
+  displayedNode: Node = <Node>{ id: 1 };
 
-  get selectedNode(): Node | undefined {   
+  get selectedNode(): Node | undefined {
     return reteStore.editor?.selected.list[0];
+  }
+
+  get needsUpdate(): boolean {
+    return osmdStore.needsUpdate;
   }
 
   mounted() {
@@ -41,18 +45,34 @@ export default class OSMDPanel extends Vue {
     });
   }
 
-
-  @Watch("selectedNode")
-  async onValueChanged(node: Node) {   
-    if (!node || !node.data.data || !this.osmd) {
+  @Watch("needsUpdate")
+  onNeedsUpdateChange(needsUpdate: boolean) {
+    if (!needsUpdate || !this.displayedNode.data.hasData) {
       return;
     }
+    this.loadScore(this.displayedNode);
+    osmdStore.setNeedsUpdate(false);
+  }
+
+  @Watch("selectedNode")
+  onSelectedNodeChange(node: Node) {
+    if (!node) {
+      return;
+    }
+
+    this.displayedNode = node;
 
     if (this.displayedNode.id == node.id || !node.data.hasData) {
       return;
     }
-    this.displayedNode = node;
 
+    this.loadScore(this.displayedNode);
+  }
+
+  async loadScore(node: Node) {
+    if (!this.osmd) {
+      return;
+    }
     this.loading = true;
     const musicXML: string = await streamStore.streamToString({
       nodeId: node.id,
@@ -67,9 +87,9 @@ export default class OSMDPanel extends Vue {
         level: LogLevel.error,
         text: "Failed to load Score: " + e.toString(),
       });
+    } finally {
+      this.loading = false;
     }
-
-    this.loading = false;
   }
 }
 </script>
