@@ -124,7 +124,7 @@ export default class OSMDPanel extends Vue {
       await this.osmd.load(musicXML);
       this.osmd.zoom = 0.5;
       this.osmd.render();
-      await this.audioPlayer.loadScore(this.osmd);
+      await this.audioPlayer.loadScore(this.osmd as any);
       this.playDisabled = false;
     } catch (e: any) {
       logStore.log({
