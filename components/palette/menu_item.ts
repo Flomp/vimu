@@ -21,6 +21,7 @@ const menuItems: MenuItem[] = [
             [
                 { name: "Measures", key: "select_measures" },
                 { name: "Part", key: "select_part" },
+                { name: "Notes", key: "select_notes" },
             ]
     },
     {

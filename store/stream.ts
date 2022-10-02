@@ -19,8 +19,22 @@ export default class StreamStore extends VuexModule {
 
     @Action({ rawError: true })
     async part(data: { nodeId: number, inputNodeId: number, part: number }): Promise<string> {
-               
+
         const result = await pyodideStore.asyncRun({ id: data.nodeId, python: `n${data.inputNodeId}.parts[${data.part}]`, writeNodeData: true });
+
+        return result;
+    }
+
+    @Action({ rawError: true })
+    async notes(data: { nodeId: number, inputNodeId: number, start: number, end: number }): Promise<PyProxy> {
+
+        const result = await pyodideStore.asyncRun({ id: data.nodeId, python: `
+        from music21 import stream
+        l = n${data.inputNodeId}.flat.notes[${data.start}:${data.end}]
+        s = stream.Stream()
+        s.append(l)
+        s
+        `, writeNodeData: true });
 
         return result;
     }

@@ -2,7 +2,7 @@
   <v-text-field
     label="Part"
     v-model="part"
-    @blur="change"
+    @input="change"
     dark
     type="number"
     :rules="[numberRule]"

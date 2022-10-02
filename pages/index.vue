@@ -47,6 +47,7 @@ import AnalysisKeyComponent from "~/components/rete/components/analysis/analysis
 import AnalysisRomanNumeralComponent from "~/components/rete/components/analysis/analysis_roman_numeral_component";
 import SelectMeasuresComponent from "~/components/rete/components/select/select_measures_component";
 import SelectPartComponent from "~/components/rete/components/select/select_part_component";
+import SelectNotesComponent from "~/components/rete/components/select/select_notes_component";
 import SourceCorpusComponent from "~/components/rete/components/source/source_corpus_component";
 import SourceTinynotationComponent from "~/components/rete/components/source/source_tinynotation_component";
 import TransformChordifyComponent from "~/components/rete/components/transform/transform_chordify_component";
@@ -134,7 +135,7 @@ export default class IndexPage extends Vue {
         if (editor.selected.list.length) {
           editor.selectNode(editor.selected.list[0]);
         }
-                
+
         osmdStore.setNeedsUpdate(true);
       }
     );
@@ -156,6 +157,7 @@ export default class IndexPage extends Vue {
       new SourceTinynotationComponent(editor),
       new SelectMeasuresComponent(editor),
       new SelectPartComponent(editor),
+      new SelectNotesComponent(editor),
       new AnalysisKeyComponent(editor),
       new AnalysisRomanNumeralComponent(editor),
       new TransformTransposeComponent(editor),

@@ -6,18 +6,7 @@
     <v-navigation-drawer app permanent right :width="drawerWidth">
       <v-row>
         <v-col class="pr-0 pb-0" cols="8">
-          <h5 class="text-button black--text grey lighten-2 px-3 absolute">
-            Score
-          </h5>
-          <div
-            style="
-              height: calc(70vh - 36px);
-              overflow-y: scroll;
-              background-color: white;
-            "
-          >
-            <OSMD-panel></OSMD-panel>
-          </div>
+          <OSMD-panel></OSMD-panel>
           <h5 class="text-button grey darken-4 px-3">Log</h5>
           <div
             style="
