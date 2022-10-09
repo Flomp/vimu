@@ -1,6 +1,6 @@
 import Rete, { Node, NodeEditor } from "rete";
 import { NodeData, WorkerInputs, WorkerOutputs } from "rete/types/core/data";
-import { sourceStore } from "~/store";
+import { apiSourceStore } from "~/store";
 import SourceCorpusControl from "../../controls/source/corpus_control/source_corpus_control";
 import { sockets } from "../../sockets/sockets";
 
@@ -29,12 +29,12 @@ export default class SourceCorpusComponent extends Rete.Component {
       return;
     }
 
-    await sourceStore.load({ id: nodeData.id, path: nodeData.data.data as string });
+    const xml = await apiSourceStore.load({ path: nodeData.data.data as string });
 
-    node.data.hasData = true;
+    node.data.xml = xml;
 
     for (let key of node.outputs.keys()) {
-      outputs[key] = nodeData.id;
+      outputs[key] = xml;
     }
   }
 }

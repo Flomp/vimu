@@ -1,6 +1,6 @@
 import Rete, { Node, NodeEditor } from "rete";
 import { NodeData, WorkerInputs, WorkerOutputs } from "rete/types/core/data";
-import { streamStore } from "~/store";
+import { apiTransformStore } from "~/store";
 import TransformTransposeControl from "../../controls/transform/transpose_control/transform_transpose_control";
 import { sockets } from "../../sockets/sockets";
 
@@ -30,18 +30,18 @@ export default class TransformTransposeComponent extends Rete.Component {
       return;
     }
 
-    const in0 = inputs["in_0"][0] as number
+    const in0 = inputs["in_0"][0] as string
     if (in0) {
       const steps: number = (node.controls.get("steps") as TransformTransposeControl)?.getData("steps") as number;
 
-      const data = await streamStore.transpose({ nodeId: nodeData.id, inputNodeId: in0, steps: steps })
-      nodeData.data['data'] = data;
-      node.data.hasData = true;
+      const data = await apiTransformStore.transpose({ data: in0, steps: steps })
+      nodeData.data.xml = data
 
-    }
 
-    for (let key of node.outputs.keys()) {
-      outputs[key] = nodeData.id
+
+      for (let key of node.outputs.keys()) {
+        outputs[key] = data
+      }
     }
   }
 }

@@ -1,6 +1,6 @@
 import Rete, { Node, NodeEditor } from "rete";
 import { NodeData, WorkerInputs, WorkerOutputs } from "rete/types/core/data";
-import { streamStore } from "~/store";
+import { apiAnalysisStore,  } from "~/store";
 import AnalysisRomanNumeralControl from "../../controls/analysis/analysis_roman_numeral_control/analysis_roman_numeral_control";
 import { sockets } from "../../sockets/sockets";
 
@@ -30,14 +30,12 @@ export default class AnalysisRomanNumeralComponent extends Rete.Component {
       return;
     }
 
-    const in0 = inputs["in_0"][0] as number
-    const in1 = inputs["in_1"][0] as number
-
-    if (in0 && in1) {          
-      const data = await streamStore.romanNumeral({ nodeId: nodeData.id, input0NodeId: in0, input1NodeId: in1 })
-      node.data.hasData = true;
-
-      nodeData.data['data'] = data;
+    const in0 = inputs["in_0"][0] as string
+    const in1 = inputs["in_1"][0] as string
+    
+    if (in0 && in1) {
+      const data = await apiAnalysisStore.romanNumeral({ data: in1, key: in0})
+      node.data.xml = data;
     }
   }
 }

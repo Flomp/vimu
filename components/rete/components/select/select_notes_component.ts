@@ -1,6 +1,6 @@
 import Rete, { Node, NodeEditor } from "rete";
 import { NodeData, WorkerInputs, WorkerOutputs } from "rete/types/core/data";
-import { streamStore } from "~/store";
+import { apiSelectStore,  } from "~/store";
 import SelectNotesControl from "../../controls/select/notes_control/select_notes_control";
 import { sockets } from "../../sockets/sockets";
 
@@ -30,18 +30,17 @@ export default class SelectNotesComponent extends Rete.Component {
       return;
     }
 
-    const in0 = inputs["in_0"][0] as number
+    const in0 = inputs["in_0"][0] as string
     if (in0) {
       const notes: number[] = (node.controls.get("stream") as SelectNotesControl)?.getData("stream") as number[];
 
-      const data = await streamStore.notes({ nodeId: nodeData.id, inputNodeId: in0, start: notes[0], end: notes[1]})
-      node.data.hasData = true;
+      const data = await apiSelectStore.notes({ data: in0, start: notes[0], end: notes[1] })
+      node.data.xml = data;
 
-      nodeData.data['data'] = data;
-    }
 
-    for (let key of node.outputs.keys()) {
-      outputs[key] = nodeData.id
+      for (let key of node.outputs.keys()) {
+        outputs[key] = data
+      }
     }
   }
 }

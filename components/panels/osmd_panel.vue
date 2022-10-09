@@ -5,7 +5,7 @@
     >
       <h5 class="text-button black--text">Score</h5>
       <v-btn icon @click="playOrPause" light :disabled="playDisabled"
-        ><v-icon>{{playIcon}}</v-icon></v-btn
+        ><v-icon>{{ playIcon }}</v-icon></v-btn
       >
     </div>
     <v-progress-linear
@@ -30,17 +30,16 @@
 <script lang="ts">
 import { Component, Vue, Watch } from "nuxt-property-decorator";
 import { OpenSheetMusicDisplay } from "opensheetmusicdisplay";
+
 import { Node } from "rete";
 import { LogLevel } from "~/models/log";
-import { logStore, osmdStore, streamStore } from "~/store";
+import { logStore, osmdStore } from "~/store";
 import { reteStore } from "~/store/rete";
-import AudioPlayer from "osmd-audio-player";
-import { PlaybackEvent } from "osmd-audio-player/dist/PlaybackEngine";
 
 @Component({})
 export default class OSMDPanel extends Vue {
   osmd!: OpenSheetMusicDisplay;
-  audioPlayer!: AudioPlayer;
+  audioPlayer!: any;
 
   reteStore = reteStore;
 
@@ -71,27 +70,24 @@ export default class OSMDPanel extends Vue {
       drawTitle: true,
     });
 
+    const AudioPlayer = require("osmd-audio-player").default;
+    const PlaybackEngine = require("osmd-audio-player/dist/PlaybackEngine");
+   
     this.audioPlayer = new AudioPlayer();
-    this.audioPlayer.on(PlaybackEvent.STATE_CHANGE, state => {
-      console.log(state);
-      
+    this.audioPlayer.on(PlaybackEngine.PlaybackEvent.STATE_CHANGE, (state: string) => {
       if (state == "PLAYING") {
         this.playing = true;
-      }else if(state == "STOPPED" || state == "PAUSED"){
+      } else if (state == "STOPPED" || state == "PAUSED") {
         this.playing = false;
       }
-    })
+    });
   }
 
   @Watch("needsUpdate")
   onNeedsUpdateChange(needsUpdate: boolean) {
     osmdStore.setNeedsUpdate(false);
 
-    if (
-      !needsUpdate ||
-      !this.displayedNode.data ||
-      !this.displayedNode.data.hasData
-    ) {
+    if (!needsUpdate) {
       return;
     }
     this.loadScore(this.displayedNode);
@@ -105,19 +101,16 @@ export default class OSMDPanel extends Vue {
 
     this.displayedNode = node;
 
-    if (node.data.hasData) {
-      this.loadScore(this.displayedNode);
-    }
+    this.loadScore(this.displayedNode);
   }
 
   async loadScore(node: Node) {
-    if (!this.osmd) {
+    if (!this.osmd || !node.data.xml) {
       return;
     }
+
     this.loading = true;
-    const musicXML: string = await streamStore.streamToString({
-      nodeId: node.id,
-    });
+    const musicXML: string = node.data.xml as string;
 
     try {
       this.playDisabled = true;

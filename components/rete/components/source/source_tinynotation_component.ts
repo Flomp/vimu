@@ -1,6 +1,6 @@
 import Rete, { Node, NodeEditor } from "rete";
 import { NodeData, WorkerInputs, WorkerOutputs } from "rete/types/core/data";
-import { sourceStore } from "~/store";
+import { apiSourceStore } from "~/store";
 import SourceTinynotationControl from "../../controls/source/tinynotation_control/source_tinynotation_control";
 import { sockets } from "../../sockets/sockets";
 
@@ -29,11 +29,11 @@ export default class SourceTinynotationComponent extends Rete.Component {
       return;
     }
       
-    await sourceStore.tinynotation({id: nodeData.id, tinynotation: nodeData.data.data as string});
-    node.data.hasData = true;
+    const data = await apiSourceStore.tinynotation({tinynotation: nodeData.data.data as string});
+    node.data.xml = data;
 
     for (let key of node.outputs.keys()) {
-      outputs[key] = nodeData.id;
+      outputs[key] = data;
     }
   }
 }

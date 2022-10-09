@@ -1,12 +1,11 @@
 <template>
   <v-app>
-    <!-- <v-app-bar app clipped-left clipped-right flat color="#353535" dark>
-      <v-toolbar-title>VIMU</v-toolbar-title>
-    </v-app-bar> -->
     <v-navigation-drawer app permanent right :width="drawerWidth">
       <v-row>
         <v-col class="pr-0 pb-0" cols="8">
-          <OSMD-panel></OSMD-panel>
+          <client-only>
+            <OSMD-panel></OSMD-panel>
+          </client-only>
           <h5 class="text-button grey darken-4 px-3">Log</h5>
           <div
             style="
@@ -48,7 +47,10 @@ import LogPanel from "~/components/panels/log_panel.vue";
 })
 export default class DefaultLayout extends Vue {
   get drawerWidth(): string {
-    return window.screen.width < 850 ? "60%" : "850px";
+    if (process.client) {
+      return window?.screen.width < 850 ? "60%" : "850px";
+    }
+    return "";
   }
 }
 </script>

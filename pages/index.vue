@@ -2,34 +2,18 @@
   <v-sheet class="main">
     <h5 class="text-button grey darken-4 px-3">Editor</h5>
     <v-progress-linear
-      :value="initialised * 100"
-      v-if="showInitialising"
-    ></v-progress-linear>
-    <v-progress-linear
       indeterminate
-      height="1"
-      v-if="showLoading"
-      style="position: absolute; top: 36px; z-index: 2"
+      v-if="apiLoading"
+      absolute
+      height="2"
     ></v-progress-linear>
-    <div
-      class="d-flex justify-center align-center"
-      style="position: absolute; top: 0; height: 100%; width: 100%"
-      v-if="showInitialising"
-    >
-      <code>{{ loadingText }}</code>
-    </div>
-    <div
-      id="rete"
-      @contextmenu="showContextMenu"
-      :class="{ 'd-none': showInitialising }"
-    ></div>
+    <div id="rete" @contextmenu="showContextMenu"></div>
     <sub-menu
       v-model="showMenu"
       :positionX="x"
       :positionY="y"
       :items="menuItems"
       @menu-click="createNode"
-      v-if="!showInitialising"
     />
   </v-sheet>
 </template>
@@ -44,6 +28,7 @@ import Vuetify from "vuetify";
 import { MenuItem, menuItems } from "~/components/palette/menu_item";
 import SubMenu from "~/components/palette/sub_menu.vue";
 import AnalysisKeyComponent from "~/components/rete/components/analysis/analysis_key_component";
+import AnalysisAmbitusComponent from "~/components/rete/components/analysis/analysis_ambitus_component";
 import AnalysisRomanNumeralComponent from "~/components/rete/components/analysis/analysis_roman_numeral_component";
 import SelectMeasuresComponent from "~/components/rete/components/select/select_measures_component";
 import SelectPartComponent from "~/components/rete/components/select/select_part_component";
@@ -53,8 +38,10 @@ import SourceTinynotationComponent from "~/components/rete/components/source/sou
 import TransformChordifyComponent from "~/components/rete/components/transform/transform_chordify_component";
 import TransformFlattenComponent from "~/components/rete/components/transform/transform_flatten_component";
 import TransformTransposeComponent from "~/components/rete/components/transform/transform_transpose_component";
+import SearchPartComponent from "~/components/rete/components/search/search_part_component";
+
 import { LogLevel } from "~/models/log";
-import { logStore, osmdStore, pyodideStore } from "~/store";
+import { apiStore, logStore, osmdStore } from "~/store";
 import { reteStore } from "~/store/rete";
 
 @Component({
@@ -70,36 +57,8 @@ export default class IndexPage extends Vue {
   editorY = 0;
   menuItems = menuItems;
 
-  showInitialising: boolean = this.initialised < 1;
-
-  get showLoading(): boolean {
-    return pyodideStore.loading;
-  }
-
-  get initialised(): number {
-    return pyodideStore.initialised;
-  }
-
-  get loadingText(): string {
-    switch (this.initialised) {
-      case 0.1:
-        return "Loading core...";
-      case 0.4:
-        return "Initialising...";
-      case 0.6:
-        return "Loading libraries...";
-      case 1.0:
-        return "Loading complete 🎉";
-      default:
-        return "Loading...";
-    }
-  }
-
-  @Watch("initialised")
-  onInitialisedChanged(value: number) {
-    if (value == 1) {
-      setTimeout(() => (this.showInitialising = false), 200);
-    }
+  get apiLoading() {
+    return apiStore.loading;
   }
 
   async mounted() {
@@ -159,10 +118,12 @@ export default class IndexPage extends Vue {
       new SelectPartComponent(editor),
       new SelectNotesComponent(editor),
       new AnalysisKeyComponent(editor),
+      new AnalysisAmbitusComponent(editor),
       new AnalysisRomanNumeralComponent(editor),
       new TransformTransposeComponent(editor),
       new TransformChordifyComponent(editor),
       new TransformFlattenComponent(editor),
+      new SearchPartComponent(editor)
     ];
 
     for (const component of components) {

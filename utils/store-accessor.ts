@@ -1,18 +1,24 @@
 import { NuxtAxiosInstance } from '@nuxtjs/axios';
 import { Store } from 'vuex'
 import { getModule } from 'vuex-module-decorators'
-import source from '~/store/source';
-import stream from '~/store/stream';
+import api from '~/store/api/api';
+import api_source from '~/store/api/source';
+import api_select from '~/store/api/select';
+import api_transform from '~/store/api/transform';
+import api_analysis from '~/store/api/analysis';
+import api_search from '~/store/api/search';
+
 import log from '~/store/log';
-import pyodide from '~/store/pyodide'
 import osmd from '~/store/osmd'
 
-import { PyodideInterface } from '~/types/pyodide';
+let apiStore : api;
+let apiSourceStore: api_source;
+let apiSelectStore: api_select;
+let apiTransformStore: api_transform;
+let apiAnalysisStore: api_analysis;
+let apiSearchStore: api_search;
 
-let sourceStore: source;
-let streamStore: stream;
 let logStore: log;
-let pyodideStore: pyodide;
 let osmdStore: osmd;
 
 let $axios: NuxtAxiosInstance;
@@ -22,12 +28,26 @@ function initialiseAxios(axiosInstance: NuxtAxiosInstance) {
 }
 
 function initialiseStores(store: Store<any>): void {
-    sourceStore = getModule(source, store)
-    streamStore = getModule(stream, store)
+    apiStore = getModule(api, store);
+    apiSourceStore = getModule(api_source, store)
+    apiSelectStore = getModule(api_select, store)
+    apiTransformStore = getModule(api_transform, store)
+    apiAnalysisStore = getModule(api_analysis, store)
+    apiSearchStore = getModule(api_search, store)
     logStore = getModule(log, store)
-    pyodideStore = getModule(pyodide, store)
     osmdStore = getModule(osmd, store)
-    pyodideStore.init();
 }
 
-export { initialiseStores, initialiseAxios, $axios, sourceStore, streamStore, logStore, pyodideStore, osmdStore }
+export {
+    initialiseStores,
+    initialiseAxios,
+    $axios,
+    apiStore,
+    apiSourceStore,
+    apiSelectStore,
+    apiTransformStore,
+    apiAnalysisStore,
+    apiSearchStore,
+    logStore,
+    osmdStore
+}

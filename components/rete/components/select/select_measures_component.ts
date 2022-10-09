@@ -1,6 +1,6 @@
 import Rete, { Node, NodeEditor } from "rete";
 import { NodeData, WorkerInputs, WorkerOutputs } from "rete/types/core/data";
-import { streamStore } from "~/store";
+import { apiSelectStore, } from "~/store";
 import SelectMeasuresControl from "../../controls/select/measures_control/select_measures_control";
 import { sockets } from "../../sockets/sockets";
 
@@ -16,7 +16,6 @@ export default class SelectMeasuresComponent extends Rete.Component {
     var in0 = new Rete.Input("in_0", "Stream", sockets.stream);
     var out0 = new Rete.Output("out_0", "Stream", sockets.stream);
 
-
     node
       .addInput(in0)
       .addOutput(out0)
@@ -30,18 +29,16 @@ export default class SelectMeasuresComponent extends Rete.Component {
       return;
     }
 
-    const in0 = inputs["in_0"][0] as number
+    const in0 = inputs["in_0"][0] as string
     if (in0) {
       const measures: number[] = (node.controls.get("stream") as SelectMeasuresControl)?.getData("stream") as number[];
 
-      const data = await streamStore.measures({ nodeId: nodeData.id, inputNodeId: in0, start: measures[0], end: measures[1]})
-      node.data.hasData = true;
+      const data = await apiSelectStore.measures({ data: in0, start: measures[0], end: measures[1] })
+      node.data.xml = data;
 
-      nodeData.data['data'] = data;
-    }
-
-    for (let key of node.outputs.keys()) {
-      outputs[key] = nodeData.id
+      for (let key of node.outputs.keys()) {
+        outputs[key] = data
+      }
     }
   }
 }

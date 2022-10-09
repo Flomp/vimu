@@ -1,26 +1,27 @@
 import Rete, { Node, NodeEditor } from "rete";
 import { NodeData, WorkerInputs, WorkerOutputs } from "rete/types/core/data";
-import { apiTransformStore, } from "~/store";
-import TransformFlattenControl from "../../controls/transform/flatten_control/transform_flatten_control";
+import { apiSearchStore,  } from "~/store";
+import SearchPartControl from "../../controls/search/search_part_control/search_part_control";
 import { sockets } from "../../sockets/sockets";
 
-export default class TransformFlattenComponent extends Rete.Component {
+export default class SearchPartComponent extends Rete.Component {
   editor!: NodeEditor;
   constructor(editor: NodeEditor) {
-    super("transform_flatten");
+    super("search_part");
     this.editor = editor;
 
   }
 
   async builder(node: Node) {
-    var in0 = new Rete.Input("in_0", "Stream", sockets.stream);
+    var in0 = new Rete.Input("in_0", "Part", sockets.part);
+    var in1 = new Rete.Input("in_1", "Stream", sockets.stream);
     var out0 = new Rete.Output("out_0", "Stream", sockets.stream);
 
-
     node
+      .addControl(new SearchPartControl(this.editor, "data", true))
       .addInput(in0)
+      .addInput(in1)
       .addOutput(out0)
-      .addControl(new TransformFlattenControl(this.editor, "chordify", true));
   }
 
   async worker(nodeData: NodeData, inputs: WorkerInputs, outputs: WorkerOutputs) {
@@ -31,10 +32,11 @@ export default class TransformFlattenComponent extends Rete.Component {
     }
 
     const in0 = inputs["in_0"][0] as string
-    if (in0) {
-      const data = await apiTransformStore.flatten({ data: in0 })
-      nodeData.data.xml = data;
-
+    const in1 = inputs["in_1"][0] as string
+    
+    if (in0 && in1) {
+      const data = await apiSearchStore.part({ data: in1, part: in0})
+      node.data.xml = data;
 
       for (let key of node.outputs.keys()) {
         outputs[key] = data

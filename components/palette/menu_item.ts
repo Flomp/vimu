@@ -12,7 +12,14 @@ const menuItems: MenuItem[] = [
         name: "Analysis", children:
             [
                 { name: "Key", key: "analysis_key" },
+                { name: "Ambitus", key: "analysis_ambitus" },
                 { name: "Roman numeral", key: "analysis_roman_numeral" }
+            ]
+    },
+    {
+        name: "Search", children:
+            [
+                { name: "Part", key: "search_part" }
             ]
     },
     {

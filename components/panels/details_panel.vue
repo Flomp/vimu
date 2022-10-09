@@ -20,22 +20,38 @@
         </v-list-item-content>
       </v-list-item>
 
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title class="text-h6 mb-2"> Value </v-list-item-title>
-          <code>{{ nodeData }}</code>
-        </v-list-item-content>
-      </v-list-item>
+      <h6 class="text-h6 mx-4">Data</h6>
+      <v-expansion-panels
+        accordion
+        flat
+        v-if="Object.keys(selectedNode.data).length > 0"
+      >
+        <v-expansion-panel
+          v-for="[key, value] in Object.entries(selectedNode.data)"
+          :key="key"
+        >
+          <v-expansion-panel-header> {{ key }} </v-expansion-panel-header>
+          <v-expansion-panel-content style="max-height: 300px">
+            <v-btn
+              icon
+              style="position: absolute; right: 16px"
+              @click="copyToClipboard(value)"
+            >
+              <v-icon size="20">mdi-content-copy</v-icon></v-btn
+            >
+            <div style="height: 100%; overflow: scroll">
+              <pre v-html="prettyXML(value)" v-if="key == 'xml'"></pre>
+              <pre v-else>{{ value }}</pre>
+            </div>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </v-expansion-panels>
+      <code class="mx-4 d-block text-center" v-else> No data </code>
 
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="text-h6">Outputs</v-list-item-title>
         </v-list-item-content>
-        <v-list-item-action>
-          <v-btn icon @click="addOutput"
-            ><v-icon>mdi-plus-circle</v-icon></v-btn
-          >
-        </v-list-item-action>
       </v-list-item>
 
       <v-list-item v-for="(o, i) in outputs" :key="o.key">
@@ -48,25 +64,29 @@
           hide-details
           @input="updateSelected()"
         ></v-text-field>
-        <v-list-item-action>
-          <v-btn icon @click="removeOutput(o)"
-            ><v-icon>mdi-close</v-icon></v-btn
-          >
-        </v-list-item-action>
       </v-list-item>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "nuxt-property-decorator";
-import Rete, { Node, Output } from "rete";
+import { Component, Vue } from "nuxt-property-decorator";
+import { Node, Output } from "rete";
 import { LogLevel } from "~/models/log";
 import { logStore } from "~/store";
 import { reteStore } from "~/store/rete";
-import { sockets } from "../rete/sockets/sockets";
+// @ts-ignore
+import Prism from "prismjs";
 
-@Component({})
+@Component({
+  head: {
+    script: [
+      {
+        src: "~/assets/prism.js",
+      },
+    ],
+  },
+})
 export default class DetailsPanel extends Vue {
   reteStore = reteStore;
 
@@ -75,11 +95,17 @@ export default class DetailsPanel extends Vue {
   }
 
   get nodeData(): any | undefined {
-    return this.selectedNode?.data.data;
+    return this.selectedNode?.data.data ?? "No data";
   }
 
   get outputs() {
     return this.selectedNode?.outputs.values();
+  }
+
+  prettyXML(value: string) {
+    console.log(Prism.highlight(value, Prism.languages.html, "html"));
+
+    return Prism.highlight(value, Prism.languages.html, "html");
   }
 
   updateSelected() {
@@ -87,26 +113,6 @@ export default class DetailsPanel extends Vue {
     if (this.selectedNode) {
       reteStore.editor!.selectNode(this.selectedNode);
     }
-  }
-
-  addOutput() {
-    const outputIndex = (this.selectedNode?.outputs.size ?? 0) + 1;
-
-    this.selectedNode?.addOutput(
-      new Rete.Output("out_" + outputIndex, "Output", sockets.number)
-    );
-    this.selectedNode?.update();
-    this.updateSelected();
-  }
-
-  removeOutput(output: Output) {
-    for (let index = output.connections.length - 1; index >= 0; index--) {
-      const element = output.connections[index];
-      reteStore.editor?.removeConnection(element);
-    }
-
-    this.selectedNode?.removeOutput(output);
-    this.updateSelected();
   }
 
   removeNode() {
@@ -120,8 +126,117 @@ export default class DetailsPanel extends Vue {
       reteStore.editor.selected.clear();
     }
   }
+
+  copyToClipboard(value: string) {
+    navigator.clipboard.writeText(value).then(() => {
+      logStore.log({
+        level: LogLevel.info,
+        text: "Copied value to clipboard!",
+      });
+    });
+  }
 }
 </script>
 
 <style>
+/* PrismJS 1.29.0
+https://prismjs.com/download.html#themes=prism-okaidia&languages=markup+css+clike+javascript */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #f8f8f2;
+  background: 0 0;
+  text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+  font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  font-size: 1em;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.5;
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+pre[class*="language-"] {
+  padding: 1em;
+  margin: 0.5em 0;
+  overflow: auto;
+  border-radius: 0.3em;
+}
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+  background: #272822;
+}
+:not(pre) > code[class*="language-"] {
+  padding: 0.1em;
+  border-radius: 0.3em;
+  white-space: normal;
+}
+.token.cdata,
+.token.comment,
+.token.doctype,
+.token.prolog {
+  color: #8292a2;
+}
+.token.punctuation {
+  color: #f8f8f2;
+}
+.token.namespace {
+  opacity: 0.7;
+}
+.token.constant,
+.token.deleted,
+.token.property,
+.token.symbol,
+.token.tag {
+  color: #f92672;
+}
+.token.boolean,
+.token.number {
+  color: #ae81ff;
+}
+.token.attr-name,
+.token.builtin,
+.token.char,
+.token.inserted,
+.token.selector,
+.token.string {
+  color: #a6e22e;
+}
+.language-css .token.string,
+.style .token.string,
+.token.entity,
+.token.operator,
+.token.url,
+.token.variable {
+  color: #f8f8f2;
+}
+.token.atrule,
+.token.attr-value,
+.token.class-name,
+.token.function {
+  color: #e6db74;
+}
+.token.keyword {
+  color: #66d9ef;
+}
+.token.important,
+.token.regex {
+  color: #fd971f;
+}
+.token.bold,
+.token.important {
+  font-weight: 700;
+}
+.token.italic {
+  font-style: italic;
+}
+.token.entity {
+  cursor: help;
+}
 </style>

@@ -1,6 +1,6 @@
 import Rete, { Node, NodeEditor } from "rete";
 import { NodeData, WorkerInputs, WorkerOutputs } from "rete/types/core/data";
-import { streamStore } from "~/store";
+import { apiTransformStore,  } from "~/store";
 import TransformChordifyControl from "../../controls/transform/chordify_control/transform_chordify_control";
 import { sockets } from "../../sockets/sockets";
 
@@ -30,16 +30,15 @@ export default class TransformChordifyComponent extends Rete.Component {
       return;
     }
 
-    const in0 = inputs["in_0"][0] as number
+    const in0 = inputs["in_0"][0] as string
     if (in0) {
-      const data = await streamStore.chordify({ nodeId: nodeData.id, inputNodeId: in0 })
-      nodeData.data['data'] = data;
-      node.data.hasData = true;
+      const data = await apiTransformStore.chordify({ data: in0 })
+      nodeData.data.xml = data;
 
-    }
 
-    for (let key of node.outputs.keys()) {
-      outputs[key] = nodeData.id;
+      for (let key of node.outputs.keys()) {
+        outputs[key] = data
+      }
     }
   }
 }
