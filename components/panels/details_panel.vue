@@ -75,18 +75,8 @@ import { Node, Output } from "rete";
 import { LogLevel } from "~/models/log";
 import { logStore } from "~/store";
 import { reteStore } from "~/store/rete";
-// @ts-ignore
-import Prism from "prismjs";
 
-@Component({
-  head: {
-    script: [
-      {
-        src: "~/assets/prism.js",
-      },
-    ],
-  },
-})
+@Component({})
 export default class DetailsPanel extends Vue {
   reteStore = reteStore;
 
@@ -103,7 +93,7 @@ export default class DetailsPanel extends Vue {
   }
 
   prettyXML(value: string) {
-    console.log(Prism.highlight(value, Prism.languages.html, "html"));
+    const Prism = require("~/assets/prism.js")
 
     return Prism.highlight(value, Prism.languages.html, "html");
   }
@@ -139,8 +129,6 @@ export default class DetailsPanel extends Vue {
 </script>
 
 <style>
-/* PrismJS 1.29.0
-https://prismjs.com/download.html#themes=prism-okaidia&languages=markup+css+clike+javascript */
 code[class*="language-"],
 pre[class*="language-"] {
   color: #f8f8f2;
