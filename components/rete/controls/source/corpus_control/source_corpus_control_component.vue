@@ -26,7 +26,7 @@ export default class SourceCorpusControlComponent extends Vue {
 
   value: string = "bach/bwv350.mxl";
 
-  items: string[] = ["bach/bwv66.6.mxl", "bach/bwv350.mxl", "bach/bwv272.mxl"];
+  items: string[] = ["bach/bwv66.6.mxl", "bach/bwv350.mxl", "bach/bwv272.mxl", "monteverdi/madrigal.3.1.mxl"];
 
   mounted() {
     this.value = this.getData(this.ikey);

@@ -3,7 +3,7 @@
     <div class="d-flex justify-space-between grey darken-4">
       <h5 class="text-button px-3">Details</h5>
       <v-btn icon @click="removeNode()" v-if="selectedNode">
-        <v-icon>mdi-delete-circle</v-icon>
+        <v-icon size="20">mdi-delete</v-icon>
       </v-btn>
     </div>
 
@@ -50,6 +50,24 @@
 
       <v-list-item>
         <v-list-item-content>
+          <v-list-item-title class="text-h6">Inputs</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-list-item v-for="(o, i) in inputs" :key="o.key">
+        <v-list-item-avatar> {{ i + 1 }}. </v-list-item-avatar>
+        <v-text-field
+          label="Name"
+          v-model="o.name"
+          solo
+          dense
+          hide-details
+          @input="updateSelected()"
+        ></v-text-field>
+      </v-list-item>
+
+      <v-list-item>
+        <v-list-item-content>
           <v-list-item-title class="text-h6">Outputs</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
@@ -88,12 +106,16 @@ export default class DetailsPanel extends Vue {
     return this.selectedNode?.data.data ?? "No data";
   }
 
+  get inputs() {
+    return this.selectedNode?.inputs.values();
+  }
+
   get outputs() {
     return this.selectedNode?.outputs.values();
   }
 
   prettyXML(value: string) {
-    const Prism = require("~/assets/prism.js")
+    const Prism = require("~/assets/prism.js");
 
     return Prism.highlight(value, Prism.languages.html, "html");
   }

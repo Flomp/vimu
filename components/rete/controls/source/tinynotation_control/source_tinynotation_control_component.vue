@@ -1,21 +1,19 @@
 <template>
   <div>
-    <v-text-field
-      class="pr-5"
-      v-model="value"
-      @input="update"
-      dark
-      solo
-      style="max-width: 200px"
-    ></v-text-field>
+    <timer-text-field v-model="value" @update="update"></timer-text-field>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "nuxt-property-decorator";
 import { NodeEditor } from "rete";
+import TimerTextField from "~/components/TimerTextField.vue";
 
-@Component({})
+@Component({
+  components: {
+    TimerTextField,
+  },
+})
 export default class SourceTinynotationControlComponent extends Vue {
   @Prop() readonly!: boolean;
   @Prop() emitter!: NodeEditor;

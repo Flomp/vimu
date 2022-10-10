@@ -19,7 +19,7 @@
             <log-panel></log-panel>
           </div>
         </v-col>
-        <v-col class="pl-0" cols="4">
+        <v-col class="pl-0" cols="4" style="z-index: 1; background-color: #363636">
           <details-panel />
         </v-col>
       </v-row>

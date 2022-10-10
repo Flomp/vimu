@@ -35,7 +35,7 @@ export default class SearchPartComponent extends Rete.Component {
     const in1 = inputs["in_1"][0] as string
     
     if (in0 && in1) {
-      const data = await apiSearchStore.part({ data: in1, part: in0})
+      const data = await apiSearchStore.part({ data: in1, part: in0, color: nodeData.data.color as string})
       node.data.xml = data;
 
       for (let key of node.outputs.keys()) {

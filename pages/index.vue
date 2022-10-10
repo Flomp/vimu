@@ -1,6 +1,12 @@
 <template>
   <v-sheet class="main">
-    <h5 class="text-button grey darken-4 px-3">Editor</h5>
+    <div class="d-flex flex-row px-3 absolute">
+      <h5 class="text-button grey darken-4 px-3">Editor</h5>
+      <v-spacer></v-spacer>
+      <v-btn icon @click="downloadJSON">
+        <v-icon>mdi-download</v-icon>
+      </v-btn>
+    </div>
     <v-progress-linear
       indeterminate
       v-if="apiLoading"
@@ -39,6 +45,7 @@ import TransformChordifyComponent from "~/components/rete/components/transform/t
 import TransformFlattenComponent from "~/components/rete/components/transform/transform_flatten_component";
 import TransformTransposeComponent from "~/components/rete/components/transform/transform_transpose_component";
 import SearchPartComponent from "~/components/rete/components/search/search_part_component";
+import SearchLyricsComponent from "~/components/rete/components/search/search_lyrics_component";
 
 import { LogLevel } from "~/models/log";
 import { apiStore, logStore, osmdStore } from "~/store";
@@ -123,7 +130,8 @@ export default class IndexPage extends Vue {
       new TransformTransposeComponent(editor),
       new TransformChordifyComponent(editor),
       new TransformFlattenComponent(editor),
-      new SearchPartComponent(editor)
+      new SearchPartComponent(editor),
+      new SearchLyricsComponent(editor),
     ];
 
     for (const component of components) {
@@ -158,6 +166,21 @@ export default class IndexPage extends Vue {
       level: LogLevel.info,
       text: `Added new node ${item.key}`,
     });
+  }
+
+  downloadJSON() {
+    const jsonData = JSON.stringify(reteStore.editor?.toJSON());
+    var jsonBlob = new Blob([jsonData], {
+      type: "text/xml;charset=utf-8",
+    });
+    var url = URL.createObjectURL(jsonBlob);
+    var downloadLink = document.createElement("a");
+    downloadLink.href = url;
+    const timestamp = new Date().getTime();
+    downloadLink.download = `vimu_export_${timestamp}.json`;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
   }
 }
 </script>

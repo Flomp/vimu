@@ -19,7 +19,8 @@ const menuItems: MenuItem[] = [
     {
         name: "Search", children:
             [
-                { name: "Part", key: "search_part" }
+                { name: "Part", key: "search_part" },
+                { name: "Lyrics", key: "search_lyrics" }
             ]
     },
     {
