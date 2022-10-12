@@ -1,5 +1,13 @@
 <template>
-  <div>
+  <div
+    style="
+      height: calc(100% - 72px);
+      overflow-y: scroll;
+      background-color: #101010;
+      display: flex;
+      flex-direction: column-reverse;
+    "
+  >
     <div class="pa-4" style="font-size: 0.8rem">
       <pre>
         _                 
@@ -12,11 +20,7 @@
 Welcome to vimu 0.0.1-beta 
 Rightclick in the editor area to get started!
       </pre>
-      <p
-        style="font-family: monospace"
-        v-for="(log, i) in logs"
-        :key="i"
-      >
+      <p style="font-family: monospace" v-for="(log, i) in logs" :key="i">
         <span :class="logLevelColor(log)">[{{ formatLogLevel(log) }}]</span>
 
         <span>[{{ formatDate(log) }}]</span>

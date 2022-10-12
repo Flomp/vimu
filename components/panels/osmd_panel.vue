@@ -1,6 +1,6 @@
 <template>
-  <div style="position: relative">
-    <div class="d-flex flex-row grey lighten-2 px-3 absolute">
+  <div style="flex: 1 0 0; min-height: 66%">
+    <div class="d-flex flex-row grey lighten-2 px-3">
       <h5 class="text-button black--text">Score</h5>
       <v-spacer></v-spacer>
       <div>
@@ -51,14 +51,14 @@
       color="black"
       background-color="transparent"
       track-color="grey"
-      height="4"
-      style="position: absolute; width: 100%; z-index: 1; top: 34px"
+      height="1"
+      style="width: 100%; z-index: 1; top: 34px"
       @input="skip"
     ></v-slider>
 
     <div
       style="
-        height: calc(70vh - 36px);
+        height: calc(100% - 36px);
         overflow-y: scroll;
         background-color: white;
       "
@@ -70,12 +70,13 @@
           grey--text
           fill-height
           d-flex
+          flex-column
           justify-center
           align-center
           text-overline
         "
       >
-        No Data
+        <span>No Data</span>
       </div>
     </div>
   </div>
@@ -126,7 +127,7 @@ export default class OSMDPanel extends Vue {
   }
 
   get showNothingSelected() {
-    return !this.selectedNode || !this.selectedNode.data.xml
+    return !this.selectedNode || !this.selectedNode.data.xml;
   }
 
   getState() {
@@ -191,7 +192,9 @@ export default class OSMDPanel extends Vue {
     } else {
       this.downloadDisabled = true;
       this.playDisabled = true;
-      this.osmd.clear();
+      try {
+        this.osmd.clear();
+      } catch (e: any) {}
     }
   }
 

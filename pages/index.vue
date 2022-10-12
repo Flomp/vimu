@@ -1,12 +1,6 @@
 <template>
   <v-sheet class="main">
-    <div class="d-flex flex-row px-3 absolute">
-      <h5 class="text-button grey darken-4 px-3">Editor</h5>
-      <v-spacer></v-spacer>
-      <v-btn icon @click="downloadJSON">
-        <v-icon>mdi-download</v-icon>
-      </v-btn>
-    </div>
+    <main-menu></main-menu>
     <v-progress-linear
       indeterminate
       v-if="apiLoading"
@@ -16,6 +10,7 @@
     <div id="rete" @contextmenu="showContextMenu"></div>
     <sub-menu
       v-model="showMenu"
+      :absolute="true"
       :positionX="x"
       :positionY="y"
       :items="menuItems"
@@ -30,8 +25,11 @@ import Rete, { Component as rComponent } from "rete";
 // @ts-ignore
 import AreaPlugin from "rete-area-plugin";
 import ConnectionPlugin from "rete-connection-plugin";
+// @ts-ignore
+import MinimapPlugin from "rete-minimap-plugin";
+
 import Vuetify from "vuetify";
-import { MenuItem, menuItems } from "~/components/palette/menu_item";
+import { MenuItem, editorMenuItems } from "~/components/palette/menu_item";
 import SubMenu from "~/components/palette/sub_menu.vue";
 import AnalysisKeyComponent from "~/components/rete/components/analysis/analysis_key_component";
 import AnalysisAmbitusComponent from "~/components/rete/components/analysis/analysis_ambitus_component";
@@ -50,10 +48,12 @@ import SearchLyricsComponent from "~/components/rete/components/search/search_ly
 import { LogLevel } from "~/models/log";
 import { apiStore, logStore, osmdStore } from "~/store";
 import { reteStore } from "~/store/rete";
+import MainMenu from "~/components/main_menu.vue";
 
 @Component({
   components: {
     SubMenu,
+    MainMenu,
   },
 })
 export default class IndexPage extends Vue {
@@ -62,7 +62,7 @@ export default class IndexPage extends Vue {
   y = 0;
   editorX = 0;
   editorY = 0;
-  menuItems = menuItems;
+  menuItems = editorMenuItems;
 
   get apiLoading() {
     return apiStore.loading;
@@ -76,7 +76,7 @@ export default class IndexPage extends Vue {
     background.classList.add("rete-background");
 
     editor.use(AreaPlugin, { background });
-
+    editor.use(MinimapPlugin);
     editor.use(ConnectionPlugin);
     const VueRenderPlugin = require("rete-vue-render-plugin").default;
     editor.use(VueRenderPlugin, {

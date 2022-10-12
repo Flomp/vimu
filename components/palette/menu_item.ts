@@ -3,11 +3,78 @@ interface MenuItem {
     name: string;
     icon?: string;
     key?: string;
+    active?: boolean;
+    divider?: boolean;
     children?: MenuItem[];
 
 }
 
-const menuItems: MenuItem[] = [
+const fileMainMenuItems: MenuItem[] = [
+    { name: "New File", divider: true },
+    { name: "Open..." },
+    { name: "Open Recent" },
+    { name: "Open from URL", divider: true },
+    {
+        name: "Export",
+        divider: true,
+        children: [
+            {
+                name: "PNG",
+                key: "file_export_png"
+            },
+            {
+                name: "JSON",
+                key: "file_export_json"
+            },
+        ]
+    },
+    { name: "Close" },
+]
+
+
+const editorMainMenuItems: MenuItem[] = [
+    {
+        name: "Center Layout",
+        key: "editor_center_layout",
+    },
+    {
+        name: "Zoom in",
+        key: "editor_zoom_in",
+    },
+    {
+        name: "Zoom out",
+        key: "editor_zoom_out",
+        divider: true
+    },
+    {
+        name: "Pixel Grid",
+        key: "editor_pixel_grid",
+        active: true
+    },
+    {
+        name: "Minimap",
+        key: "editor_minimap",
+        active: true
+    },
+
+]
+
+const viewMainMenuItems: MenuItem[] = [
+
+    {
+        name: "Score",
+        key: "view_score",
+        active: true
+    },
+    {
+        name: "Log",
+        key: "view_log",
+        active: true
+    },
+
+]
+
+const editorMenuItems: MenuItem[] = [
     {
         name: "Analysis", children:
             [
@@ -51,6 +118,6 @@ const menuItems: MenuItem[] = [
 
 ];
 
-export { MenuItem, menuItems }
+export { MenuItem, editorMenuItems, viewMainMenuItems, fileMainMenuItems, editorMainMenuItems }
 
 export default {}

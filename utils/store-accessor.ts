@@ -10,6 +10,7 @@ import api_search from '~/store/api/search';
 
 import log from '~/store/log';
 import osmd from '~/store/osmd'
+import settings from '~/store/settings'
 
 let apiStore : api;
 let apiSourceStore: api_source;
@@ -20,6 +21,7 @@ let apiSearchStore: api_search;
 
 let logStore: log;
 let osmdStore: osmd;
+let settingsStore: settings;
 
 let $axios: NuxtAxiosInstance;
 
@@ -36,6 +38,7 @@ function initialiseStores(store: Store<any>): void {
     apiSearchStore = getModule(api_search, store)
     logStore = getModule(log, store)
     osmdStore = getModule(osmd, store)
+    settingsStore = getModule(settings, store)
 }
 
 export {
@@ -49,5 +52,6 @@ export {
     apiAnalysisStore,
     apiSearchStore,
     logStore,
-    osmdStore
+    osmdStore,
+    settingsStore
 }

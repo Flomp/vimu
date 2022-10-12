@@ -6,7 +6,7 @@ import { Log, LogLevel } from '~/models/log';
     stateFactory: true,
     namespaced: true,
 })
-export default class SourceStore extends VuexModule {
+export default class LogStore extends VuexModule {
     logs: Log[] = []
     @Mutation
     log(data: { level: LogLevel, text: string }) {
