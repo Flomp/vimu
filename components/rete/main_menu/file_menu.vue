@@ -1,0 +1,61 @@
+<template>
+  <sub-menu
+    v-model="open"
+    :items="items"
+    @menu-click="handleClick"
+    name="File"
+    :dense="true"
+  >
+    <template v-slot:activator="{ on, attrs }">
+      <v-btn
+        class="text-capitalize rounded-0"
+        elevation="0"
+        v-bind="attrs"
+        v-on="on"
+        text
+        >File</v-btn
+      >
+    </template>
+  </sub-menu>
+</template>
+
+<script lang="ts">
+import { Component, Vue } from "nuxt-property-decorator";
+import { MenuItem } from "~/components/palette/menu_item";
+import SubMenu from "~/components/palette/sub_menu.vue";
+
+@Component({
+  components: {
+    SubMenu,
+  },
+})
+export default class FileMenu extends Vue {
+  open: boolean = false;
+
+  items: MenuItem[] = [
+    { name: "New File", divider: true },
+    { name: "Open..." },
+    { name: "Open Recent" },
+    { name: "Open from URL", divider: true },
+    {
+      name: "Export",
+      divider: true,
+      children: [
+        {
+          name: "PNG",
+          key: "file_export_png",
+        },
+        {
+          name: "JSON",
+          key: "file_export_json",
+        },
+      ],
+    },
+    { name: "Close" },
+  ];
+  handleClick(item: MenuItem) {}
+}
+</script>
+
+<style>
+</style>

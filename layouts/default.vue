@@ -1,36 +1,45 @@
 <template>
   <v-app>
-    <v-row class="fill-height ma-0">
-      <v-col class="pa-0" style="flex: 1 1">
+    <div id="wrapper" class="d-flex fill-height ma-0" style="flex-wrap: nowrap">
+      <div id="editor" class="pa-0" style="flex: 1 1 50%">
         <v-main>
           <nuxt />
         </v-main>
-      </v-col>
-      <v-col
+      </div>
+      <div
+        id="editor-handler"
+        class="vertical-handler"
+        v-if="showFirstColumn"
+      ></div>
+      <div
         class="d-flex flex-column pa-0"
-        style="flex: 0 1 512px"
+        style="flex: 1 1 auto; min-width: 0; max-height: 100vh"
         v-if="showFirstColumn"
       >
-        <client-only>
-          <OSMD-panel v-show="showScore"></OSMD-panel>
-        </client-only>
-        <div v-show="showLog" style="flex: 1 1 0; min-height: 276px">
-          <h5 class="text-button grey darken-4 px-3">Log</h5>
+        <div id="score" style="flex: 1 1 66%" v-show="showScore">
+          <client-only>
+            <OSMD-panel></OSMD-panel>
+          </client-only>
+        </div>
+        <div id="score-handler" class="horizontal-handler"></div>
+
+        <div v-show="showLog" style="flex: 1 1 auto">
           <log-panel></log-panel>
         </div>
-      </v-col>
-      <v-col
+      </div>
+      <div
         class="pa-0"
         style="
           z-index: 1;
           background-color: #363636;
-          flex: 0 1 280px;
-          max-width: 280px;
+          flex: 0 0 20%;
+          width: 20%;
+          max-width: 300px;
         "
       >
         <details-panel />
-      </v-col>
-    </v-row>
+      </div>
+    </div>
   </v-app>
 </template>
 
@@ -67,8 +76,80 @@ export default class DefaultLayout extends Vue {
   get showLog() {
     return settingsStore.settings.view.log;
   }
+
+  mounted() {
+    this.handleDrag();
+  }
+
+  handleDrag() {
+    const editorHandler = document.getElementById("editor-handler");
+    const editor = document.getElementById("editor");
+    var isEditorHandlerDragging = false;
+
+    const scoreHandler = document.getElementById("score-handler");
+    const score = document.getElementById("score");
+    var isScoreHandlerDragging = false;
+
+    document.addEventListener("mousedown", function (e) {
+      if (e.target === editorHandler) {
+        isEditorHandlerDragging = true;
+      } else if (e.target === scoreHandler) {
+        isScoreHandlerDragging = true;
+      }
+    });
+
+    document.addEventListener("mousemove", function (e) {
+      if (isEditorHandlerDragging) {
+        const editorMinWidth = 276;
+
+        editor!.style.width = Math.max(editorMinWidth, e.clientX - 4) + "px";
+        editor!.style.flexGrow = "0";
+        editor!.style.flexBasis = "auto";
+      } else if (isScoreHandlerDragging) {
+        const scoreMinHeight = 128;
+
+        score!.style.height = Math.max(scoreMinHeight, e.clientY - 4) + "px";
+        score!.style.flexGrow = "0";
+        score!.style.flexBasis = "auto";
+      }
+    });
+
+    document.addEventListener("mouseup", function (e) {
+      isEditorHandlerDragging = false;
+      isScoreHandlerDragging = false;
+    });
+  }
 }
 </script>
 
 <style>
+.vertical-handler {
+  width: 2px;
+  padding: 0;
+  cursor: ew-resize;
+  flex: 0 0 auto;
+}
+
+.vertical-handler::before {
+  content: "";
+  display: block;
+  width: 2px;
+  height: 100%;
+  margin: 0 auto;
+}
+
+.horizontal-handler {
+  height: 2px;
+  padding: 0;
+  cursor: ns-resize;
+  flex: 0 0 auto;
+}
+
+.horizontal-handler::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 2px;
+  margin: 0 auto;
+}
 </style>

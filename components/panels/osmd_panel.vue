@@ -1,5 +1,5 @@
 <template>
-  <div style="flex: 1 0 0; min-height: 66%">
+  <div class="fill-height">
     <div class="d-flex flex-row grey lighten-2 px-3">
       <h5 class="text-button black--text">Score</h5>
       <v-spacer></v-spacer>
@@ -32,6 +32,7 @@
             </v-list-item>
           </v-list>
         </v-menu>
+        <v-btn icon light @click="minimize()"><v-icon>mdi-minus</v-icon></v-btn>
       </div>
     </div>
     <v-progress-linear
@@ -88,7 +89,7 @@ import { OpenSheetMusicDisplay } from "opensheetmusicdisplay";
 
 import { Node } from "rete";
 import { LogLevel } from "~/models/log";
-import { logStore, osmdStore } from "~/store";
+import { logStore, osmdStore, settingsStore } from "~/store";
 import { reteStore } from "~/store/rete";
 import PlaybackEngine, {
   PlaybackEvent,
@@ -288,6 +289,12 @@ export default class OSMDPanel extends Vue {
     document.body.appendChild(downloadLink);
     downloadLink.click();
     document.body.removeChild(downloadLink);
+  }
+
+  minimize() {
+    const settings = JSON.parse(JSON.stringify(settingsStore.settings));
+    settings.view.score = false;
+    settingsStore.changeSettings(settings);
   }
 }
 </script>
