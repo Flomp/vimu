@@ -3,7 +3,8 @@ interface MenuItem {
     name: string;
     icon?: string;
     key?: string;
-    active?: boolean;
+    selected?: boolean;
+    disabled?: boolean;
     divider?: boolean;
     children?: MenuItem[];
 

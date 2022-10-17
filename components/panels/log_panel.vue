@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="fill-height">
     <div class="d-flex grey darken-4">
       <h5 class="text-button px-3">Log</h5>
       <v-spacer></v-spacer>
@@ -8,7 +8,7 @@
 
     <div
       style="
-        height: calc(100% - 72px);
+        height: calc(100% - 36px);
         overflow-y: scroll;
         background-color: #101010;
         display: flex;

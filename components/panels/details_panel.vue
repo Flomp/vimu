@@ -89,7 +89,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "nuxt-property-decorator";
-import { Node, Output } from "rete";
+import { Node } from "rete";
 import { LogLevel } from "~/models/log";
 import { logStore } from "~/store";
 import { reteStore } from "~/store/rete";

@@ -43,11 +43,11 @@
           v-else-if="item.children"
         />
         <template v-else>
-          <v-list-item :key="index" @click="menuClick(item)">
+          <v-list-item :key="index" @click="menuClick(item)" :disabled="item.disabled === true">
             <v-list-item-action v-if="item.icon">
               <v-icon>mdi-{{ item.icon }}</v-icon>
             </v-list-item-action>
-            <v-icon class="mr-4" size="16" v-if="item.active">mdi-check</v-icon>
+            <v-icon class="mr-4" size="16" v-if="item.selected">mdi-check</v-icon>
             <v-list-item-content>
               <v-list-item-title :class="{ 'ml-8': item.active === false }">
                 {{ item.name }}

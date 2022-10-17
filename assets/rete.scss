@@ -30,7 +30,12 @@ $connection-color: #656565;
   stroke: $connection-color  !important
 }
 
+
 .rete-background {
+  background: #363636
+}
+
+.pixel-grid {
   background:
     linear-gradient(-90deg, rgba(0, 0, 0, .1) 1px, transparent 1px),
     linear-gradient(rgba(0, 0, 0, .1) 1px, transparent 1px),

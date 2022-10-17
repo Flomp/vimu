@@ -12,18 +12,18 @@
         v-if="showFirstColumn"
       ></div>
       <div
-        class="d-flex flex-column pa-0"
+        class="pa-0"
         style="flex: 1 1 auto; min-width: 0; max-height: 100vh"
         v-if="showFirstColumn"
       >
-        <div id="score" style="flex: 1 1 66%" v-show="showScore">
+        <div id="score" style="height: 66%" v-show="showScore">
           <client-only>
             <OSMD-panel></OSMD-panel>
           </client-only>
         </div>
         <div id="score-handler" class="horizontal-handler"></div>
 
-        <div v-show="showLog" style="flex: 1 1 auto">
+        <div id="log" style="height: calc(34% - 4px)" v-show="showLog">
           <log-panel></log-panel>
         </div>
       </div>
@@ -90,6 +90,8 @@ export default class DefaultLayout extends Vue {
     const score = document.getElementById("score");
     var isScoreHandlerDragging = false;
 
+    const log = document.getElementById("log");
+
     document.addEventListener("mousedown", function (e) {
       if (e.target === editorHandler) {
         isEditorHandlerDragging = true;
@@ -108,9 +110,11 @@ export default class DefaultLayout extends Vue {
       } else if (isScoreHandlerDragging) {
         const scoreMinHeight = 128;
 
-        score!.style.height = Math.max(scoreMinHeight, e.clientY - 4) + "px";
-        score!.style.flexGrow = "0";
-        score!.style.flexBasis = "auto";
+        const scoreHeight = Math.max(scoreMinHeight, e.clientY - 4);
+        if (window.innerHeight - scoreMinHeight > scoreHeight) {
+          score!.style.height = scoreHeight + "px";
+          log!.style.height = window.innerHeight - scoreHeight -4 + "px";
+        }
       }
     });
 

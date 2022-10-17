@@ -25,7 +25,9 @@ import { MenuItem } from "~/components/palette/menu_item";
 import SubMenu from "~/components/palette/sub_menu.vue";
 import { Settings } from "~/models/settings";
 import { settingsStore } from "~/store";
-
+import { reteStore } from "~/store/rete";
+// @ts-ignore
+import { zoomAt } from "rete-area-plugin/src/zoom-at";
 @Component({
   components: {
     SubMenu,
@@ -37,20 +39,59 @@ export default class ViewMenu extends Vue {
   get items(): MenuItem[] {
     return [
       {
+        name: "Zoom to fit",
+        key: "view_zoom_to_fit",
+      },
+      {
+        name: "Zoom in",
+        key: "view_zoom_in",
+      },
+      {
+        name: "Zoom out",
+        key: "view_zoom_out",
+        divider: true,
+      },
+      {
+        name: "Pixel Grid",
+        key: "view_pixel_grid",
+        selected: settingsStore.settings.view.pixelGrid,
+      },
+      {
+        name: "Minimap",
+        key: "view_minimap",
+        selected: settingsStore.settings.view.minimap,
+        divider: true,
+      },
+      {
         name: "Score",
         key: "view_score",
-        active: settingsStore.settings.view.score,
+        selected: settingsStore.settings.view.score,
       },
       {
         name: "Log",
         key: "view_log",
-        active: settingsStore.settings.view.log,
+        selected: settingsStore.settings.view.log,
       },
     ];
   }
-  
-  handleClick(item: MenuItem) {
+
+  handleClick(item: MenuItem) {    
     switch (item.key) {
+      case "view_zoom_to_fit":
+        this.zoomToFit();
+        break;
+      case "view_zoom_in":
+        this.zoom(1);
+        break;
+      case "view_zoom_out":
+        this.zoom(-1);
+        break;
+      case "view_pixel_grid":
+        this.togglePixelGrid();
+        break;
+      case "view_minimap":
+        this.toggleMinimap();
+        break;
       case "view_score":
         this.toggleView("score");
         break;
@@ -60,6 +101,65 @@ export default class ViewMenu extends Vue {
     }
   }
 
+  zoomToFit() {
+    zoomAt(reteStore.editor)
+  }
+
+  zoom(direction: 1 | -1) {
+    if (!reteStore.editor) {
+      return;
+    }
+    const { area } = reteStore.editor.view;
+    const [w, h] = [
+      reteStore.editor.view.container.clientWidth,
+      reteStore.editor.view.container.clientHeight,
+    ];
+    var rect = area.el.getBoundingClientRect();
+    var delta = 0.3 * direction;
+    var ox = (rect.left - w / 2) * delta;
+    var oy = (rect.top - h / 2) * delta;
+
+    area.zoom(area.transform.k * (1 + delta), ox, oy, "wheel");
+  }
+
+  togglePixelGrid() {
+    const settings: Settings = JSON.parse(
+      JSON.stringify(settingsStore.settings)
+    );
+
+    const editor = document.getElementsByClassName(
+      "rete-background"
+    )[0] as HTMLElement;
+    if (editor.classList.contains("pixel-grid")) {
+      editor.classList.remove("pixel-grid");
+      settings.view.pixelGrid = false;
+    } else {
+      editor.classList.add("pixel-grid");
+      settings.view.pixelGrid = true;
+    }
+
+    settingsStore.changeSettings(settings);
+  }
+
+  toggleMinimap() {
+    const settings: Settings = JSON.parse(
+      JSON.stringify(settingsStore.settings)
+    );
+
+    const minimap = document.getElementsByClassName(
+      "minimap"
+    )[0] as HTMLElement;
+    if (minimap.style.display == "none") {
+      minimap.style.display = "block";
+      settings.view.minimap = true;
+    } else {
+      minimap.style.display = "none";
+      settings.view.minimap = false;
+    }
+
+    settingsStore.changeSettings(settings);
+  }
+
   toggleView(key: "score" | "log") {
     const settings: Settings = JSON.parse(
       JSON.stringify(settingsStore.settings)
@@ -67,8 +167,6 @@ export default class ViewMenu extends Vue {
     settings.view[key] = !settings.view[key];
 
     settingsStore.changeSettings(settings);
-
-    console.log(this.items[0]);
   }
 }
 </script>

@@ -27,6 +27,8 @@ import AreaPlugin from "rete-area-plugin";
 import ConnectionPlugin from "rete-connection-plugin";
 // @ts-ignore
 import MinimapPlugin from "rete-minimap-plugin";
+// @ts-ignore
+import HistoryPlugin from "rete-history-plugin";
 
 import Vuetify from "vuetify";
 import { MenuItem, editorMenuItems } from "~/components/palette/menu_item";
@@ -73,10 +75,9 @@ export default class IndexPage extends Vue {
     const editor = new Rete.NodeEditor("vimu@0.1.0", container!);
 
     const background = document.createElement("div");
-    background.classList.add("rete-background");
+    background.classList.add("pixel-grid");
 
-    editor.use(AreaPlugin, { background });
-    editor.use(MinimapPlugin);
+    editor.use(AreaPlugin, { background: background });
     editor.use(ConnectionPlugin);
     const VueRenderPlugin = require("rete-vue-render-plugin").default;
     editor.use(VueRenderPlugin, {
@@ -84,6 +85,8 @@ export default class IndexPage extends Vue {
         vuetify: new Vuetify(),
       },
     });
+    editor.use(MinimapPlugin);
+    editor.use(HistoryPlugin, { keyboard: true });
 
     const engine = new Rete.Engine("vimu@0.1.0");
 
@@ -93,7 +96,7 @@ export default class IndexPage extends Vue {
         // "nodecreated",
         // "noderemoved",
         "connectioncreated",
-        "connectionremoved",
+        //"connectionremoved",
       ],
       async () => {
         await engine.abort();
