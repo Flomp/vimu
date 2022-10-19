@@ -12,7 +12,7 @@
         v-if="showFirstColumn"
       ></div>
       <div
-        class="pa-0"
+        class="pa-0 mb-1"
         style="flex: 1 1 auto; min-width: 0; max-height: 100vh"
         v-if="showFirstColumn"
       >
@@ -108,12 +108,13 @@ export default class DefaultLayout extends Vue {
         editor!.style.flexGrow = "0";
         editor!.style.flexBasis = "auto";
       } else if (isScoreHandlerDragging) {
-        const scoreMinHeight = 128;
+        const scoreMinHeight = 20;
+        const scoreMaxHeight = 80;
 
-        const scoreHeight = Math.max(scoreMinHeight, e.clientY - 4);
-        if (window.innerHeight - scoreMinHeight > scoreHeight) {
-          score!.style.height = scoreHeight + "px";
-          log!.style.height = window.innerHeight - scoreHeight -4 + "px";
+        const scoreHeight = Math.floor(((e.clientY - 2)/window.innerHeight) * 100);
+        if (scoreHeight > scoreMinHeight && scoreHeight < scoreMaxHeight) {
+          score!.style.height = scoreHeight + "%";
+          log!.style.height = 100 - scoreHeight + "%";          
         }
       }
     });
