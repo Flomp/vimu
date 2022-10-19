@@ -1,27 +1,38 @@
 <template>
   <v-sheet class="main">
-    <main-menu></main-menu>
-    <v-progress-linear
-      indeterminate
-      v-if="apiLoading"
-      absolute
-      height="2"
-    ></v-progress-linear>
-    <div id="rete" @contextmenu="showContextMenu"></div>
-    <sub-menu
-      v-model="showMenu"
-      :absolute="true"
-      :positionX="x"
-      :positionY="y"
-      :items="menuItems"
-      @menu-click="createNode"
-    />
+    <div id="wrapper" class="d-flex fill-height ma-0" style="flex-wrap: nowrap">
+      <div id="editor" class="pa-0" style="flex: 1 1 50%">
+        <editor-panel></editor-panel>
+      </div>
+      <div id="editor-handler" class="vertical-handler" v-if="showFirstColumn"></div>
+      <div class="pa-0" style="flex: 1 1 auto; min-width: 0; max-height: calc(100vh - 4px)" v-if="showFirstColumn">
+        <div id="score" style="height: 72%" v-show="showScore">
+          <client-only>
+            <OSMD-panel></OSMD-panel>
+          </client-only>
+        </div>
+        <div id="score-handler" class="horizontal-handler"></div>
+
+        <div id="log" style="height: 28%" v-show="showLog">
+          <log-panel></log-panel>
+        </div>
+      </div>
+      <div class="pa-0" style="
+          z-index: 1;
+          background-color: #363636;
+          flex: 0 0 15%;
+          width: 15%;
+          max-width: 300px;
+        ">
+        <details-panel />
+      </div>
+    </div>
   </v-sheet>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from "nuxt-property-decorator";
-import Rete, { Component as rComponent } from "rete";
+import { Component, Provide, ProvideReactive, Vue } from "nuxt-property-decorator";
+import Rete, { NodeEditor } from "rete";
 // @ts-ignore
 import AreaPlugin from "rete-area-plugin";
 import ConnectionPlugin from "rete-connection-plugin";
@@ -31,43 +42,55 @@ import MinimapPlugin from "rete-minimap-plugin";
 import HistoryPlugin from "rete-history-plugin";
 
 import Vuetify from "vuetify";
-import { MenuItem, editorMenuItems } from "~/components/palette/menu_item";
-import SubMenu from "~/components/palette/sub_menu.vue";
-import AnalysisKeyComponent from "~/components/rete/components/analysis/analysis_key_component";
 import AnalysisAmbitusComponent from "~/components/rete/components/analysis/analysis_ambitus_component";
+import AnalysisKeyComponent from "~/components/rete/components/analysis/analysis_key_component";
 import AnalysisRomanNumeralComponent from "~/components/rete/components/analysis/analysis_roman_numeral_component";
+import SearchLyricsComponent from "~/components/rete/components/search/search_lyrics_component";
+import SearchPartComponent from "~/components/rete/components/search/search_part_component";
 import SelectMeasuresComponent from "~/components/rete/components/select/select_measures_component";
-import SelectPartComponent from "~/components/rete/components/select/select_part_component";
 import SelectNotesComponent from "~/components/rete/components/select/select_notes_component";
+import SelectPartComponent from "~/components/rete/components/select/select_part_component";
 import SourceCorpusComponent from "~/components/rete/components/source/source_corpus_component";
 import SourceTinynotationComponent from "~/components/rete/components/source/source_tinynotation_component";
 import TransformChordifyComponent from "~/components/rete/components/transform/transform_chordify_component";
 import TransformFlattenComponent from "~/components/rete/components/transform/transform_flatten_component";
 import TransformTransposeComponent from "~/components/rete/components/transform/transform_transpose_component";
-import SearchPartComponent from "~/components/rete/components/search/search_part_component";
-import SearchLyricsComponent from "~/components/rete/components/search/search_lyrics_component";
 
-import { LogLevel } from "~/models/log";
-import { apiStore, logStore, osmdStore } from "~/store";
-import { reteStore } from "~/store/rete";
-import MainMenu from "~/components/main_menu.vue";
+import DetailsPanel from "~/components/panels/details_panel.vue";
+import EditorPanel from "~/components/panels/editor_panel.vue";
+import LogPanel from "~/components/panels/log_panel.vue";
+import OSMDPanel from "~/components/panels/osmd_panel.vue";
+import { osmdStore, settingsStore } from "~/store";
+
+
 
 @Component({
   components: {
-    SubMenu,
-    MainMenu,
+    EditorPanel,
+    DetailsPanel,
+    OSMDPanel,
+    LogPanel
   },
 })
 export default class IndexPage extends Vue {
-  showMenu = false;
   x = 0;
   y = 0;
   editorX = 0;
   editorY = 0;
-  menuItems = editorMenuItems;
 
-  get apiLoading() {
-    return apiStore.loading;
+  @ProvideReactive()
+  editor: NodeEditor | null = null;
+
+  get showFirstColumn() {
+    return settingsStore.settings.view.score || settingsStore.settings.view.log;
+  }
+
+  get showScore() {
+    return settingsStore.settings.view.score;
+  }
+
+  get showLog() {
+    return settingsStore.settings.view.log;
   }
 
   async mounted() {
@@ -86,7 +109,7 @@ export default class IndexPage extends Vue {
       },
     });
     editor.use(MinimapPlugin);
-    editor.use(HistoryPlugin, { keyboard: true });
+    editor.use(HistoryPlugin, { keyboard: false });
 
     const engine = new Rete.Engine("vimu@0.1.0");
 
@@ -113,14 +136,6 @@ export default class IndexPage extends Vue {
       return source !== "dblclick";
     });
 
-    editor.on("mousemove", ({ x, y }) => {
-      this.editorX = x;
-      this.editorY = y;
-    });
-
-    reteStore.editor = editor;
-    reteStore.engine = engine;
-
     const components = [
       new SourceCorpusComponent(editor),
       new SourceTinynotationComponent(editor),
@@ -141,55 +156,89 @@ export default class IndexPage extends Vue {
       editor.register(component);
       engine.register(component);
     }
+
+    this.editor = editor;
+
+    this.handleDrag()
   }
 
-  showContextMenu(e: MouseEvent) {
-    e.preventDefault();
-    this.showMenu = false;
-    this.x = e.clientX;
-    this.y = e.clientY;
-    this.$nextTick(() => {
-      this.showMenu = true;
+  handleDrag() {
+    const editorHandler = document.getElementById("editor-handler");
+    const editor = document.getElementById("editor");
+    var isEditorHandlerDragging = false;
+
+    const scoreHandler = document.getElementById("score-handler");
+    const score = document.getElementById("score");
+    var isScoreHandlerDragging = false;
+
+    const log = document.getElementById("log");
+
+    document.addEventListener("mousedown", function (e) {
+      if (e.target === editorHandler) {
+        isEditorHandlerDragging = true;
+      } else if (e.target === scoreHandler) {
+        isScoreHandlerDragging = true;
+      }
     });
-  }
 
-  async createNode(item: MenuItem) {
-    if (!item.key || !reteStore.editor) {
-      return;
-    }
-    const node = await (
-      reteStore.editor?.components.get(item.key) as rComponent
-    ).createNode();
+    document.addEventListener("mousemove", function (e) {
+      if (isEditorHandlerDragging) {
+        const editorMinWidth = 276;
 
-    node.position = [this.editorX, this.editorY];
+        editor!.style.width = Math.max(editorMinWidth, e.clientX - 4) + "px";
+        editor!.style.flexGrow = "0";
+        editor!.style.flexBasis = "auto";
+      } else if (isScoreHandlerDragging) {
+        const scoreMinHeight = 20;
+        const scoreMaxHeight = 80;
 
-    reteStore.editor.addNode(node);
-
-    logStore.log({
-      level: LogLevel.info,
-      text: `Added new node ${item.key}`,
+        const scoreHeight = Math.floor(((e.clientY - 2) / window.innerHeight) * 100);
+        if (scoreHeight > scoreMinHeight && scoreHeight < scoreMaxHeight) {
+          score!.style.height = scoreHeight + "%";
+          log!.style.height = 100 - scoreHeight + "%";
+        }
+      }
     });
-  }
 
-  downloadJSON() {
-    const jsonData = JSON.stringify(reteStore.editor?.toJSON());
-    var jsonBlob = new Blob([jsonData], {
-      type: "text/xml;charset=utf-8",
+    document.addEventListener("mouseup", function (e) {
+      if (isEditorHandlerDragging) {
+        // Editor width changed -> rerender the score
+        osmdStore.setNeedsUpdate(true)
+      }
+      isEditorHandlerDragging = false;
+      isScoreHandlerDragging = false;
     });
-    var url = URL.createObjectURL(jsonBlob);
-    var downloadLink = document.createElement("a");
-    downloadLink.href = url;
-    const timestamp = new Date().getTime();
-    downloadLink.download = `vimu_export_${timestamp}.json`;
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
   }
 }
 </script>
-
 <style>
-#rete {
-  height: calc(100vh - 36px) !important;
+.vertical-handler {
+  width: 2px;
+  padding: 0;
+  cursor: ew-resize;
+  flex: 0 0 auto;
+}
+
+.vertical-handler::before {
+  content: "";
+  display: block;
+  width: 2px;
+  height: 100%;
+  margin: 0 auto;
+}
+
+.horizontal-handler {
+  height: 2px;
+  padding: 0;
+  cursor: ns-resize;
+  flex: 0 0 auto;
+}
+
+.horizontal-handler::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 2px;
+  margin: 0 auto;
 }
 </style>

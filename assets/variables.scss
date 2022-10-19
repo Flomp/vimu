@@ -3,7 +3,7 @@
 $font-family:'Inter';
 
 .v-application {
-  [class*='text-'] {
+  [class*='text-'] .title{
     font-family: $font-family, sans-serif !important;
   }
   font-family: $font-family, sans-serif !important;

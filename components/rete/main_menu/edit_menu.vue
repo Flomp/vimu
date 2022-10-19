@@ -1,30 +1,16 @@
 <template>
-  <sub-menu
-    v-model="open"
-    :items="items"
-    @menu-click="handleClick"
-    name="Edit"
-    :dense="true"
-  >
+  <sub-menu v-model="open" :items="items" @menu-click="handleClick" name="Edit" :dense="true">
     <template v-slot:activator="{ on, attrs }">
-      <v-btn
-        class="text-capitalize rounded-0"
-        elevation="0"
-        v-bind="attrs"
-        v-on="on"
-        text
-        >Edit</v-btn
-      >
+      <v-btn class="text-capitalize rounded-0" elevation="0" v-bind="attrs" v-on="on" text>Edit</v-btn>
     </template>
   </sub-menu>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "nuxt-property-decorator";
-import { Node } from "rete";
+import { Component, InjectReactive, Vue, Watch } from "nuxt-property-decorator";
+import { Node, NodeEditor } from "rete";
 import { MenuItem } from "~/components/palette/menu_item";
 import SubMenu from "~/components/palette/sub_menu.vue";
-import { reteStore } from "~/store/rete";
 
 @Component({
   components: {
@@ -32,11 +18,20 @@ import { reteStore } from "~/store/rete";
   },
 })
 export default class EditMenu extends Vue {
+  @InjectReactive()
+  editor!: NodeEditor;
+
   open: boolean = false;
   copiedNode: Node | undefined;
 
+  nodeCopied = false;
+
+  mounted() {
+    this.bindKeys();
+  }
+
   get selectedNode() {
-    return reteStore.editor?.selected.list[0];
+    return this.editor?.selected.list[0];
   }
 
   get items(): MenuItem[] {
@@ -44,33 +39,59 @@ export default class EditMenu extends Vue {
       {
         name: "Undo",
         key: "edit_undo",
+        keybinding: "⌘Z"
       },
       {
         name: "Redo",
         key: "edit_redo",
+        keybinding: "⌘⇧Z",
         divider: true,
       },
       {
         name: "Copy",
         key: "edit_copy",
-        disabled: false,
+        disabled: !this.selectedNode,
+        keybinding: "⌘C"
       },
       {
         name: "Paste",
         key: "edit_paste",
-        disabled: false,
+        disabled: !this.nodeCopied,
+        keybinding: "⌘V"
       },
       {
         name: "Duplicate",
         key: "edit_duplicate",
-        disabled: false,
+        disabled: !this.selectedNode,
       },
       {
         name: "Delete",
         key: "edit_delete",
-        disabled: false,
+        disabled: !this.selectedNode,
+        keybinding: "⌫"
       },
     ];
+  }
+
+  bindKeys() {
+    document.addEventListener('keydown', e => {
+      if (e.code == "Backspace") {
+        this.delete()
+      } else if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.repeat) {
+        switch (e.code) {
+          case 'KeyY': this.undo(); break;
+          case 'KeyC': this.copy(); break;
+          case 'KeyV': this.paste(); break;
+
+          default:
+        }
+      } else if ((e.ctrlKey || e.metaKey) && e.shiftKey && !e.repeat) {
+        switch (e.code) {
+          case 'KeyY': this.redo(); break;
+          default:
+        }
+      }
+    });
   }
 
   handleClick(item: MenuItem) {
@@ -97,41 +118,52 @@ export default class EditMenu extends Vue {
   }
 
   async copy() {
-    this.copiedNode = await this.copyNode(reteStore.editor?.selected.list[0]!);
+    if (!this.selectedNode) {
+      return;
+    }
+    this.copiedNode = await this.copyNode(this.selectedNode);
+
+    this.nodeCopied = true;
   }
 
   async paste() {
     if (!this.copiedNode) {
       return;
     }
-    const { container } = reteStore.editor!.view.area;
+    const { container } = this.editor!.view.area;
     const [hw, hh] = [container.clientWidth / 2, container.clientHeight / 2];
-    const { x, y, k } = reteStore.editor!.view.area.transform;
+    const { x, y, k } = this.editor!.view.area.transform;
 
     const center: [number, number] = [(hw - x) / k, (hh - y) / k];
-    this.copiedNode.position = center;
-    reteStore.editor?.addNode(this.copiedNode);
+
+    const pasteCopy = await this.copyNode(this.copiedNode);
+    pasteCopy.position = center;
+    this.editor?.addNode(pasteCopy);
   }
 
   undo() {
-    reteStore.editor?.trigger("undo" as any);
+    this.editor?.trigger("undo" as any);
   }
 
   redo() {
-    reteStore.editor?.trigger("redo" as any);
+    this.editor?.trigger("redo" as any);
   }
 
   async duplicate() {
+    if (!this.selectedNode) {
+      return;
+    }
     const copiedNode = await this.copyNode(this.selectedNode!);
     const [x, y] = copiedNode.position;
     copiedNode.position = [x + 10, y + 10];
-    reteStore.editor?.addNode(copiedNode);
+    this.editor?.addNode(copiedNode);
   }
 
   async copyNode(node: Node): Promise<Node> {
     const { name, ...params } = node;
-    const component = reteStore.editor?.components.get(name);
+    const component = this.editor?.components.get(name);
     const copiedNode = await this.createNode(component, params);
+
     return copiedNode;
   }
 
@@ -146,11 +178,15 @@ export default class EditMenu extends Vue {
   }
 
   delete() {
-    reteStore.editor?.removeNode(this.selectedNode!);
-    reteStore.editor?.selected.clear();
+    if (!this.selectedNode) {
+      return;
+    }
+    this.editor?.removeNode(this.selectedNode!);
+    this.editor?.selected.clear();
   }
 }
 </script>
 
 <style>
+
 </style>

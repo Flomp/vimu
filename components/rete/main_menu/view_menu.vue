@@ -1,31 +1,18 @@
 <template>
-  <sub-menu
-    v-model="open"
-    :items="items"
-    @menu-click="handleClick"
-    name="View"
-    :dense="true"
-  >
+  <sub-menu v-model="open" :items="items" @menu-click="handleClick" name="View" :dense="true">
     <template v-slot:activator="{ on, attrs }">
-      <v-btn
-        class="text-capitalize rounded-0"
-        elevation="0"
-        v-bind="attrs"
-        v-on="on"
-        text
-        >View</v-btn
-      >
+      <v-btn class="text-capitalize rounded-0" elevation="0" v-bind="attrs" v-on="on" text>View</v-btn>
     </template>
   </sub-menu>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "nuxt-property-decorator";
+import { Component, InjectReactive, Vue } from "nuxt-property-decorator";
+import { NodeEditor } from "rete";
 import { MenuItem } from "~/components/palette/menu_item";
 import SubMenu from "~/components/palette/sub_menu.vue";
 import { Settings } from "~/models/settings";
 import { settingsStore } from "~/store";
-import { reteStore } from "~/store/rete";
 // @ts-ignore
 import { zoomAt } from "rete-area-plugin/src/zoom-at";
 @Component({
@@ -34,14 +21,13 @@ import { zoomAt } from "rete-area-plugin/src/zoom-at";
   },
 })
 export default class ViewMenu extends Vue {
+  @InjectReactive()
+  editor!: NodeEditor;
+
   open: boolean = false;
 
   get items(): MenuItem[] {
     return [
-      {
-        name: "Zoom to fit",
-        key: "view_zoom_to_fit",
-      },
       {
         name: "Zoom in",
         key: "view_zoom_in",
@@ -49,6 +35,10 @@ export default class ViewMenu extends Vue {
       {
         name: "Zoom out",
         key: "view_zoom_out",
+      },
+      {
+        name: "Zoom to fit",
+        key: "view_zoom_to_fit",
         divider: true,
       },
       {
@@ -75,16 +65,16 @@ export default class ViewMenu extends Vue {
     ];
   }
 
-  handleClick(item: MenuItem) {    
+  handleClick(item: MenuItem) {
     switch (item.key) {
-      case "view_zoom_to_fit":
-        this.zoomToFit();
-        break;
       case "view_zoom_in":
         this.zoom(1);
         break;
       case "view_zoom_out":
         this.zoom(-1);
+        break;
+      case "view_zoom_to_fit":
+        this.zoomToFit();
         break;
       case "view_pixel_grid":
         this.togglePixelGrid();
@@ -101,18 +91,14 @@ export default class ViewMenu extends Vue {
     }
   }
 
-  zoomToFit() {
-    zoomAt(reteStore.editor)
-  }
-
   zoom(direction: 1 | -1) {
-    if (!reteStore.editor) {
+    if (!this.editor) {
       return;
     }
-    const { area } = reteStore.editor.view;
+    const { area } = this.editor.view;
     const [w, h] = [
-      reteStore.editor.view.container.clientWidth,
-      reteStore.editor.view.container.clientHeight,
+      this.editor.view.container.clientWidth,
+      this.editor.view.container.clientHeight,
     ];
     var rect = area.el.getBoundingClientRect();
     var delta = 0.3 * direction;
@@ -120,6 +106,10 @@ export default class ViewMenu extends Vue {
     var oy = (rect.top - h / 2) * delta;
 
     area.zoom(area.transform.k * (1 + delta), ox, oy, "wheel");
+  }
+
+  zoomToFit() {
+    zoomAt(this.editor)
   }
 
   togglePixelGrid() {
@@ -172,4 +162,5 @@ export default class ViewMenu extends Vue {
 </script>
 
 <style>
+
 </style>

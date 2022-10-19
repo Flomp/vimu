@@ -7,6 +7,7 @@ interface MenuItem {
     disabled?: boolean;
     divider?: boolean;
     children?: MenuItem[];
+    keybinding?: string
 
 }
 

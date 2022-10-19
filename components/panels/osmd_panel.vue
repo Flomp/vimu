@@ -84,23 +84,23 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from "nuxt-property-decorator";
+import { Component, InjectReactive, Vue, Watch } from "nuxt-property-decorator";
 import { OpenSheetMusicDisplay } from "opensheetmusicdisplay";
 
-import { Node } from "rete";
+import PlaybackEngine, {
+PlaybackEvent
+} from "osmd-audio-player/dist/PlaybackEngine";
+import { Node, NodeEditor } from "rete";
 import { LogLevel } from "~/models/log";
 import { logStore, osmdStore, settingsStore } from "~/store";
-import { reteStore } from "~/store/rete";
-import PlaybackEngine, {
-  PlaybackEvent,
-} from "osmd-audio-player/dist/PlaybackEngine";
 
 @Component({})
 export default class OSMDPanel extends Vue {
+  @InjectReactive()
+  editor!: NodeEditor;
+  
   osmd!: OpenSheetMusicDisplay;
   audioPlayer!: PlaybackEngine;
-
-  reteStore = reteStore;
 
   loading: boolean = false;
 
@@ -116,7 +116,7 @@ export default class OSMDPanel extends Vue {
   maxIterationStep = 0;
 
   get selectedNode(): Node | undefined {
-    return reteStore.editor?.selected.list[0];
+    return this.editor?.selected.list[0];
   }
 
   get needsUpdate(): boolean {

@@ -60,18 +60,18 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "nuxt-property-decorator";
-import { Node } from "rete";
+import { Component, InjectReactive, Vue } from "nuxt-property-decorator";
+import { Node, NodeEditor } from "rete";
 import { LogLevel } from "~/models/log";
 import { logStore } from "~/store";
-import { reteStore } from "~/store/rete";
 
 @Component({})
 export default class DetailsPanel extends Vue {
-  reteStore = reteStore;
+  @InjectReactive()
+  editor!: NodeEditor;
 
   get selectedNode(): Node | undefined {
-    return reteStore.editor?.selected.list[0];
+    return this.editor?.selected.list[0];
   }
 
   get nodeData(): any | undefined {
@@ -95,19 +95,19 @@ export default class DetailsPanel extends Vue {
   updateSelected() {
     this.selectedNode?.update();
     if (this.selectedNode) {
-      reteStore.editor!.selectNode(this.selectedNode);
+      this.editor!.selectNode(this.selectedNode);
     }
   }
 
   removeNode() {
-    if (this.selectedNode && reteStore.editor) {
+    if (this.selectedNode && this.editor) {
       logStore.log({
         level: LogLevel.info,
         text: `Removed node ${this.selectedNode.name}`,
       });
 
-      reteStore.editor?.removeNode(this.selectedNode);
-      reteStore.editor.selected.clear();
+      this.editor?.removeNode(this.selectedNode);
+      this.editor.selected.clear();
     }
   }
 

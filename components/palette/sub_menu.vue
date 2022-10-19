@@ -1,23 +1,9 @@
 <template>
-  <v-menu
-    :close-on-content-click="false"
-    :offset-x="isOffsetX"
-    :offset-y="isOffsetY"
-    :open-on-hover="isOpenOnHover"
-    :transition="transition"
-    :position-x="positionX"
-    :position-y="positionY"
-    :absolute="absolute"
-    v-model="menuOpened"
-    :content-class="removeForcedOffset ? 'menu-offset' : ''"
-  >
+  <v-menu :close-on-content-click="false" :offset-x="isOffsetX" :offset-y="isOffsetY" :open-on-hover="isOpenOnHover"
+    :transition="transition" :position-x="positionX" :position-y="positionY" :absolute="absolute" v-model="menuOpened"
+    :content-class="removeForcedOffset ? 'menu-offset' : ''">
     <template v-slot:activator="{ on, attrs }">
-      <v-list-item
-        class="d-flex justify-space-between"
-        v-on="on"
-        v-if="isSubMenu"
-        :dense="dense"
-      >
+      <v-list-item class="d-flex justify-space-between" v-on="on" v-if="isSubMenu" :dense="dense" link>
         <v-list-item-title>
           {{ name }}
         </v-list-item-title>
@@ -29,19 +15,8 @@
     </template>
     <v-list :dense="dense">
       <template v-for="(item, index) in items">
-        <v-divider :key="index" v-if="item.isDivider" />
-        <sub-menu
-          :is-offset-x="true"
-          :is-offset-y="false"
-          :is-open-on-hover="true"
-          :is-sub-menu="true"
-          :key="index"
-          :items="item.children"
-          :name="item.name"
-          :dense="dense"
-          @menu-click="menuClick"
-          v-else-if="item.children"
-        />
+        <sub-menu :is-offset-x="true" :is-offset-y="false" :is-open-on-hover="true" :is-sub-menu="true" :key="'m'+index"
+          :items="item.children" :name="item.name" :dense="dense" @menu-click="menuClick" v-if="item.children" />
         <template v-else>
           <v-list-item :key="index" @click="menuClick(item)" :disabled="item.disabled === true">
             <v-list-item-action v-if="item.icon">
@@ -49,10 +24,11 @@
             </v-list-item-action>
             <v-icon class="mr-4" size="16" v-if="item.selected">mdi-check</v-icon>
             <v-list-item-content>
-              <v-list-item-title :class="{ 'ml-8': item.active === false }">
-                {{ item.name }}
+              <v-list-item-title :class="{ 'ml-8': item.selected === false }">
+                <span>{{ item.name }}</span>
               </v-list-item-title>
             </v-list-item-content>
+            <kbd class="ml-8" v-if="item.keybinding">{{item.keybinding}}</kbd>
           </v-list-item>
           <v-divider v-if="item.divider" :key="'d' + index"></v-divider>
         </template>
