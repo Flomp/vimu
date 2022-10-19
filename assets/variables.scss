@@ -1,10 +1,7 @@
-@import url('https://fonts.googleapis.com/css? family=Inter:500&display=swap');
-
-$font-family:'Inter';
-
-.v-application {
-  [class*='text-'] .title{
-    font-family: $font-family, sans-serif !important;
-  }
-  font-family: $font-family, sans-serif !important;
+@font-face {
+  font-family: Inter;
+  src: url('~/assets/fonts/Inter.ttf');
 }
+
+$font-family: Inter;
+$body-font-family: Inter;

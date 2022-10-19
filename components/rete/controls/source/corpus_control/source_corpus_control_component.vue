@@ -5,8 +5,7 @@
       v-model="value"
       :items="items"
       @input="change($event)"
-      dark
-      solo
+      outlined
       style="max-width: 200px"
     ></v-select>
   </div>

@@ -4,8 +4,7 @@
     v-model="text"
     @input="onType"
     hide-details
-    dark
-    solo
+    outlined
     style="max-width: 200px"
   ></v-text-field>
 </template>

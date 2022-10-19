@@ -1,6 +1,6 @@
 <template>
   <div class="fill-height">
-    <div class="d-flex grey darken-4">
+    <div class="d-flex grey lighten-2">
       <h5 class="text-button px-3">Log</h5>
       <v-spacer></v-spacer>
       <v-btn icon @click="minimize()"><v-icon>mdi-minus</v-icon></v-btn>
@@ -10,7 +10,7 @@
       style="
         height: calc(100% - 36px);
         overflow-y: scroll;
-        background-color: #101010;
+        background-color: #ffffff;
         display: flex;
         flex-direction: column-reverse;
       "

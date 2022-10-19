@@ -1,38 +1,79 @@
-$node-color: #353535;
-$node-color-selected: #282828;
-$node-color-selected-border: #2962FF;
-$node-color-hover: #474747;
+$node-color: #ffffff;
+$node-text-color: #000000;
+$node-color-border: #bfbfbf;
 
-$socket-color: #2962FF;
 
-$connection-color: #656565;
+$node-color-selected: #ffffff;
+$node-color-selected-border: #000000;
+$node-color-hover: #f7f7f7;
+
+$node-title-color: #000000;
+
+$socket-color: #ffffff;
+$socket-border-color: #000000;
+
+$connection-color: #000000;
+
+$minimap-color: rgb(0, 0, 0, 0.1);
+$minimap-border-color: #cbcbcb;
+$minimap-node-color: rgb(0, 0, 0, 0.6);
+$minimap-viewport-color: rgb(0, 0, 0, 0.25);
+$minimap-viewport-border-color: #696969;
 
 .node {
-  background: $node-color  !important;
-  border: 1px solid black !important;
+  background: $node-color !important;
+  color: $node-text-color !important;
+  border: 3px solid $node-color-border !important;
 
   &:hover {
-    background: $node-color-hover  !important;
+    background: $node-color-hover !important;
   }
 
   &.selected {
-    background: $node-color-selected  !important;
-    border-color: $node-color-selected-border  !important;
+    background: $node-color-selected !important;
+    border-color: $node-color-selected-border !important;
   }
+}
 
+.node .title {
+  color: $node-text-color !important
+}
+
+.node .output-title {
+  color: $node-text-color !important
+}
+
+.node .input-title {
+  color: $node-text-color !important
 }
 
 .socket {
-  background: $socket-color  !important;
+  background: $socket-color !important;
+  border-color: $socket-border-color !important
 }
 
 .connection path {
-  stroke: $connection-color  !important
+  stroke: $connection-color !important
+}
+
+.minimap {
+  background: $minimap-color !important;
+  border-color: $minimap-border-color !important;
+}
+
+.minimap .mini-node {
+  background: $minimap-node-color !important;
+}
+
+.minimap .mini-viewport {
+  background: $minimap-viewport-color !important;
+  border-color: $minimap-viewport-border-color !important;
+
 }
 
 
 .rete-background {
-  background: #363636
+  background: #ffffff
 }
 
 .pixel-grid {
@@ -41,11 +82,11 @@ $connection-color: #656565;
     linear-gradient(rgba(0, 0, 0, .1) 1px, transparent 1px),
     linear-gradient(-90deg, rgba(0, 0, 0, .09) 1px, transparent 1px),
     linear-gradient(rgba(0, 0, 0, .09) 1px, transparent 1px),
-    linear-gradient(transparent 3px, #363636 3px, #363636 78px, transparent 78px),
+    linear-gradient(transparent 3px, #ffffff 3px, #ffffff 78px, transparent 78px),
     linear-gradient(-90deg, rgb(85, 85, 85) 1px, transparent 1px),
-    linear-gradient(-90deg, transparent 3px, #363636 3px, #363636 78px, transparent 78px),
+    linear-gradient(-90deg, transparent 3px, #ffffff 3px, #ffffff 78px, transparent 78px),
     linear-gradient(rgb(85, 85, 85) 1px, transparent 1px),
-    #363636;
+    #ffffff;
   background-size:
     40px 40px,
     40px 40px,

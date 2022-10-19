@@ -1,25 +1,15 @@
 <template>
-  <div class="fill-height">
+  <div class="fill-height" style="position: relative;">
     <div class="d-flex flex-row grey lighten-2 px-3">
       <h5 class="text-button black--text">Score</h5>
       <v-spacer></v-spacer>
       <div>
-        <v-btn
-          @click="playOrPause"
-          :disabled="playDisabled || showNothingSelected"
-          light
-          icon
-          ><v-icon>{{ playIcon }}</v-icon></v-btn
-        >
+        <v-btn @click="playOrPause" :disabled="playDisabled || showNothingSelected" light icon>
+          <v-icon>{{ playIcon }}</v-icon>
+        </v-btn>
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              v-bind="attrs"
-              v-on="on"
-              :disabled="downloadDisabled || showNothingSelected"
-              light
-              icon
-            >
+            <v-btn v-bind="attrs" v-on="on" :disabled="downloadDisabled || showNothingSelected" light icon>
               <v-icon>mdi-download</v-icon>
             </v-btn>
           </template>
@@ -32,42 +22,22 @@
             </v-list-item>
           </v-list>
         </v-menu>
-        <v-btn icon light @click="minimize()"><v-icon>mdi-minus</v-icon></v-btn>
+        <v-btn icon light @click="minimize()">
+          <v-icon>mdi-minus</v-icon>
+        </v-btn>
       </div>
     </div>
-    <v-progress-linear
-      absolute
-      indeterminate
-      color="black"
-      height="1"
-      v-if="loading"
-    ></v-progress-linear>
-    <v-slider
-      class="ma-0"
-      v-model="currentIterationStep"
-      :max="maxIterationStep"
-      light
-      hide-details
-      v-else-if="!playDisabled && !showNothingSelected"
-      color="black"
-      background-color="transparent"
-      track-color="grey"
-      height="1"
-      style="width: 100%; z-index: 1; top: 34px"
-      @input="skip"
-    ></v-slider>
+    <v-progress-linear absolute indeterminate color="black" height="2" v-if="loading"></v-progress-linear>
+    <v-slider class="ma-0" v-model="currentIterationStep" :max="maxIterationStep" light hide-details
+      v-else-if="!playDisabled && !showNothingSelected" color="black" background-color="transparent" track-color="grey"
+      height="1" style="width: 100%; z-index: 1; top: 34px" @input="skip"></v-slider>
 
-    <div
-      style="
-        height: calc(100% - 36px);
+    <div style="height: calc(100% - 36px);
         overflow-y: scroll;
         background-color: white;
-      "
-    >
+      ">
       <div :class="{ 'd-none': showNothingSelected }" id="osmdContainer"></div>
-      <div
-        v-if="showNothingSelected"
-        class="
+      <div v-if="showNothingSelected" class="
           grey--text
           fill-height
           d-flex
@@ -75,8 +45,7 @@
           justify-center
           align-center
           text-overline
-        "
-      >
+        ">
         <span>No Data</span>
       </div>
     </div>
@@ -88,7 +57,7 @@ import { Component, InjectReactive, Vue, Watch } from "nuxt-property-decorator";
 import { OpenSheetMusicDisplay } from "opensheetmusicdisplay";
 
 import PlaybackEngine, {
-PlaybackEvent
+  PlaybackEvent
 } from "osmd-audio-player/dist/PlaybackEngine";
 import { Node, NodeEditor } from "rete";
 import { LogLevel } from "~/models/log";
@@ -98,7 +67,7 @@ import { logStore, osmdStore, settingsStore } from "~/store";
 export default class OSMDPanel extends Vue {
   @InjectReactive()
   editor!: NodeEditor;
-  
+
   osmd!: OpenSheetMusicDisplay;
   audioPlayer!: PlaybackEngine;
 
@@ -195,7 +164,7 @@ export default class OSMDPanel extends Vue {
       this.playDisabled = true;
       try {
         this.osmd.clear();
-      } catch (e: any) {}
+      } catch (e: any) { }
     }
   }
 

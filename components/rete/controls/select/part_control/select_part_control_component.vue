@@ -3,7 +3,6 @@
     label="Part"
     v-model="part"
     @input="change"
-    dark
     type="number"
     :rules="[numberRule]"
   ></v-text-field>

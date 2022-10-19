@@ -7,7 +7,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "nuxt-property-decorator";
 import { NodeEditor } from "rete";
-import TimerTextField from "~/components/TimerTextField.vue";
+import TimerTextField from "~/components/timer_text_field.vue";
 
 @Component({
   components: {

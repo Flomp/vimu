@@ -42,6 +42,10 @@ export default class ViewMenu extends Vue {
         divider: true,
       },
       {
+        name: "Arrange Nodes",
+        key: "view_arrange_nodes",
+      },
+      {
         name: "Pixel Grid",
         key: "view_pixel_grid",
         selected: settingsStore.settings.view.pixelGrid,
@@ -75,6 +79,9 @@ export default class ViewMenu extends Vue {
         break;
       case "view_zoom_to_fit":
         this.zoomToFit();
+        break;
+      case "view_arrange_nodes":
+        this.arrangeNodes();
         break;
       case "view_pixel_grid":
         this.togglePixelGrid();
@@ -157,6 +164,10 @@ export default class ViewMenu extends Vue {
     settings.view[key] = !settings.view[key];
 
     settingsStore.changeSettings(settings);
+  }
+
+  arrangeNodes() {
+    this.editor.trigger('arrange' as any);
   }
 }
 </script>

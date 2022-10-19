@@ -1,23 +1,21 @@
 <template>
   <div class="d-flex align-center mt-2">
     <span>Color:</span>
-    <v-menu offset-x :close-on-content-click="false" @input="onClose">
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn :color="circleColor" dark v-bind="attrs" v-on="on" icon
-          ><v-icon>mdi-circle</v-icon></v-btn
-        >
-      </template>
-      <v-color-picker v-model="color" hide-inputs></v-color-picker>
-    </v-menu>
+    <menu-color-picker v-model="color" @update="update"></menu-color-picker>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "nuxt-property-decorator";
 import { NodeEditor } from "rete";
-import { rgbToHex, isSameColor } from "~/utils/color_util";
+import MenuColorPicker from "~/components/rete/menu_color_picker.vue";
 
-@Component({})
+
+@Component({
+  components: {
+    MenuColorPicker
+  }
+})
 export default class SearchControlComponent extends Vue {
   @Prop() readonly!: boolean;
   @Prop() emitter!: NodeEditor;
@@ -25,32 +23,14 @@ export default class SearchControlComponent extends Vue {
   @Prop() getData!: Function;
   @Prop() putData!: Function;
 
-  color: { r: number; g: number; b: number } = { r: 255, g: 0, b: 0 };
-  previousColor: { r: number; g: number; b: number } = { r: 255, g: 0, b: 0 };
+  color: string = "#ff0000";
 
-  get circleColor() {
-    return rgbToHex(this.color);
-  }
 
-  mounted() {
-    this.putData("color", this.circleColor);
-  }
-  
   update() {
     if (this.ikey) {
-      this.putData("color", this.circleColor);
+      this.putData("color", this.color);
     }
     this.emitter.trigger("process");
-  }
-
-  onClose(open: boolean) {
-    if (open) {
-      this.previousColor = this.color;
-    } else {
-      if (!isSameColor(this.color, this.previousColor)) {
-        this.update();
-      }
-    }
   }
 }
 </script>
@@ -58,4 +38,5 @@ export default class SearchControlComponent extends Vue {
 
 
 <style scoped>
+
 </style>

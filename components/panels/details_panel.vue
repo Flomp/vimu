@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="d-flex justify-space-between grey darken-4">
+    <div class="d-flex justify-space-between grey lighten-2">
       <h5 class="text-button px-3">Details</h5>
       <v-btn icon @click="removeNode()" v-if="selectedNode">
         <v-icon size="20">mdi-delete</v-icon>
@@ -11,7 +11,7 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="text-h6 mb-2"> Name </v-list-item-title>
-          <v-text-field v-model="selectedNode.name" solo hide-details @input="updateSelected()"></v-text-field>
+          <v-text-field v-model="selectedNode.name" outlined hide-details @input="updateSelected()"></v-text-field>
         </v-list-item-content>
       </v-list-item>
 
@@ -41,7 +41,7 @@
 
         <v-list-item v-for="(o, i) in inputs" :key="o.key">
           <v-list-item-avatar> {{ i + 1 }}. </v-list-item-avatar>
-          <v-text-field label="Name" v-model="o.name" solo dense hide-details @input="updateSelected()"></v-text-field>
+          <v-text-field label="Name" v-model="o.name" outlined dense hide-details @input="updateSelected()"></v-text-field>
         </v-list-item>
       </template>
 
@@ -53,7 +53,7 @@
 
       <v-list-item v-for="(o, i) in outputs" :key="o.key">
         <v-list-item-avatar> {{ i + 1 }}. </v-list-item-avatar>
-        <v-text-field label="Name" v-model="o.name" solo dense hide-details @input="updateSelected()"></v-text-field>
+        <v-text-field label="Name" v-model="o.name" outlined dense hide-details @input="updateSelected()"></v-text-field>
       </v-list-item>
     </div>
   </div>
@@ -123,12 +123,11 @@ export default class DetailsPanel extends Vue {
 </script>
 
 <style>
-code[class*="language-"],
-pre[class*="language-"] {
-  color: #f8f8f2;
+code[class*=language-],
+pre[class*=language-] {
+  color: #000;
   background: 0 0;
-  text-shadow: 0 1px rgba(0, 0, 0, 0.3);
-  font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
   font-size: 1em;
   text-align: left;
   white-space: pre;
@@ -142,99 +141,195 @@ pre[class*="language-"] {
   -webkit-hyphens: none;
   -moz-hyphens: none;
   -ms-hyphens: none;
-  hyphens: none;
+  hyphens: none
 }
 
-pre[class*="language-"] {
-  padding: 1em;
-  margin: 0.5em 0;
-  overflow: auto;
-  border-radius: 0.3em;
+pre[class*=language-] {
+  position: relative;
+  margin: .5em 0;
+  overflow: visible;
+  padding: 1px
 }
 
-:not(pre)>code[class*="language-"],
-pre[class*="language-"] {
-  background: #272822;
+pre[class*=language-]>code {
+  position: relative;
+  z-index: 1;
+  border-left: 10px solid #358ccb;
+  box-shadow: -1px 0 0 0 #358ccb, 0 0 0 1px #dfdfdf;
+  background-color: #fdfdfd;
+  background-image: linear-gradient(transparent 50%, rgba(69, 142, 209, .04) 50%);
+  background-size: 3em 3em;
+  background-origin: content-box;
+  background-attachment: local
 }
 
-:not(pre)>code[class*="language-"] {
-  padding: 0.1em;
-  border-radius: 0.3em;
-  white-space: normal;
+code[class*=language-] {
+  max-height: inherit;
+  height: inherit;
+  padding: 0 1em;
+  display: block;
+  overflow: auto
 }
 
+:not(pre)>code[class*=language-],
+pre[class*=language-] {
+  background-color: #fdfdfd;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin-bottom: 1em
+}
+
+:not(pre)>code[class*=language-] {
+  position: relative;
+  padding: .2em;
+  border-radius: .3em;
+  color: #c92c2c;
+  border: 1px solid rgba(0, 0, 0, .1);
+  display: inline;
+  white-space: normal
+}
+
+pre[class*=language-]:after,
+pre[class*=language-]:before {
+  content: '';
+  display: block;
+  position: absolute;
+  bottom: .75em;
+  left: .18em;
+  width: 40%;
+  height: 20%;
+  max-height: 13em;
+  box-shadow: 0 13px 8px #979797;
+  -webkit-transform: rotate(-2deg);
+  -moz-transform: rotate(-2deg);
+  -ms-transform: rotate(-2deg);
+  -o-transform: rotate(-2deg);
+  transform: rotate(-2deg)
+}
+
+pre[class*=language-]:after {
+  right: .75em;
+  left: auto;
+  -webkit-transform: rotate(2deg);
+  -moz-transform: rotate(2deg);
+  -ms-transform: rotate(2deg);
+  -o-transform: rotate(2deg);
+  transform: rotate(2deg)
+}
+
+.token.block-comment,
 .token.cdata,
 .token.comment,
 .token.doctype,
 .token.prolog {
-  color: #8292a2;
+  color: #7d8b99
 }
 
 .token.punctuation {
-  color: #f8f8f2;
-}
-
-.token.namespace {
-  opacity: 0.7;
-}
-
-.token.constant,
-.token.deleted,
-.token.property,
-.token.symbol,
-.token.tag {
-  color: #f92672;
+  color: #5f6364
 }
 
 .token.boolean,
-.token.number {
-  color: #ae81ff;
+.token.constant,
+.token.deleted,
+.token.function-name,
+.token.number,
+.token.property,
+.token.symbol,
+.token.tag {
+  color: #c92c2c
 }
 
 .token.attr-name,
 .token.builtin,
 .token.char,
+.token.function,
 .token.inserted,
 .token.selector,
 .token.string {
-  color: #a6e22e;
+  color: #2f9c0a
 }
 
-.language-css .token.string,
-.style .token.string,
 .token.entity,
 .token.operator,
 .token.url,
 .token.variable {
-  color: #f8f8f2;
+  color: #a67f59;
+  background: rgba(255, 255, 255, .5)
 }
 
 .token.atrule,
 .token.attr-value,
 .token.class-name,
-.token.function {
-  color: #e6db74;
-}
-
 .token.keyword {
-  color: #66d9ef;
+  color: #1990b8
 }
 
 .token.important,
 .token.regex {
-  color: #fd971f;
+  color: #e90
 }
 
-.token.bold,
+.language-css .token.string,
+.style .token.string {
+  color: #a67f59;
+  background: rgba(255, 255, 255, .5)
+}
+
 .token.important {
-  font-weight: 700;
+  font-weight: 400
+}
+
+.token.bold {
+  font-weight: 700
 }
 
 .token.italic {
-  font-style: italic;
+  font-style: italic
 }
 
 .token.entity {
-  cursor: help;
+  cursor: help
+}
+
+.token.namespace {
+  opacity: .7
+}
+
+@media screen and (max-width:767px) {
+
+  pre[class*=language-]:after,
+  pre[class*=language-]:before {
+    bottom: 14px;
+    box-shadow: none
+  }
+}
+
+pre[class*=language-].line-numbers.line-numbers {
+  padding-left: 0
+}
+
+pre[class*=language-].line-numbers.line-numbers code {
+  padding-left: 3.8em
+}
+
+pre[class*=language-].line-numbers.line-numbers .line-numbers-rows {
+  left: 0
+}
+
+pre[class*=language-][data-line] {
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 0
+}
+
+pre[data-line] code {
+  position: relative;
+  padding-left: 4em
+}
+
+pre .line-highlight {
+  margin-top: 0
 }
 </style>

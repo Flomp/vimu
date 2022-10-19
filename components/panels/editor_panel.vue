@@ -1,7 +1,13 @@
 <template>
     <div style="position: relative;">
         <main-menu></main-menu>
-        <v-progress-linear indeterminate v-if="apiLoading" absolute height="2"></v-progress-linear>
+        <v-progress-linear
+      absolute
+      indeterminate
+      color="black"
+      height="2"
+      v-if="apiLoading"
+    ></v-progress-linear>
         <div id="rete" @contextmenu="showContextMenu"></div>
         <sub-menu v-model="showMenu" :absolute="true" :positionX="x" :positionY="y" :items="menuItems"
             @menu-click="createNode" />

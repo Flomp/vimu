@@ -5,7 +5,6 @@
         label="Start"
         v-model="measures[0]"
         @input="change"
-        dark
         type="number"
         :rules="[numberRule]"
       ></v-text-field>
@@ -15,7 +14,6 @@
         label="End"
         v-model="measures[1]"
         @input="change"
-        dark
         type="number"
         :rules="[numberRule]"
       ></v-text-field>

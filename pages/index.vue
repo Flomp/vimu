@@ -4,8 +4,9 @@
       <div id="editor" class="pa-0" style="flex: 1 1 50%">
         <editor-panel></editor-panel>
       </div>
-      <div id="editor-handler" class="vertical-handler" v-if="showFirstColumn"></div>
-      <div class="pa-0" style="flex: 1 1 auto; min-width: 0; max-height: calc(100vh - 4px)" v-if="showFirstColumn">
+      <div id="editor-handler" class="vertical-handler" v-if="showFirstColumn" style="background-color: lightgrey;">
+      </div>
+      <div class="pa-0" style="flex: 1 1 auto; min-width: 0; max-height: calc(100vh - 4px);" v-if="showFirstColumn">
         <div id="score" style="height: 72%" v-show="showScore">
           <client-only>
             <OSMD-panel></OSMD-panel>
@@ -19,7 +20,8 @@
       </div>
       <div class="pa-0" style="
           z-index: 1;
-          background-color: #363636;
+          background-color: #ffffff;
+          border-left: 2px solid lightgrey
           flex: 0 0 15%;
           width: 15%;
           max-width: 300px;
@@ -40,6 +42,8 @@ import ConnectionPlugin from "rete-connection-plugin";
 import MinimapPlugin from "rete-minimap-plugin";
 // @ts-ignore
 import HistoryPlugin from "rete-history-plugin";
+// @ts-ignore
+import AutoArrangePlugin from 'rete-auto-arrange-plugin';
 
 import Vuetify from "vuetify";
 import AnalysisAmbitusComponent from "~/components/rete/components/analysis/analysis_ambitus_component";
@@ -110,6 +114,11 @@ export default class IndexPage extends Vue {
     });
     editor.use(MinimapPlugin);
     editor.use(HistoryPlugin, { keyboard: false });
+    const [w, h] = [
+      editor.view.container.clientWidth,
+      editor.view.container.clientHeight,
+    ];
+    editor.use(AutoArrangePlugin, {offset: {x: w/2, y: h/2} });
 
     const engine = new Rete.Engine("vimu@0.1.0");
 

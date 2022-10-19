@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-row absolute">
+  <div class="d-flex flex-row absolute grey lighten-2">
     <file-menu></file-menu>
     <edit-menu></edit-menu>
     <view-menu></view-menu>
@@ -20,8 +20,9 @@ import ViewMenu from "./rete/main_menu/view_menu.vue";
     ViewMenu,
   },
 })
-export default class MainMenu extends Vue {}
+export default class MainMenu extends Vue { }
 </script>
 
 <style scoped>
+
 </style>
