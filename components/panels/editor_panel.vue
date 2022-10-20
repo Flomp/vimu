@@ -1,13 +1,7 @@
 <template>
     <div style="position: relative;">
         <main-menu></main-menu>
-        <v-progress-linear
-      absolute
-      indeterminate
-      color="black"
-      height="2"
-      v-if="apiLoading"
-    ></v-progress-linear>
+        <v-progress-linear absolute indeterminate color="black" height="2" v-if="apiLoading"></v-progress-linear>
         <div id="rete" @contextmenu="showContextMenu"></div>
         <sub-menu v-model="showMenu" :absolute="true" :positionX="x" :positionY="y" :items="menuItems"
             @menu-click="createNode" />
@@ -60,6 +54,10 @@ export default class EditorPanel extends Vue {
 
     bindKeys() {
         document.addEventListener('keydown', e => {
+            const activeElement = document.activeElement as HTMLInputElement;
+            if (activeElement?.tagName == "INPUT" && activeElement.type == "text") {
+                return;
+            }
             if (e.code === "Space") {
                 this.x = this.editorX + 2;
                 this.y = this.editorY + 30;

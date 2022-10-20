@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-row absolute grey lighten-2">
+  <div class="d-flex flex-row align-center grey lighten-2">
     <file-menu></file-menu>
     <edit-menu></edit-menu>
     <view-menu></view-menu>

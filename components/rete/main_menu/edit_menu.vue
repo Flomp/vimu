@@ -75,6 +75,10 @@ export default class EditMenu extends Vue {
 
   bindKeys() {
     document.addEventListener('keydown', e => {
+      const activeElement = document.activeElement as HTMLInputElement;   
+      if(activeElement?.tagName == "INPUT" && activeElement.type == "text") {
+        return;
+      }
       if (e.code == "Backspace") {
         this.delete()
       } else if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.repeat) {
@@ -177,7 +181,7 @@ export default class EditMenu extends Vue {
     return node;
   }
 
-  delete() {
+  delete() {    
     if (!this.selectedNode) {
       return;
     }

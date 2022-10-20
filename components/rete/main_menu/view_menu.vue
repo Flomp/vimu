@@ -9,7 +9,7 @@
 <script lang="ts">
 import { Component, InjectReactive, Vue } from "nuxt-property-decorator";
 import { NodeEditor } from "rete";
-import { MenuItem } from "~/components/palette/menu_item";
+import { editorMenuItems, MenuItem } from "~/components/palette/menu_item";
 import SubMenu from "~/components/palette/sub_menu.vue";
 import { Settings } from "~/models/settings";
 import { settingsStore } from "~/store";
@@ -167,7 +167,10 @@ export default class ViewMenu extends Vue {
   }
 
   arrangeNodes() {
-    this.editor.trigger('arrange' as any);
+    if (this.editor.nodes.length) {
+      this.editor.trigger('arrange' as any);
+
+    }
   }
 }
 </script>

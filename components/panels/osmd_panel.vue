@@ -169,7 +169,7 @@ export default class OSMDPanel extends Vue {
   }
 
   async loadScore(node: Node) {
-    if (!this.osmd || !node.data?.xml) {
+    if (!this.osmd || !node?.data?.xml) {
       return;
     }
 

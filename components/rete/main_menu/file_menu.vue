@@ -5,6 +5,7 @@
     @menu-click="handleClick"
     name="File"
     :dense="true"
+    :removeForcedOffset="true"
   >
     <template v-slot:activator="{ on, attrs }">
       <v-btn
