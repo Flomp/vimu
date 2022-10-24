@@ -4,7 +4,7 @@
       <div id="editor" class="pa-0">
         <editor-panel></editor-panel>
       </div>
-      <div class="vertical-dragbar" v-if="showFirstColumn" @mousedown="startLeftDrag"></div>
+      <div class="vertical-dragbar" @mousedown="startLeftDrag"></div>
       <div id="score" v-show="showScore">
         <client-only>
           <OSMD-panel></OSMD-panel>
@@ -12,7 +12,7 @@
       </div>
       <div id="logDragbar" class="horizontal-dragbar" v-show="showScore && showLog" @mousedown="startUpperDrag"></div>
 
-      <div class="vertical-dragbar" @mousedown="startRightDrag"></div>
+      <div class="vertical-dragbar" v-if="showFirstColumn"  @mousedown="startRightDrag"></div>
 
       <div id="log" v-show="showLog">
         <log-panel></log-panel>
@@ -51,12 +51,13 @@ import SourceTinynotationComponent from "~/components/rete/components/source/sou
 import TransformChordifyComponent from "~/components/rete/components/transform/transform_chordify_component";
 import TransformFlattenComponent from "~/components/rete/components/transform/transform_flatten_component";
 import TransformTransposeComponent from "~/components/rete/components/transform/transform_transpose_component";
+import OutputComponent from "~/components/rete/components/output/output_component";
 
 import DetailsPanel from "~/components/panels/details_panel.vue";
 import EditorPanel from "~/components/panels/editor_panel.vue";
 import LogPanel from "~/components/panels/log_panel.vue";
 import OSMDPanel from "~/components/panels/osmd_panel.vue";
-import { osmdStore, settingsStore } from "~/store";
+import { engineStore, osmdStore, settingsStore } from "~/store";
 
 @Component({
   components: {
@@ -97,17 +98,24 @@ export default class Editor extends Vue {
     let bottomcol = document.getElementById("score");
     bottomcol!.style.gridRow = value ? "1/2" : "1/4";
     bottomcol!.style.gridColumn = "3/4";
+  }
+
+  @Watch("showFirstColumn")
+  onShowFirstColumnChange(value: boolean) {
+    let editorcol = document.getElementById("editor");
+    editorcol!.style.gridColumn = value ? "1/2" : "1/4";
 
   }
 
+
   async mounted() {
-    this.initEditor()
+    await this.initEditor()
 
     let page = document.getElementById("panel-grid");
 
     const initialTopHeight = 0.7
     let rows = [
-      page!.clientHeight * initialTopHeight + 34,
+      page!.clientHeight * initialTopHeight-2,
       2,
       page!.clientHeight * (1 - initialTopHeight),
     ];
@@ -117,7 +125,7 @@ export default class Editor extends Vue {
 
   }
 
-  initEditor() {
+  async initEditor() {
     const container = document.querySelector<HTMLElement>("#rete");
     const editor = new Rete.NodeEditor("vimu@0.1.0", container!);
 
@@ -148,22 +156,25 @@ export default class Editor extends Vue {
         // "nodecreated",
         // "noderemoved",
         "connectioncreated",
-        //"connectionremoved",
+        "connectionremoved",
       ],
       async () => {
-        await engine.abort();
-        await engine.process(editor.toJSON());
-        if (editor.selected.list.length) {
-          editor.selectNode(editor.selected.list[0]);
+        engineStore.setLoading(true);
+        try {
+          console.log(JSON.stringify(editor.toJSON()));
+          
+          await engineStore.process(editor.toJSON());
+        } finally {
+          engineStore.setLoading(false);
         }
-
-        osmdStore.setNeedsUpdate(true);
       }
     );
 
     editor.on("zoom", ({ source }) => {
       return source !== "dblclick";
     });
+
+    const out = new OutputComponent(editor);
 
     const components = [
       new SourceCorpusComponent(editor),
@@ -179,12 +190,18 @@ export default class Editor extends Vue {
       new TransformFlattenComponent(editor),
       new SearchPartComponent(editor),
       new SearchLyricsComponent(editor),
+      out
+
     ];
 
     for (const component of components) {
       editor.register(component);
       engine.register(component);
     }
+
+    const outputNode = await out.createNode();
+    outputNode.position = [w - 2 * 108, h / 2];
+    editor.addNode(outputNode);
 
     this.editor = editor;
   }

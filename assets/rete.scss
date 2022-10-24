@@ -2,10 +2,18 @@ $node-color: #ffffff;
 $node-text-color: #000000;
 $node-color-border: #bfbfbf;
 
-
 $node-color-selected: #ffffff;
 $node-color-selected-border: #000000;
 $node-color-hover: #f7f7f7;
+
+
+$node-primary-color: #ffffff;
+$node-primary-text-color: #000000;
+$node-primary-color-border: #7e9ffb;
+
+$node-primary-color-selected: #ffffff;
+$node-primary-color-selected-border: #2962FF;
+$node-primary-color-hover: #f7f7f7;
 
 $node-title-color: #000000;
 
@@ -32,6 +40,21 @@ $minimap-viewport-border-color: #696969;
   &.selected {
     background: $node-color-selected !important;
     border-color: $node-color-selected-border !important;
+  }
+}
+
+.node.output {
+  background: $node-primary-color !important;
+  color: $node-primary-text-color !important;
+  border: 3px solid $node-primary-color-border !important;
+
+  &:hover {
+    background: $node-primary-color-hover !important;
+  }
+
+  &.selected {
+    background: $node-primary-color-selected !important;
+    border-color: $node-primary-color-selected-border !important;
   }
 }
 

@@ -25,6 +25,9 @@ export default class SearchControlComponent extends Vue {
 
   color: string = "#ff0000";
 
+  mounted() {
+    this.update()
+  }
 
   update() {
     if (this.ikey) {

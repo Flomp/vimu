@@ -17,7 +17,7 @@
             <v-list-item @click="downloadSVG()">
               <v-list-item-title>SVG</v-list-item-title>
             </v-list-item>
-            <v-list-item @click="downloadMusicXML()">
+            <v-list-item>
               <v-list-item-title>MusicXML</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -61,7 +61,7 @@ import PlaybackEngine, {
 } from "osmd-audio-player/dist/PlaybackEngine";
 import { Node, NodeEditor } from "rete";
 import { LogLevel } from "~/models/log";
-import { logStore, osmdStore, settingsStore } from "~/store";
+import { engineStore, logStore, osmdStore, settingsStore } from "~/store";
 
 @Component({})
 export default class OSMDPanel extends Vue {
@@ -84,10 +84,6 @@ export default class OSMDPanel extends Vue {
   currentIterationStep = 0;
   maxIterationStep = 0;
 
-  get selectedNode(): Node | undefined {
-    return this.editor?.selected.list[0];
-  }
-
   get needsUpdate(): boolean {
     return osmdStore.needsUpdate;
   }
@@ -97,11 +93,11 @@ export default class OSMDPanel extends Vue {
   }
 
   get showNothingSelected() {
-    return !this.selectedNode || !this.selectedNode.data.xml;
+    return !this.engineData;
   }
 
-  getState() {
-    console.log(this.audioPlayer?.state);
+  get engineData() {
+    return engineStore.data
   }
 
   mounted() {
@@ -146,19 +142,13 @@ export default class OSMDPanel extends Vue {
     if (!needsUpdate) {
       return;
     }
-    this.loadScore(this.displayedNode!);
+    this.onEngineDataChanged(this.engineData!);
   }
 
-  @Watch("selectedNode")
-  onSelectedNodeChange(node?: Node) {
-    if (this.displayedNode?.id == node?.id) {
-      return;
-    }
-
-    this.displayedNode = node;
-
-    if (this.displayedNode) {
-      this.loadScore(this.displayedNode);
+  @Watch("engineData")
+  onEngineDataChanged(data: string) {    
+    if (data && data.length) {      
+      this.loadScore(data);
     } else {
       this.downloadDisabled = true;
       this.playDisabled = true;
@@ -168,19 +158,12 @@ export default class OSMDPanel extends Vue {
     }
   }
 
-  async loadScore(node: Node) {
-    if (!this.osmd || !node?.data?.xml) {
-      return;
-    }
-
-    this.loading = true;
-    const musicXML: string = node.data.xml as string;
-
+  async loadScore(data: string) {
     try {
       this.audioPlayer?.stop();
       this.downloadDisabled = true;
       this.playDisabled = true;
-      await this.osmd.load(musicXML);
+      await this.osmd.load(data);
       this.osmd.zoom = 0.5;
       this.osmd.render();
       this.downloadDisabled = false;
@@ -233,28 +216,6 @@ export default class OSMDPanel extends Vue {
     downloadLink.href = svgUrl;
     const timestamp = new Date().getTime();
     downloadLink.download = `vimu_export_${timestamp}.svg`;
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
-  }
-
-  downloadMusicXML() {
-    if (!this.selectedNode || !this.selectedNode.data.xml) {
-      logStore.log({
-        level: LogLevel.error,
-        text: "Download failed. Invalid XML",
-      });
-      return;
-    }
-    const musicXMLData = this.selectedNode!.data.xml as string;
-    var xmlBlob = new Blob([musicXMLData], {
-      type: "text/xml;charset=utf-8",
-    });
-    var xmlUrl = URL.createObjectURL(xmlBlob);
-    var downloadLink = document.createElement("a");
-    downloadLink.href = xmlUrl;
-    const timestamp = new Date().getTime();
-    downloadLink.download = `vimu_export_${timestamp}.xml`;
     document.body.appendChild(downloadLink);
     downloadLink.click();
     document.body.removeChild(downloadLink);

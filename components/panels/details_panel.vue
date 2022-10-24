@@ -2,7 +2,7 @@
   <div>
     <div class="d-flex justify-space-between grey lighten-2">
       <h5 class="text-button px-3">Details</h5>
-      <v-btn icon @click="removeNode()" v-if="selectedNode">
+      <v-btn icon @click="removeNode()" v-if="showDelete">
         <v-icon size="20">mdi-delete</v-icon>
       </v-btn>
     </div>
@@ -69,6 +69,10 @@ import { logStore } from "~/store";
 export default class DetailsPanel extends Vue {
   @InjectReactive()
   editor!: NodeEditor;
+
+  get showDelete() {
+    return this.selectedNode?.name != "output"
+  }
 
   get selectedNode(): Node | undefined {
     return this.editor?.selected.list[0];

@@ -34,6 +34,11 @@ export default class EditMenu extends Vue {
     return this.editor?.selected.list[0];
   }
 
+  get disable() {
+    return !this.selectedNode ||this.selectedNode?.name == "output"
+  }
+
+
   get items(): MenuItem[] {
     return [
       {
@@ -50,7 +55,7 @@ export default class EditMenu extends Vue {
       {
         name: "Copy",
         key: "edit_copy",
-        disabled: !this.selectedNode,
+        disabled: this.disable,
         keybinding: "⌘C"
       },
       {
@@ -62,12 +67,12 @@ export default class EditMenu extends Vue {
       {
         name: "Duplicate",
         key: "edit_duplicate",
-        disabled: !this.selectedNode,
+        disabled: this.disable,
       },
       {
         name: "Delete",
         key: "edit_delete",
-        disabled: !this.selectedNode,
+        disabled: this.disable,
         keybinding: "⌫"
       },
     ];

@@ -13,7 +13,7 @@
 import { Component, InjectReactive, Vue, Watch } from "nuxt-property-decorator";
 import { Component as rComponent, NodeEditor } from "rete";
 import { LogLevel } from "~/models/log";
-import { apiStore, logStore } from "~/store";
+import { engineStore, logStore } from "~/store";
 import MainMenu from "../main_menu.vue";
 import { editorMenuItems, MenuItem } from "../palette/menu_item";
 import SubMenu from "../palette/sub_menu.vue";
@@ -36,7 +36,7 @@ export default class EditorPanel extends Vue {
     editorY = 0;
 
     get apiLoading() {
-        return apiStore.loading;
+        return engineStore.loading;
     }
 
     mounted() {

@@ -5,6 +5,7 @@
     @input="change"
     type="number"
     :rules="[numberRule]"
+    style="max-width:96px"
   ></v-text-field>
 </template>
 
