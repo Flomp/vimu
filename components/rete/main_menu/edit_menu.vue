@@ -35,7 +35,7 @@ export default class EditMenu extends Vue {
   }
 
   get disable() {
-    return !this.selectedNode ||this.selectedNode?.name == "output"
+    return !this.selectedNode || this.selectedNode?.name == "output"
   }
 
 
@@ -80,8 +80,8 @@ export default class EditMenu extends Vue {
 
   bindKeys() {
     document.addEventListener('keydown', e => {
-      const activeElement = document.activeElement as HTMLInputElement;   
-      if(activeElement?.tagName == "INPUT" && activeElement.type == "text") {
+      const activeElement = document.activeElement as HTMLInputElement;
+      if (activeElement?.tagName == "INPUT" && activeElement.type == "text") {
         return;
       }
       if (e.code == "Backspace") {
@@ -186,7 +186,7 @@ export default class EditMenu extends Vue {
     return node;
   }
 
-  delete() {    
+  delete() {
     if (!this.selectedNode) {
       return;
     }

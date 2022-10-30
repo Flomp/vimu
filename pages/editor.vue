@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { Component, ProvideReactive, Ref, Vue, Watch } from "nuxt-property-decorator";
+import { Component, ProvideReactive, Vue, Watch } from "nuxt-property-decorator";
 import Rete, { NodeEditor } from "rete";
 // @ts-ignore
 import AreaPlugin from "rete-area-plugin";
@@ -41,6 +41,11 @@ import Vuetify from "vuetify";
 import AnalysisAmbitusComponent from "~/components/rete/components/analysis/analysis_ambitus_component";
 import AnalysisKeyComponent from "~/components/rete/components/analysis/analysis_key_component";
 import AnalysisRomanNumeralComponent from "~/components/rete/components/analysis/analysis_roman_numeral_component";
+import DetectModulationComponent from "~/components/rete/components/detect/detect_modulation_component";
+import DetectParallelsComponent from "~/components/rete/components/detect/detect_parallels_component";
+import DetectVoiceCrossingsComponent from "~/components/rete/components/detect/detect_voice_crossings_component";
+
+import OutputComponent from "~/components/rete/components/output/output_component";
 import SearchLyricsComponent from "~/components/rete/components/search/search_lyrics_component";
 import SearchPartComponent from "~/components/rete/components/search/search_part_component";
 import SelectMeasuresComponent from "~/components/rete/components/select/select_measures_component";
@@ -51,12 +56,12 @@ import SourceTinynotationComponent from "~/components/rete/components/source/sou
 import TransformChordifyComponent from "~/components/rete/components/transform/transform_chordify_component";
 import TransformFlattenComponent from "~/components/rete/components/transform/transform_flatten_component";
 import TransformTransposeComponent from "~/components/rete/components/transform/transform_transpose_component";
-import OutputComponent from "~/components/rete/components/output/output_component";
 
 import DetailsPanel from "~/components/panels/details_panel.vue";
 import EditorPanel from "~/components/panels/editor_panel.vue";
 import LogPanel from "~/components/panels/log_panel.vue";
 import OSMDPanel from "~/components/panels/osmd_panel.vue";
+
 import { engineStore, osmdStore, settingsStore } from "~/store";
 
 @Component({
@@ -190,6 +195,9 @@ export default class Editor extends Vue {
       new TransformFlattenComponent(editor),
       new SearchPartComponent(editor),
       new SearchLyricsComponent(editor),
+      new DetectModulationComponent(editor),
+      new DetectParallelsComponent(editor),
+      new DetectVoiceCrossingsComponent(editor),
       out
 
     ];

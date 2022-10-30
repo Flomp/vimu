@@ -1,12 +1,12 @@
 import Rete, { Node, NodeEditor } from "rete";
 import { NodeData, WorkerInputs, WorkerOutputs } from "rete/types/core/data";
-import SearchLyricsControl from "../../controls/search/search_lyrics_control/search_lyrics_control";
+import DetectParallelsControl from "../../controls/detect/detect_parallels_control/detect_parallels_control";
 import { sockets } from "../../sockets/sockets";
 
-export default class SearchLyricsComponent extends Rete.Component {
+export default class DetectParallelsComponent extends Rete.Component {
   editor!: NodeEditor;
   constructor(editor: NodeEditor) {
-    super("search_lyrics");
+    super("detect_parallels");
     this.editor = editor;
 
   }
@@ -16,7 +16,7 @@ export default class SearchLyricsComponent extends Rete.Component {
     var out0 = new Rete.Output("out_0", "Score", sockets.stream);
 
     node
-      .addControl(new SearchLyricsControl(this.editor, "data", true))
+      .addControl(new DetectParallelsControl(this.editor, "data", true))
       .addInput(in0)
       .addOutput(out0);
 

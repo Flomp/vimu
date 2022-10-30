@@ -39,6 +39,14 @@ export default class EditorPanel extends Vue {
         return engineStore.loading;
     }
 
+    get selectedNode() {
+        return this.editor.selected.list[0]
+    }
+
+    get outputNode() {
+        return this.editor.nodes.find(n => n.name == "output")
+    }
+
     mounted() {
         this.bindKeys()
     }
@@ -64,6 +72,12 @@ export default class EditorPanel extends Vue {
                 this.$nextTick(() => {
                     this.showMenu = true;
                 });
+            } else if (e.code === "Enter" && this.selectedNode) {
+
+                for (const connection of this.outputNode!.getConnections()) {
+                    this.editor.removeConnection(connection)
+                }
+                this.editor.connect(this.selectedNode.outputs.get('out_0')!, this.outputNode!.inputs.get('in_0')!);
             }
         });
     }

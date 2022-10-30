@@ -37,6 +37,15 @@ const editorMenuItems: MenuItem[] = [
             ]
     },
     {
+        name: "Detect",
+        children:
+            [
+                { name: "Modulation", key: "detect_modulation" },
+                { name: "Parallels", key: "detect_parallels" },
+                { name: "Voice crossings", key: "detect_voice_crossings" },
+            ]
+    },
+    {
         name: "Source", children:
             [
                 { name: "Corpus", key: "source_corpus" },

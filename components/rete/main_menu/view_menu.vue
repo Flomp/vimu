@@ -9,7 +9,7 @@
 <script lang="ts">
 import { Component, InjectReactive, Vue } from "nuxt-property-decorator";
 import { NodeEditor } from "rete";
-import { editorMenuItems, MenuItem } from "~/components/palette/menu_item";
+import { MenuItem } from "~/components/palette/menu_item";
 import SubMenu from "~/components/palette/sub_menu.vue";
 import { Settings } from "~/models/settings";
 import { settingsStore } from "~/store";

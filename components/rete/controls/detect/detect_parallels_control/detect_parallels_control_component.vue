@@ -1,6 +1,5 @@
 <template>
   <div>
-    <timer-text-field v-model="value" @update="update"></timer-text-field>
     <div class="d-flex align-center mt-2">
       <span>Color:</span>
       <menu-color-picker v-model="color" @update="update"></menu-color-picker>
@@ -20,23 +19,21 @@ import TimerTextField from "~/components/timer_text_field.vue";
     MenuColorPicker
   },
 })
-export default class SearchLyricsControlComponent extends Vue {
+export default class DetectParallelsControlComponent extends Vue {
   @Prop() readonly!: boolean;
   @Prop() emitter!: NodeEditor;
   @Prop() ikey!: String;
   @Prop() getData!: Function;
   @Prop() putData!: Function;
 
-  value: string = "";
   color: string = "#ff0000"
 
   mounted() {
-    this.value = this.getData(this.ikey);
+    this.putData("color", this.color);
   }
 
   update() {   
     if (this.ikey) {
-      this.putData(this.ikey, this.value);
       this.putData("color", this.color);
     }
     this.emitter.trigger("process");
