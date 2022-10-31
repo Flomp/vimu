@@ -8,7 +8,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "nuxt-property-decorator";
 import { NodeEditor } from "rete";
-import MenuColorPicker from "~/components/rete/menu_color_picker.vue";
+import MenuColorPicker from "~/components/editor/rete/menu_color_picker.vue";
 
 
 @Component({

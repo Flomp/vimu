@@ -1,0 +1,38 @@
+<template>
+    <v-btn class="vimuBtn" :class="{ 'vimuBtn--secondary': !primary }" :outlined="!primary"
+        :color="primary ? '#2962FF' : null" :dark="primary" elevation="0" :x-large="xLarge" :large="large" :to="to"
+        @click="click">
+        <span class="font-weight-bold">
+            <slot></slot>
+        </span>
+    </v-btn>
+</template>
+
+<script lang="ts">
+import { Vue, Component, Prop, Emit } from "nuxt-property-decorator";
+
+@Component({})
+export default class VimuBtn extends Vue {
+    @Prop() readonly text!: string;
+    @Prop() readonly primary!: boolean;
+    @Prop() readonly large!: boolean;
+    @Prop() readonly xLarge!: boolean;
+    @Prop() readonly to!: string;
+
+    @Emit()
+    click() {
+        return;
+    }
+
+}
+</script>
+
+<style>
+.vimuBtn {
+    border-radius: 8px !important;
+}
+
+.vimuBtn--secondary {
+    border: 2px solid !important
+}
+</style>

@@ -10,8 +10,8 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "nuxt-property-decorator";
 import { NodeEditor } from "rete";
-import MenuColorPicker from "~/components/rete/menu_color_picker.vue";
-import TimerTextField from "~/components/timer_text_field.vue";
+import MenuColorPicker from "~/components/editor/rete/menu_color_picker.vue";
+import TimerTextField from "~/components/editor/timer_text_field.vue";
 
 @Component({
   components: {
@@ -19,7 +19,7 @@ import TimerTextField from "~/components/timer_text_field.vue";
     MenuColorPicker
   },
 })
-export default class DetectVoiceCrossingsControlComponent extends Vue {
+export default class DetectParallelsControlComponent extends Vue {
   @Prop() readonly!: boolean;
   @Prop() emitter!: NodeEditor;
   @Prop() ikey!: String;

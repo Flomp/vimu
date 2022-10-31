@@ -22,8 +22,8 @@
 
 <script lang="ts">
 import { Component, Vue } from "nuxt-property-decorator";
-import { MenuItem } from "~/components/palette/menu_item";
-import SubMenu from "~/components/palette/sub_menu.vue";
+import { MenuItem } from "~/components/editor/palette/menu_item";
+import SubMenu from "~/components/editor/palette/sub_menu.vue";
 
 @Component({
   components: {

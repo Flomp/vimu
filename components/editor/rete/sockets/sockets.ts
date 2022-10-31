@@ -3,6 +3,7 @@ export default {
 
 }
 
+const heroSocket = new Rete.Socket("index.hero")
 const scoreSocket = new Rete.Socket("music21.stream.Score")
 const partSocket = new Rete.Socket("music21.stream.Part")
 const keySocket = new Rete.Socket("music21.key.Key")
@@ -14,6 +15,7 @@ streamSocket.combineWith(scoreSocket)
 streamSocket.combineWith(partSocket)
 
 export const sockets = {
+    hero: heroSocket,
     number: new Rete.Socket("Number value"),
     stream: streamSocket,
     score: scoreSocket,

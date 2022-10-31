@@ -38,33 +38,34 @@ import HistoryPlugin from "rete-history-plugin";
 import AutoArrangePlugin from 'rete-auto-arrange-plugin';
 
 import Vuetify from "vuetify";
-import AnalysisAmbitusComponent from "~/components/rete/components/analysis/analysis_ambitus_component";
-import AnalysisKeyComponent from "~/components/rete/components/analysis/analysis_key_component";
-import AnalysisRomanNumeralComponent from "~/components/rete/components/analysis/analysis_roman_numeral_component";
-import DetectModulationComponent from "~/components/rete/components/detect/detect_modulation_component";
-import DetectParallelsComponent from "~/components/rete/components/detect/detect_parallels_component";
-import DetectVoiceCrossingsComponent from "~/components/rete/components/detect/detect_voice_crossings_component";
+import AnalysisAmbitusComponent from "~/components/editor/rete/components/analysis/analysis_ambitus_component";
+import AnalysisKeyComponent from "~/components/editor/rete/components/analysis/analysis_key_component";
+import AnalysisRomanNumeralComponent from "~/components/editor/rete/components/analysis/analysis_roman_numeral_component";
+import DetectModulationComponent from "~/components/editor/rete/components/detect/detect_modulation_component";
+import DetectParallelsComponent from "~/components/editor/rete/components/detect/detect_parallels_component";
+import DetectVoiceCrossingsComponent from "~/components/editor/rete/components/detect/detect_voice_crossings_component";
 
-import OutputComponent from "~/components/rete/components/output/output_component";
-import SearchLyricsComponent from "~/components/rete/components/search/search_lyrics_component";
-import SearchPartComponent from "~/components/rete/components/search/search_part_component";
-import SelectMeasuresComponent from "~/components/rete/components/select/select_measures_component";
-import SelectNotesComponent from "~/components/rete/components/select/select_notes_component";
-import SelectPartComponent from "~/components/rete/components/select/select_part_component";
-import SourceCorpusComponent from "~/components/rete/components/source/source_corpus_component";
-import SourceTinynotationComponent from "~/components/rete/components/source/source_tinynotation_component";
-import TransformChordifyComponent from "~/components/rete/components/transform/transform_chordify_component";
-import TransformFlattenComponent from "~/components/rete/components/transform/transform_flatten_component";
-import TransformTransposeComponent from "~/components/rete/components/transform/transform_transpose_component";
+import OutputComponent from "~/components/editor/rete/components/output/output_component";
+import SearchLyricsComponent from "~/components/editor/rete/components/search/search_lyrics_component";
+import SearchPartComponent from "~/components/editor/rete/components/search/search_part_component";
+import SelectMeasuresComponent from "~/components/editor/rete/components/select/select_measures_component";
+import SelectNotesComponent from "~/components/editor/rete/components/select/select_notes_component";
+import SelectPartComponent from "~/components/editor/rete/components/select/select_part_component";
+import SourceCorpusComponent from "~/components/editor/rete/components/source/source_corpus_component";
+import SourceTinynotationComponent from "~/components/editor/rete/components/source/source_tinynotation_component";
+import TransformChordifyComponent from "~/components/editor/rete/components/transform/transform_chordify_component";
+import TransformFlattenComponent from "~/components/editor/rete/components/transform/transform_flatten_component";
+import TransformTransposeComponent from "~/components/editor/rete/components/transform/transform_transpose_component";
 
-import DetailsPanel from "~/components/panels/details_panel.vue";
-import EditorPanel from "~/components/panels/editor_panel.vue";
-import LogPanel from "~/components/panels/log_panel.vue";
-import OSMDPanel from "~/components/panels/osmd_panel.vue";
+import DetailsPanel from "~/components/editor/panels/details_panel.vue";
+import EditorPanel from "~/components/editor/panels/editor_panel.vue";
+import LogPanel from "~/components/editor/panels/log_panel.vue";
+import OSMDPanel from "~/components/editor/panels/osmd_panel.vue";
 
 import { engineStore, osmdStore, settingsStore } from "~/store";
 
 @Component({
+  layout: "editor",
   components: {
     EditorPanel,
     DetailsPanel,
