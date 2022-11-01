@@ -75,7 +75,7 @@ export default class Terminal extends Vue {
 }
 </script>
 
-<style>
+<style scoped>
 pre {
    color: #8baaff
 }

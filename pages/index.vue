@@ -4,38 +4,50 @@
         </div>
         <v-container>
             <section>
-                <div class="d-flex">
-                    <vimu-article title="Fully visual, fully intuitive" callToAction="Read Documentation">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing
-                        elit. Faucibus viverra maecenas est, lacus, lectus viverra. Viverra scelerisque nisl id cursus
-                        porta
-                        ut vel. Adipiscing semper congue.
-                    </vimu-article>
-                    <div style="flex:1 1 100%"></div>
-                </div>
-                <div class="d-flex align-center">
-                    <div style="flex:1 1 100%">
-                        <speed-carrot :width="400"></speed-carrot>
-                    </div>
-                    <vimu-article title="Speed up your research" callToAction="Explore">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing
-                        elit. Faucibus viverra maecenas est, lacus, lectus viverra. Viverra scelerisque nisl id cursus
-                        porta
-                        ut vel. Adipiscing semper congue.
-                    </vimu-article>
-                </div>
-                <div class="d-flex">
-                    <vimu-article title="100% Open Source" callToAction="How to install">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing
-                        elit. Faucibus viverra maecenas est, lacus, lectus viverra. Viverra scelerisque nisl id cursus
-                        porta
-                        ut vel. Adipiscing semper congue.
-                    </vimu-article>
-                    <div class="px-8" style="flex:1 1 100%">
-                        <terminal></terminal>
-                    </div>
+                <v-row>
+                    <v-col>
+                        <vimu-article title="Fully visual, fully intuitive" callToAction="Read Documentation">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing
+                            elit. Faucibus viverra maecenas est, lacus, lectus viverra. Viverra scelerisque nisl id
+                            cursus
+                            porta
+                            ut vel. Adipiscing semper congue.
+                        </vimu-article>
+                    </v-col>
 
-                </div>
+                    <v-col>
+                        <bunny-dead-carrot :width="400"></bunny-dead-carrot>
+                    </v-col>
+                </v-row>
+                <v-row class="align-center">
+                    <v-col>
+                        <speed-carrot :width="400"></speed-carrot>
+                    </v-col>
+                    <v-col>
+                        <vimu-article title="Speed up your research" callToAction="Explore">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing
+                            elit. Faucibus viverra maecenas est, lacus, lectus viverra. Viverra scelerisque nisl id
+                            cursus
+                            porta
+                            ut vel. Adipiscing semper congue.
+                        </vimu-article>
+                    </v-col>
+
+                </v-row>
+                <v-row>
+                    <v-col>
+                        <vimu-article title="100% Open Source" callToAction="How to install">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing
+                            elit. Faucibus viverra maecenas est, lacus, lectus viverra. Viverra scelerisque nisl id
+                            cursus
+                            porta
+                            ut vel. Adipiscing semper congue.
+                        </vimu-article>
+                    </v-col>
+                    <v-col>
+                        <matrix-bunny></matrix-bunny>
+                    </v-col>
+                </v-row>
             </section>
             <section>
                 <div style="padding-top: 64px;">
@@ -99,12 +111,16 @@ import VimuArticle from "~/components/vimu/vimu_article.vue";
 import VimuCard from "~/components/vimu/vimu_card.vue"
 import Terminal from "~/components/index/terminal.vue"
 import SpeedCarrot from "~/components/vimu/speed_carrot.vue";
+import MatrixBunny from "~/components/vimu/martix_bunny.vue";
+import BunnyDeadCarrot from "~/components/vimu/bunny_dead_carrot.vue";
 @Component({
     components: {
         VimuArticle,
         VimuCard,
         Terminal,
-        SpeedCarrot
+        SpeedCarrot,
+        MatrixBunny,
+        BunnyDeadCarrot
     }
 })
 export default class IndexPage extends Vue {
@@ -130,6 +146,8 @@ export default class IndexPage extends Vue {
         });
         editor.use(ConnectionPlugin);
 
+        (editor.view.area as any)._zoom.intensity = 0.01;
+
         const hero = new IndexHeroComponent(editor);
         const easteregg = new IndexEastereggComponent(editor);
 
@@ -140,23 +158,23 @@ export default class IndexPage extends Vue {
         engine.register(easteregg)
 
         const paddingLeft = 128
-        const paddingRight = 512
 
         const heroNode = await hero.createNode();
         heroNode.position = [paddingLeft, 64];
         editor.addNode(heroNode);
 
+        const heroNodeEl = editor.view.nodes.get(heroNode)!.el;
+        const heroNodeWidth = heroNodeEl.clientWidth;
+
         const eastereggNode = await easteregg.createNode();
-        eastereggNode.position = [w - paddingRight, 64];
+        eastereggNode.position = [3 * paddingLeft + heroNodeWidth, 64];
 
         editor.addNode(eastereggNode);
-
-        // editor.connect(heroNode.outputs.get('out_0')!, eastereggNode.inputs.get('in_0')!)
 
         editor.selectNode(heroNode)
 
         editor.on("zoom", ({ zoom, source }) => {
-            return zoom > 0.5 && zoom < 2;
+            return source != 'dblclick' && zoom > 0.5 && zoom < 2;
         });
 
         editor.on(["connectioncreate", "connectionremove"], () => {

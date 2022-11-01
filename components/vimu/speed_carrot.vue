@@ -24,16 +24,16 @@
         <path d="M778.769 757.65L854.021 783.757" stroke="#FE572A" stroke-width="15" stroke-linecap="round" />
         <path d="M825.376 328.398L919.44 361.032" stroke="#FE572A" stroke-width="15" stroke-linecap="round" />
         <path d="M875.881 631.403L940.066 653.671" stroke="#FE572A" stroke-width="15" stroke-linecap="round" />
-        <line x1="380" y1="632" x2="574" y2="632" stroke="black" stroke-width="10" />
-        <line x1="298" y1="549" x2="656" y2="549" stroke="black" stroke-width="10" />
-        <line x1="437" y1="425" x2="690" y2="425" stroke="black" stroke-width="10" />
+        <line x1="380" y1="627" x2="574" y2="627" stroke="black" stroke-width="20" />
+        <line x1="298" y1="546.5" x2="656" y2="546.5" stroke="black" stroke-width="15" />
+        <line x1="437" y1="420" x2="690" y2="420" stroke="black" stroke-width="20" />
         <line x1="327" y1="748" x2="656" y2="748" stroke="black" stroke-width="10" />
         <circle cx="466.5" cy="89.5" r="88.5" fill="#DDE0FF" />
-        <circle cx="368.5" cy="125.5" r="97.5" fill="#DDE0FF" />
-        <circle cx="483.5" cy="210.5" r="103.5" fill="#DDE0FF" />
+        <circle cx="368.5" cy="125.5" r="97.5" fill="#D6DAFF" />
+        <circle cx="483.5" cy="210.5" r="103.5" fill="#ECEEFF" />
         <circle cx="144" cy="419" r="80" fill="#DDE0FF" />
-        <circle cx="97.5" cy="516.5" r="97.5" fill="#DDE0FF" />
-        <circle cx="207.5" cy="498.5" r="63.5" fill="#DDE0FF" />
+        <circle cx="97.5" cy="516.5" r="97.5" fill="#D4D7F5" />
+        <circle cx="207.5" cy="498.5" r="63.5" fill="#E7E9FF" />
     </svg>
 
 </template>
@@ -43,7 +43,7 @@ import { Vue, Component, Prop } from "nuxt-property-decorator";
 
 @Component({})
 export default class SpeedCarrot extends Vue {
-    @Prop({default: 1206}) readonly width!: number;
+    @Prop({ default: 1206 }) readonly width!: number;
 }
 </script>
 
