@@ -1,7 +1,9 @@
 <template>
   <div class="d-flex align-center justify-space-between py-2 px-12 vimu-appbar">
     <div>
-      <Logo :width=128 />
+      <nuxt-link to="/">
+        <Logo :width=128 />
+      </nuxt-link>
     </div>
     <div class="d-flex align-center justify-space-between" style="flex-basis: 33%">
       <div>
@@ -9,7 +11,7 @@
         <span class="font-weight-bold px-5">Pricing</span>
       </div>
 
-      <vimu-btn class="ml-10">Login</vimu-btn>
+      <vimu-btn class="ml-10" to="/login">Login</vimu-btn>
     </div>
 
   </div>
