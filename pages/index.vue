@@ -15,12 +15,12 @@
                         </vimu-article>
                     </v-col>
 
-                    <v-col>
+                    <v-col  v-if="!$vuetify.breakpoint.mobile">
                         <bunny-dead-carrot :width="400"></bunny-dead-carrot>
                     </v-col>
                 </v-row>
                 <v-row class="align-center">
-                    <v-col>
+                    <v-col v-if="!$vuetify.breakpoint.mobile">
                         <speed-carrot :width="400"></speed-carrot>
                     </v-col>
                     <v-col>
@@ -44,7 +44,7 @@
                             ut vel. Adipiscing semper congue.
                         </vimu-article>
                     </v-col>
-                    <v-col>
+                    <v-col v-if="!$vuetify.breakpoint.mobile">
                         <matrix-bunny></matrix-bunny>
                     </v-col>
                 </v-row>
@@ -111,7 +111,7 @@ import VimuArticle from "~/components/vimu/vimu_article.vue";
 import VimuCard from "~/components/vimu/vimu_card.vue"
 import Terminal from "~/components/index/terminal.vue"
 import SpeedCarrot from "~/components/vimu/speed_carrot.vue";
-import MatrixBunny from "~/components/vimu/martix_bunny.vue";
+import MatrixBunny from "~/components/vimu/matrix_bunny.vue";
 import BunnyDeadCarrot from "~/components/vimu/bunny_dead_carrot.vue";
 @Component({
     components: {
@@ -146,7 +146,7 @@ export default class IndexPage extends Vue {
         });
         editor.use(ConnectionPlugin);
 
-        (editor.view.area as any)._zoom.intensity = 0.01;
+        (editor.view.area as any)._zoom.intensity = 0.03;
 
         const hero = new IndexHeroComponent(editor);
         const easteregg = new IndexEastereggComponent(editor);

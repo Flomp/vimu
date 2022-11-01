@@ -35,6 +35,5 @@ export default class VimuCard extends Vue {
 .vimu-card-title {
     font-size: 1.4rem;
     font-weight: 700;
-    ;
 }
 </style>

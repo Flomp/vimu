@@ -27,9 +27,13 @@ export default class VimuBtn extends Vue {
 }
 </script>
 
-<style>
+<style scoped>
 .vimuBtn {
     border-radius: 8px !important;
+}
+
+.v-btn::before {
+    border-radius: initial !important;
 }
 
 .vimuBtn--secondary {

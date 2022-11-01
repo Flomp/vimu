@@ -1,32 +1,32 @@
 <template>
     <div class="vimu-footer">
         <v-container class="fill-height">
-            <div class="d-flex fill-height justify-space-around" style="width: 100%">
-                <div style="margin: auto 0">
-                    <Logo :light="true" :width="256"></Logo>
+            <v-row class="fill-height justify-sm-space-around ma-0" style="width: 100%">
+                <v-col cols="12" lg="3" style="margin: auto 0">
+                    <Logo :light="true" :width="212"></Logo>
 
-                </div>
-                <div class="d-flex flex-column mt-4">
+                </v-col>
+                <v-col cols="6" sm="3" class="d-flex flex-column mt-4">
                     <span class="vimu-footer-title pb-3">Product</span>
                     <span class="vimu-footer-text py-1">Editor</span>
                     <span class="vimu-footer-text py-1">Installation</span>
                     <span class="vimu-footer-text py-1">Pricing</span>
-                </div>
-                <div class="d-flex flex-column mt-4">
+                </v-col>
+                <v-col cols="6" sm="3" class="d-flex flex-column mt-4">
                     <span class="vimu-footer-title pb-3">Resources</span>
                     <span class="vimu-footer-text py-1">Documentation</span>
                     <span class="vimu-footer-text py-1">Examples</span>
                     <span class="vimu-footer-text py-1">Contact us</span>
                     <span class="vimu-footer-text py-1">Terms of service</span>
                     <span class="vimu-footer-text py-1">Privacy policy</span>
-                </div>
-                <div class="d-flex flex-column mt-4">
+                </v-col>
+                <v-col cols="6" sm="3" class="d-flex flex-column mt-4">
                     <span class="vimu-footer-title pb-3">Developers</span>
                     <span class="vimu-footer-text py-1">GitHub</span>
                     <span class="vimu-footer-text py-1">Contribute</span>
                     <span class="vimu-footer-text py-1">Changelog</span>
-                </div>
-            </div>
+                </v-col>
+            </v-row>
         </v-container>
 
     </div>
@@ -46,7 +46,7 @@ export default class VimuFooter extends Vue {
 
 <style>
 .vimu-footer {
-    height: 256px;
+    min-height: 256px;
 
     background-color: #161414;
     border-radius: 20px 20px 0 0;
