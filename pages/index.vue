@@ -15,7 +15,7 @@
                         </vimu-article>
                     </v-col>
 
-                    <v-col  v-if="!$vuetify.breakpoint.mobile">
+                    <v-col v-if="!$vuetify.breakpoint.mobile">
                         <bunny-dead-carrot :width="400"></bunny-dead-carrot>
                     </v-col>
                 </v-row>
@@ -127,6 +127,9 @@ export default class IndexPage extends Vue {
 
     async mounted() {
         const container = document.querySelector<HTMLElement>("#index-rete");
+        container?.addEventListener('wheel', (e) => {
+            e.stopPropagation();
+        }, true)
         const editor = new Rete.NodeEditor("vimu@0.1.0", container!);
         const engine = new Rete.Engine("vimu@0.1.0");
         const background = document.createElement("div");

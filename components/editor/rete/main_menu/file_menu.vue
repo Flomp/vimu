@@ -9,7 +9,7 @@
   >
     <template v-slot:activator="{ on, attrs }">
       <v-btn
-        class="text-capitalize rounded-0"
+        class="text-capitalize rounded-0 menu-item"
         elevation="0"
         v-bind="attrs"
         v-on="on"

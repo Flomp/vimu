@@ -23,6 +23,9 @@ import ViewMenu from "./rete/main_menu/view_menu.vue";
 export default class MainMenu extends Vue { }
 </script>
 
-<style scoped>
-
+<style >
+.menu-item {
+  letter-spacing: inherit;
+  font-weight: 600;
+}
 </style>

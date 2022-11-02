@@ -1,7 +1,7 @@
 <template>
   <sub-menu v-model="open" :items="items" @menu-click="handleClick" name="Edit" :dense="true">
     <template v-slot:activator="{ on, attrs }">
-      <v-btn class="text-capitalize rounded-0" elevation="0" v-bind="attrs" v-on="on" text>Edit</v-btn>
+      <v-btn class="text-capitalize rounded-0 menu-item" elevation="0" v-bind="attrs" v-on="on" text>Edit</v-btn>
     </template>
   </sub-menu>
 </template>
