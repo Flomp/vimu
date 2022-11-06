@@ -1,7 +1,7 @@
 <template>
   <v-menu :close-on-content-click="false" :offset-x="isOffsetX" :offset-y="isOffsetY" :open-on-hover="isOpenOnHover"
     :transition="transition" :position-x="positionX" :position-y="positionY" :absolute="absolute" v-model="menuOpened"
-    :content-class="removeForcedOffset ? 'menu-offset' : ''">
+    :content-class="removeForcedOffset ? 'left-menu-offset vimu-menu elevation-0' : 'vimu-menu elevation-0'">
     <template v-slot:activator="{ on, attrs }">
       <v-list-item class="d-flex justify-space-between" v-on="on" v-if="isSubMenu" :dense="dense" link>
         <v-list-item-title>
@@ -80,7 +80,5 @@ export default class SubMenu extends Vue {
 </script>
 
 <style>
-.menu-offset {
-  margin-left: -12px !important;
-}
+
 </style>

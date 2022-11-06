@@ -1,21 +1,8 @@
 <template>
-  <sub-menu
-    v-model="open"
-    :items="items"
-    @menu-click="handleClick"
-    name="File"
-    :dense="true"
-    :removeForcedOffset="true"
-  >
+  <sub-menu v-model="open" :items="items" @menu-click="handleClick" name="File" :dense="true"
+    :removeForcedOffset="true">
     <template v-slot:activator="{ on, attrs }">
-      <v-btn
-        class="text-capitalize rounded-0 menu-item"
-        elevation="0"
-        v-bind="attrs"
-        v-on="on"
-        text
-        >File</v-btn
-      >
+      <v-btn class="text-capitalize rounded-0 menu-item" elevation="0" v-bind="attrs" v-on="on" text>File</v-btn>
     </template>
   </sub-menu>
 </template>
@@ -34,7 +21,7 @@ export default class FileMenu extends Vue {
   open: boolean = false;
 
   items: MenuItem[] = [
-    { name: "New File", divider: true },
+    { name: "Back to files", key: "back_to_files", divider: true },
     { name: "Open..." },
     { name: "Open Recent" },
     { name: "Open from URL", divider: true },
@@ -54,9 +41,19 @@ export default class FileMenu extends Vue {
     },
     { name: "Close" },
   ];
-  handleClick(item: MenuItem) {}
+  handleClick(item: MenuItem) {
+    switch (item.key) {
+      case "back_to_files":
+        this.backToFiles();
+    }
+  }
+
+  backToFiles() {
+    this.$router.push('/dashboard/files');
+  }
 }
 </script>
 
 <style>
+
 </style>

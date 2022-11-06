@@ -12,11 +12,18 @@
           <span class="font-weight-bold px-5">Pricing</span>
         </div>
 
-        <vimu-btn class="ml-10" to="/login">Login</vimu-btn>
+        <div>
+          <vimu-btn class="mr-4" :primary="true" to="/dashboard/files">Dashboard</vimu-btn>
+          <vimu-profile-menu></vimu-profile-menu>
+        </div>
       </div>
-      <v-btn color="black" icon @click="showMenu = !showMenu" v-else>
+      <v-btn color="black" icon @click="showMenu = !showMenu" v-else-if="!loggedIn">
         <v-icon>{{ menuIcon }}</v-icon>
       </v-btn>
+      <div v-else>
+          <vimu-profile-menu></vimu-profile-menu>
+        </div>
+
 
     </div>
     <div v-if="showMenu">
@@ -31,19 +38,30 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "nuxt-property-decorator";
+import { Vue, Component, ProvideReactive } from "nuxt-property-decorator";
 import VimuBtn from "./vimu_button.vue";
 import Logo from "./logo.vue";
-
+import VimuProfileMenu from "./vimu_profile_menu.vue";
 
 @Component({
   components: {
     Logo,
-    VimuBtn
+    VimuBtn,
+    VimuProfileMenu
   }
 })
 export default class VimuAppBar extends Vue {
   showMenu: boolean = false;
+
+  @ProvideReactive()
+  loggedIn: boolean = this.$pb.authStore.model !== null;
+
+  mounted() {
+    this.$pb.authStore.onChange((token, model) => {
+      this.loggedIn = token !== null && model !== null;
+    });
+  }
+
 
 
   get menuIcon() {
@@ -59,6 +77,7 @@ export default class VimuAppBar extends Vue {
   top: 0;
   background-color: white;
   z-index: 2;
+  height: 75px;
 }
 
 .vimu-appbar-menu {

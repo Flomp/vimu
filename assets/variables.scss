@@ -10,6 +10,14 @@ $body-font-family: Inter;
   width: 100%
 }
 
+.left-menu-offset {
+  margin-left: -12px !important;
+}
+
+.right-menu-offset {
+  margin-right: -12px !important;
+}
+
 .vimu-title {
   font-size: 3.75rem !important;
   font-weight: 700;
@@ -26,4 +34,9 @@ $body-font-family: Inter;
 }
 .vimu-text {
   color: #5A5A5A
+}
+
+.vimu-menu {
+  border: 2px solid currentColor;
+  border-radius: 10px !important;
 }

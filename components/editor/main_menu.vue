@@ -26,6 +26,5 @@ export default class MainMenu extends Vue { }
 <style >
 .menu-item {
   letter-spacing: inherit;
-  font-weight: 600;
 }
 </style>

@@ -4,6 +4,9 @@
     v-model="model"
     :label="label"
     :type="type"
+    :rules="rules"
+    :hide-details="hideDetails"
+    validate-on-blur
     outlined
   ></v-text-field>
 </template>
@@ -16,6 +19,8 @@ export default class VimuTextField extends Vue {
     @VModel() model!: string;
     @Prop() readonly label!: string;
     @Prop() readonly type!: string;
+    @Prop() readonly rules!: Function[];
+    @Prop({default: false}) readonly hideDetails!: boolean;
 
 }
 </script>

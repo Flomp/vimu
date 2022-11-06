@@ -8,41 +8,34 @@
             <carrot-balloon class="balloon carrot-balloon" :width="400"></carrot-balloon>
         </v-col>
         <v-col>
-            <div class="login-form">
-                <h3 class="login-form-title pb-5">Login</h3>
-                <span class="font-weight-bold">Username</span>
-                <vimu-text-field></vimu-text-field>
-                <span class="font-weight-bold">Password</span>
-                <vimu-text-field type="password"></vimu-text-field>
-                <vimu-btn class="fill-width" :primary="true" :large="true">Login</vimu-btn>
-                <div class="py-5">
-                    <span>Don't have an Account?</span>
-                    <nuxt-link to="/">Signup</nuxt-link>
-                </div>
-                <div class="d-flex align-center">
-                    <v-divider></v-divider>
-                    <span class="px-4 vimu-text">or</span>
-                    <v-divider></v-divider>
-                </div>
-                <vimu-btn class="fill-width mt-6">Sign in with Google</vimu-btn>
-            </div>
+            <transition name="bounce" mode="out-in">
+                <login-form @toggle="showSignup = true" :loading="loginLoading" @submit="loginSubmit"
+                    v-if="!showSignup"></login-form>
+                <signup-form @toggle="showSignup = false" :loading="signupLoading" @submit="signupSubmit" v-else>
+                </signup-form>
+            </transition>
         </v-col>
     </v-row>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "nuxt-property-decorator";
-import VimuTextField from "~/components/vimu/vimu_text_field.vue"
-import VimuBtn from "~/components/vimu/vimu_button.vue";
+import { Component, Vue } from "nuxt-property-decorator";
 import BunnyBalloon from "~/components/vimu/bunny_balloon.vue";
 import CarrotBalloon from "~/components/vimu/carrot_balloon.vue";
 import Cloud1 from "~/components/vimu/cloud1.vue";
 import Cloud2 from "~/components/vimu/cloud2.vue";
 import Cloud3 from "~/components/vimu/cloud3.vue";
+import VimuBtn from "~/components/vimu/vimu_button.vue";
+import VimuTextField from "~/components/vimu/vimu_text_field.vue";
+import LoginForm from "~/components/forms/login_form.vue";
+import SignupForm from "~/components/forms/signup_form.vue";
+import { authStore } from "~/store";
 
 @Component({
     layout: "default_no_footer",
     components: {
+        LoginForm,
+        SignupForm,
         VimuTextField,
         VimuBtn,
         BunnyBalloon,
@@ -53,26 +46,34 @@ import Cloud3 from "~/components/vimu/cloud3.vue";
     }
 })
 export default class LoginPage extends Vue {
+    showSignup: boolean = false;
+
+    signupLoading: boolean = false;
+    loginLoading: boolean = false;
+
+    async signupSubmit(data: { email: string, password: string, passwordConfirm: string }) {
+        this.signupLoading = true;
+        const success = await authStore.signup(data);
+
+        if (success) {
+            this.$router.push('/')
+        }
+        this.signupLoading = false;
+    }
+
+    async loginSubmit(data: { email: string, password: string }) {
+        this.loginLoading = true;
+
+        const success: boolean = await authStore.login(data)
+        if (success) {
+            this.$router.push('/dashboard/files')
+        }
+        this.loginLoading = false;
+    }
 }
 </script>
 
 <style>
-.login-form {
-    position: relative;
-    border: 3px solid currentColor;
-    max-width: 500px;
-    border-radius: 30px;
-    padding: 32px;
-    background-color: #fff;
-    z-index: 0;
-    margin: 0 auto
-}
-
-.login-form-title {
-    font-size: 2.1rem;
-    font-weight: 700;
-}
-
 @keyframes up {
     0% {
         transform: translateY(100%);
@@ -133,5 +134,27 @@ export default class LoginPage extends Vue {
 .cloud-3 {
     left: 128px;
     bottom: 312px
+}
+
+.bounce-enter-active {
+    animation: bounce-in .5s;
+}
+
+.bounce-leave-active {
+    animation: bounce-in .5s reverse;
+}
+
+@keyframes bounce-in {
+    0% {
+        transform: scale(0);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 </style>
