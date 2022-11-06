@@ -7,7 +7,7 @@
                 </nuxt-link>
             </v-list-item>
 
-            <v-list-item>
+            <v-list-item to="/dashboard/files/recent">
                 <v-list-item-avatar>
                     <v-icon>mdi-history</v-icon>
                 </v-list-item-avatar>
@@ -15,7 +15,7 @@
                     Recent
                 </v-list-item-title>
             </v-list-item>
-            <v-list-item to="/dashboard/files">
+            <v-list-item to="/dashboard/files/all">
                 <v-list-item-avatar>
                     <v-icon>mdi-file</v-icon>
                 </v-list-item-avatar>
@@ -23,8 +23,7 @@
                     Files
                 </v-list-item-title>
             </v-list-item>
-            <v-divider></v-divider>
-            <v-list-item>
+            <v-list-item to="/dashboard/files/favorites">
                 <v-list-item-avatar>
                     <v-icon>mdi-star</v-icon>
                 </v-list-item-avatar>
@@ -32,6 +31,8 @@
                     Favorites
                 </v-list-item-title>
             </v-list-item>
+            <v-divider></v-divider>
+
         </v-list>
     </v-navigation-drawer>
 </template>

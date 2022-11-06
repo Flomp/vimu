@@ -14,8 +14,8 @@ export default class LogStore extends VuexModule {
 
 
     @MutationAction({ mutate: ['files'] })
-    async list() {
-        const response = await $pb.collection('files').getList(undefined, undefined, {sort: '-created'})
+    async list(data: {filter: string, sort: string} = {filter: '', sort: ''}) {        
+        const response = await $pb.collection('files').getList(undefined, undefined, {sort: data.sort, filter: data.filter})
         return { files: response.items }
     }
 

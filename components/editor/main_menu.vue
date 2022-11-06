@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-row align-center grey lighten-2">
+  <div class="d-flex flex-row align-center vimu-editor-header">
     <file-menu></file-menu>
     <edit-menu></edit-menu>
     <view-menu></view-menu>
@@ -26,5 +26,8 @@ export default class MainMenu extends Vue { }
 <style >
 .menu-item {
   letter-spacing: inherit;
+}
+.vimu-editor-header {
+  background-color: rgb(245, 245, 245);
 }
 </style>

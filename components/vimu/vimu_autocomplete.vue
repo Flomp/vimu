@@ -27,8 +27,6 @@ export default class VimuAutocomplete extends Vue {
     @Prop() readonly hideDetails!: boolean;
     @Prop() readonly prependInnerIcon!: string;
     @Prop() readonly placeholder!: string;
-
-
 }
 </script>
 

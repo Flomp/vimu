@@ -1,5 +1,5 @@
 <template>
-  <v-sheet class="main">
+  <v-sheet class="main fill-height">
     <div ref="page" id="panel-grid" @mouseup="endDrag" @mousemove="onDrag">
       <div id="editor" class="pa-0">
         <editor-panel></editor-panel>
@@ -62,7 +62,6 @@ import EditorPanel from "~/components/editor/panels/editor_panel.vue";
 import LogPanel from "~/components/editor/panels/log_panel.vue";
 import OSMDPanel from "~/components/editor/panels/osmd_panel.vue";
 
-import { Data } from "rete/types/core/data";
 import { engineStore, fileStore, osmdStore, settingsStore } from "~/store";
 // @ts-ignore
 import { zoomAt } from "rete-area-plugin/src/zoom-at";
@@ -113,6 +112,7 @@ export default class Editor extends Vue {
   onShowFirstColumnChange(value: boolean) {
     let editorcol = document.getElementById("editor");
     editorcol!.style.gridColumn = value ? "1/2" : "1/4";
+    this.editor?.view.resize();
   }
 
 
@@ -138,9 +138,21 @@ export default class Editor extends Vue {
       2,
       page!.clientHeight * (1 - initialTopHeight),
     ];
-
     let newRowDefn = rows.map(c => c.toString() + "px").join(" ");
     page!.style.gridTemplateRows = newRowDefn;
+
+
+    if (!this.showFirstColumn) {
+      this.onShowFirstColumnChange(false)
+    }
+    if (!this.showScore) {
+      this.onShowScoreChange(false)
+    }
+    if (!this.showLog) {
+      this.onShowLogChange(false)
+    }
+
+
 
   }
 
@@ -285,8 +297,7 @@ export default class Editor extends Vue {
   }
 
   onDrag(event: MouseEvent) {
-    event.preventDefault();
-    event.stopPropagation();
+    window.getSelection()?.removeAllRanges();
     if (this.isLeftDragging || this.isRightDragging) {
       let page = document.getElementById("panel-grid");
       let leftcol = document.getElementById("editor");
@@ -340,18 +351,20 @@ export default class Editor extends Vue {
   margin: 0;
   display: grid;
   grid-template-columns: 50% 2px 1fr 2px 300px;
-  grid-template-rows: 1fr 2px 1fr;
+  grid-template-rows: 1fr 2px 300px;
 }
 
 .vertical-dragbar {
   grid-row: span 3;
   cursor: ew-resize;
   background-color: #e0e0e0;
+  z-index: 1
 }
 
 .horizontal-dragbar {
   background-color: #e0e0e0;
   cursor: ns-resize;
+  z-index: 1
 }
 
 #logDragbar {
@@ -370,5 +383,6 @@ export default class Editor extends Vue {
 
 #log {
   grid-column: 3/4;
+  z-index: 1;
 }
 </style>

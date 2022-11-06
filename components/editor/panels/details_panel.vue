@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="d-flex justify-space-between grey lighten-2">
-      <h5 class="text-button px-3">Details</h5>
+    <div class="d-flex align-center justify-space-between vimu-editor-header" style="height: 36px">
+      <h5 class="px-3">Details</h5>
       <v-btn icon @click="removeNode()" v-if="showDelete">
         <v-icon size="20">mdi-delete</v-icon>
       </v-btn>
@@ -10,12 +10,14 @@
     <div v-if="selectedNode">
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title class="text-h6 mb-2"> Name </v-list-item-title>
-          <v-text-field v-model="selectedNode.name" outlined hide-details @input="updateSelected()"></v-text-field>
+          <v-list-item-title class="mb-2"> Type </v-list-item-title>
+          <div class="d-flex align-center justify-space-between"> <span class="font-weight-bold">{{ selectedNode.name }}</span>
+            <v-btn icon><v-icon>mdi-help-circle</v-icon></v-btn>
+          </div>
         </v-list-item-content>
       </v-list-item>
 
-      <h6 class="text-h6 mx-4">Data</h6>
+      <span class="mx-4">Data</span>
       <v-expansion-panels accordion flat v-if="Object.keys(selectedNode.data).length > 0">
         <v-expansion-panel v-for="[key, value] in Object.entries(selectedNode.data)" :key="key">
           <v-expansion-panel-header> {{ key }} </v-expansion-panel-header>
@@ -35,26 +37,31 @@
       <template v-if="selectedNode.inputs.size">
         <v-list-item>
           <v-list-item-content>
-            <v-list-item-title class="text-h6">Inputs</v-list-item-title>
+            <v-list-item-title >Inputs</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
         <v-list-item v-for="(o, i) in inputs" :key="o.key">
           <v-list-item-avatar> {{ i + 1 }}. </v-list-item-avatar>
-          <v-text-field label="Name" v-model="o.name" outlined dense hide-details @input="updateSelected()"></v-text-field>
+          <v-text-field label="Name" v-model="o.name" outlined dense hide-details @input="updateSelected()">
+          </v-text-field>
         </v-list-item>
       </template>
 
+      <template v-if="selectedNode.outputs.size">
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title class="text-h6">Outputs</v-list-item-title>
+          <v-list-item-title >Outputs</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
 
       <v-list-item v-for="(o, i) in outputs" :key="o.key">
         <v-list-item-avatar> {{ i + 1 }}. </v-list-item-avatar>
-        <v-text-field label="Name" v-model="o.name" outlined dense hide-details @input="updateSelected()"></v-text-field>
+        <v-text-field label="Name" v-model="o.name" outlined dense hide-details @input="updateSelected()">
+        </v-text-field>
       </v-list-item>
+      </template>
+
     </div>
   </div>
 </template>
@@ -71,7 +78,7 @@ export default class DetailsPanel extends Vue {
   editor!: NodeEditor;
 
   get showDelete() {
-    return this.selectedNode?.name != "output"
+    return this.selectedNode && this.selectedNode.name != "output"
   }
 
   get selectedNode(): Node | undefined {

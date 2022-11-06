@@ -66,7 +66,7 @@ export default class LoginPage extends Vue {
 
         const success: boolean = await authStore.login(data)
         if (success) {
-            this.$router.push('/dashboard/files')
+            this.$router.push('/dashboard/files/all')
         }
         this.loginLoading = false;
     }

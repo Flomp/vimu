@@ -1,7 +1,7 @@
 <template>
   <div class="fill-height">
-    <div class="d-flex grey lighten-2">
-      <h5 class="text-button px-3">Log</h5>
+    <div class="d-flex align-center vimu-editor-header">
+      <h5 class="px-3">Log</h5>
       <v-spacer></v-spacer>
       <v-btn icon @click="minimize()"><v-icon>mdi-minus</v-icon></v-btn>
     </div>

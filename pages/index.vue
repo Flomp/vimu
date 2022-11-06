@@ -89,7 +89,7 @@
                     <h1 class="vimu-title">
                         Drag, connect, analyse
                     </h1>
-                    <vimu-button class="my-10" :primary="true" :x-large="true" to="/editor">Get started</vimu-button>
+                    <vimu-button class="my-10" :primary="true" :x-large="true" to="/dashboard/files/all">Get started</vimu-button>
                 </div>
             </section>
         </v-container>
@@ -144,7 +144,15 @@ export default class IndexPage extends Vue {
         const VueRenderPlugin = require("rete-vue-render-plugin").default;
         editor.use(VueRenderPlugin, {
             options: {
-                vuetify: new Vuetify(),
+                vuetify: new Vuetify({
+                    theme: {
+                        themes: {
+                            light: {
+                                primary: '#000000',
+                            }
+                        }
+                    }
+                }),
             },
         });
         editor.use(ConnectionPlugin);
@@ -187,7 +195,7 @@ export default class IndexPage extends Vue {
         editor.on(["process"], (params) => {
             const trigger = (params as any).trigger
             if (trigger === "primary") {
-                this.$router.push('/editor')
+                this.$router.push('/dashboard/files/all')
             }
 
         });

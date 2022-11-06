@@ -49,7 +49,7 @@ export default class FileMenu extends Vue {
   }
 
   backToFiles() {
-    this.$router.push('/dashboard/files');
+    this.$router.push('/dashboard/files/all');
   }
 }
 </script>

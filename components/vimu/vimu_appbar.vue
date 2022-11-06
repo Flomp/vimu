@@ -13,7 +13,7 @@
         </div>
 
         <div>
-          <vimu-btn class="mr-4" :primary="true" to="/dashboard/files">Dashboard</vimu-btn>
+          <vimu-btn class="mr-4" :primary="true" to="/dashboard/files/all" v-if="loggedIn">Dashboard</vimu-btn>
           <vimu-profile-menu></vimu-profile-menu>
         </div>
       </div>

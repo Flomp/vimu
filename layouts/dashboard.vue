@@ -2,9 +2,10 @@
     <v-app>
         <notification-center />
         <drawer></drawer>
-        <div class="d-flex vimu-appbar dashboard-appbar align-center pr-3 px-md-12">
-            <v-spacer></v-spacer>
+
+        <div class="dashboard-appbar">
             <vimu-profile-menu></vimu-profile-menu>
+
         </div>
         <v-main>
             <nuxt />
@@ -35,9 +36,16 @@ export default class DashboardLayout extends Vue {
 </script>
 
 <style>
-@media only screen and (min-width: 600px) {
+.dashboard-appbar {
+    position: absolute;
+    right: 48px;
+    top: 13.5px;
+    z-index: 1;
+}
+
+@media only screen and (max-width: 536px) {
     .dashboard-appbar {
-        margin-left: 224px
+        display:none
     }
 }
 </style>

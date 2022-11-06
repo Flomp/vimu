@@ -1,23 +1,23 @@
 <template>
   <div class="fill-height" style="position: relative;">
-    <div class="d-flex flex-row grey lighten-2 px-3">
-      <h5 class="text-button black--text">Score</h5>
+    <div class="d-flex align-center flex-row vimu-editor-header px-3">
+      <h5>Output</h5>
       <v-spacer></v-spacer>
       <div>
         <v-btn @click="playOrPause" :disabled="playDisabled || showNothingSelected" light icon>
           <v-icon>{{ playIcon }}</v-icon>
         </v-btn>
-        <v-menu offset-y>
+        <v-menu offset-y content-class="vimu-menu elevation-0">
           <template v-slot:activator="{ on, attrs }">
             <v-btn v-bind="attrs" v-on="on" :disabled="downloadDisabled || showNothingSelected" light icon>
               <v-icon>mdi-download</v-icon>
             </v-btn>
           </template>
           <v-list dense>
-            <v-list-item @click="downloadSVG()">
+            <v-list-item @click="downloadSVG">
               <v-list-item-title>SVG</v-list-item-title>
             </v-list-item>
-            <v-list-item>
+            <v-list-item @click="downloadXML">
               <v-list-item-title>MusicXML</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -28,9 +28,9 @@
       </div>
     </div>
     <v-progress-linear absolute indeterminate color="black" height="2" v-if="loading"></v-progress-linear>
-    <v-slider class="ma-0" v-model="currentIterationStep" :max="maxIterationStep" light hide-details
+    <v-slider class="ma-0 osmd-slider" v-model="currentIterationStep" :max="maxIterationStep" light hide-details
       v-else-if="!playDisabled && !showNothingSelected" color="black" background-color="transparent" track-color="grey"
-      height="1" style="width: 100%; z-index: 1; top: 34px" @input="skip"></v-slider>
+      height="1" style="width: 100%;" @input="skip"></v-slider>
 
     <div style="height: calc(100% - 36px);
         overflow-y: scroll;
@@ -146,8 +146,8 @@ export default class OSMDPanel extends Vue {
   }
 
   @Watch("engineData")
-  onEngineDataChanged(data: string) {    
-    if (data && data.length) {      
+  onEngineDataChanged(data: string) {
+    if (data && data.length) {
       this.loadScore(data);
     } else {
       this.downloadDisabled = true;
@@ -221,6 +221,21 @@ export default class OSMDPanel extends Vue {
     document.body.removeChild(downloadLink);
   }
 
+  downloadXML() {
+    const element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(engineStore.data));
+    const timestamp = new Date().getTime();
+    element.setAttribute('download', `vimu_export_${timestamp}.mxml`);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+
+  }
+
   minimize() {
     const settings = JSON.parse(JSON.stringify(settingsStore.settings));
     settings.view.score = false;
@@ -234,5 +249,9 @@ export default class OSMDPanel extends Vue {
   min-height: 2px;
   margin-left: 0px;
   margin-right: 0px;
+}
+
+::v-deep .v-slider__thumb {
+  z-index: 2;
 }
 </style>
