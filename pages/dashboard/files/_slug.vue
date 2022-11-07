@@ -117,8 +117,8 @@ export default class FilesPage extends Vue {
         await this.list();
     }
 
-    async list() {
-        this.listLoading = true;
+    async list(showLoading: boolean = true) {
+        this.listLoading = showLoading;
         await fileStore.list({ filter: this.filter, sort: this.sort });
         this.listLoading = false;
     }
@@ -152,7 +152,7 @@ export default class FilesPage extends Vue {
 
     async favoriteFile(file: File) {
         await fileStore.update({ id: file.id, favorite: !file.favorite })
-        await this.list();
+        await this.list(false);
     }
 
     openFile(file: File) {
