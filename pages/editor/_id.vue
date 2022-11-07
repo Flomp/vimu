@@ -27,8 +27,7 @@
 <script lang="ts">
 import { Component, ProvideReactive, Vue, Watch } from "nuxt-property-decorator";
 import Rete, { NodeEditor } from "rete";
-// @ts-ignore
-import AreaPlugin from "rete-area-plugin";
+
 import ConnectionPlugin from "rete-connection-plugin";
 // @ts-ignore
 import MinimapPlugin from "rete-minimap-plugin";
@@ -163,6 +162,7 @@ export default class Editor extends Vue {
     const background = document.createElement("div");
     background.classList.add("pixel-grid");
 
+    const AreaPlugin = require("rete-area-plugin").default;
     editor.use(AreaPlugin, { background: background });
     editor.use(ConnectionPlugin);
     const VueRenderPlugin = require("rete-vue-render-plugin").default;

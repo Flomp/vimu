@@ -101,8 +101,6 @@
 <script lang="ts">
 import { Component, Vue } from "nuxt-property-decorator";
 import Rete from "rete";
-// @ts-ignore
-import AreaPlugin from "rete-area-plugin";
 import ConnectionPlugin from "rete-connection-plugin";
 import Vuetify from "vuetify";
 import IndexEastereggComponent from "~/components/index/rete/components/index/index_easteregg_component";
@@ -140,6 +138,7 @@ export default class IndexPage extends Vue {
 
         background.classList.add("pixel-grid");
 
+        const AreaPlugin = require("rete-area-plugin").default;
         editor.use(AreaPlugin, { background: background });
         const VueRenderPlugin = require("rete-vue-render-plugin").default;
         editor.use(VueRenderPlugin, {

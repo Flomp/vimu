@@ -1,7 +1,6 @@
 import colors from 'vuetify/es5/util/colors'
 
 export default {
-  ssr: false,
   loading: false,
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -30,8 +29,7 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '~/plugins/axios.ts',
-    '~/plugins/pocketbase.ts',
-
+    { src: '~/plugins/pocketbase.ts' }
   ],
 
   router: {
@@ -55,7 +53,7 @@ export default {
     '@nuxtjs/pwa',
 
     '@nuxtjs/vuetify',
-    
+
     'cookie-universal-nuxt',
   ],
 
@@ -100,5 +98,15 @@ export default {
         ["@babel/transform-runtime"]
       ]
     },
-  }
+    transpile: [
+      'rete-area-plugin',
+      'osmd-audio-player',
+      'pocketbase'
+    ],
+  },
+
+  server: {
+    host: "0.0.0.0",
+    port: process.env.PORT || 3000,
+  },
 }
