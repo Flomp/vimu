@@ -1,17 +1,25 @@
 <template>
-    <v-menu offset-y v-if="loggedIn" nudge-bottom="13" content-class="vimu-menu elevation-0">
+    <v-menu offset-y v-if="loggedIn" nudge-bottom="24" content-class="vimu-menu elevation-0">
         <template v-slot:activator="{ on, attrs }">
-            <v-avatar class="profile-avatar" size="48" color="grey lighten-3" v-bind="attrs" v-on="on">
-                <img class="pa-1" :src="avatarURL" alt="alt">
-            </v-avatar>
+            <div class="d-inline" v-bind="attrs" v-on="on">
+                <vimu-avatar :seed="avatarSeed" :size="48"></vimu-avatar>
+            </div>
         </template>
         <v-list dense>
-            <v-list-item to="/dashboard/profile">
+            <v-list-item to="/dashboard/account">
                 <v-list-item-avatar>
                     <v-icon>mdi-account</v-icon>
                 </v-list-item-avatar>
                 <v-list-item-title>
-                    <span>Profile</span>
+                    <span>Account</span>
+                </v-list-item-title>
+            </v-list-item>
+            <v-list-item to="/dashboard/files/all">
+                <v-list-item-avatar>
+                    <v-icon>mdi-file</v-icon>
+                </v-list-item-avatar>
+                <v-list-item-title>
+                    <span>Files</span>
                 </v-list-item-title>
             </v-list-item>
             <v-divider></v-divider>
@@ -31,22 +39,24 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, InjectReactive } from "nuxt-property-decorator";
+import { Component, Prop, Vue } from "nuxt-property-decorator";
 import { authStore } from "~/store";
+import VimuAvatar from "./vimu_avatar.vue";
 import VimuBtn from "./vimu_button.vue";
 
 @Component({
     components: {
-        VimuBtn
+        VimuBtn,
+        VimuAvatar
     }
 })
 export default class VimuProfileMenu extends Vue {
 
-    @InjectReactive()
+    @Prop()
     loggedIn!: boolean;
 
-    get avatarURL() {
-        return `https://avatars.dicebear.com/api/croodles-neutral/:${this.$pb.authStore.model?.email}.svg`
+    get avatarSeed() {
+        return this.$pb.authStore.model?.email ?? '';
     }
 
     logout() {
@@ -60,5 +70,4 @@ export default class VimuProfileMenu extends Vue {
 .profile-avatar {
     box-shadow: 0 0 0 2px currentColor;
 }
-
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="vimu-appbar py-2">
-    <div class="d-flex align-center justify-space-between px-12">
+    <div class="d-flex align-center justify-space-between px-8 px-md-12">
       <div>
         <nuxt-link to="/">
           <Logo :width=128 />
@@ -14,15 +14,15 @@
 
         <div>
           <vimu-btn class="mr-4" :primary="true" to="/dashboard/files/all" v-if="loggedIn">Dashboard</vimu-btn>
-          <vimu-profile-menu></vimu-profile-menu>
+          <vimu-profile-menu :logged-in="loggedIn"></vimu-profile-menu>
         </div>
       </div>
       <v-btn color="black" icon @click="showMenu = !showMenu" v-else-if="!loggedIn">
         <v-icon>{{ menuIcon }}</v-icon>
       </v-btn>
       <div v-else>
-          <vimu-profile-menu></vimu-profile-menu>
-        </div>
+        <vimu-profile-menu :logged-in="loggedIn"></vimu-profile-menu>
+      </div>
 
 
     </div>
@@ -53,7 +53,6 @@ import VimuProfileMenu from "./vimu_profile_menu.vue";
 export default class VimuAppBar extends Vue {
   showMenu: boolean = false;
 
-  @ProvideReactive()
   loggedIn: boolean = this.$pb.authStore.model !== null;
 
   mounted() {
@@ -61,8 +60,6 @@ export default class VimuAppBar extends Vue {
       this.loggedIn = token !== null && model !== null;
     });
   }
-
-
 
   get menuIcon() {
     return this.showMenu ? "mdi-menu-up" : "mdi-menu-down"

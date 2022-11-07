@@ -10,14 +10,14 @@
             </div>
             <v-row>
                 <template v-if="!listLoading">
-                    <v-col col="12" md="6" lg="4" v-for="file in files" :key="file.id">
+                    <v-col cols="12" sm="6" md="4" lg="3" v-for="file in files" :key="file.id">
                         <file-card :file="file" @remove="removeFile" @rename="renameFile" @favorite="favoriteFile"
                             @open="openFile" @open-in-new-tab="openFileInNewTab">
                         </file-card>
                     </v-col>
                 </template>
                 <template v-else>
-                    <v-col col="12" md="6" lg="4" v-for="i in 3" :key="i">
+                    <v-col cols="12" sm="6" md="4" lg="3" v-for="i in 4" :key="i">
                         <v-skeleton-loader type="card"></v-skeleton-loader>
                     </v-col>
                 </template>
@@ -85,15 +85,13 @@ export default class FilesPage extends Vue {
         switch (slug) {
             case 'recent':
                 return 'Recent'
-            case 'favorites':
-                return 'Favorites'
         }
         return 'Files'
 
     }
 
     validate({ params }: Context) {
-        return ['all', 'recent', 'favorites'].includes(params.slug)
+        return ['all', 'recent'].includes(params.slug)
     }
 
     created() {
@@ -102,10 +100,6 @@ export default class FilesPage extends Vue {
             case 'recent':
                 this.sort = '-updated'
                 this.filter = ''
-                break;
-            case 'favorites':
-                this.filter = 'favorite=true'
-                this.sort = '-created'
                 break;
             default:
                 this.filter = ''

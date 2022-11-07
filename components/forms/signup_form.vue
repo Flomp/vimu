@@ -9,7 +9,7 @@
         <vimu-text-field v-model="passwordConfirm" type="password" :rules="passwordConfirmRules"></vimu-text-field>
         <vimu-btn class="fill-width" :primary="true" :large="true" :loading="loading" :disabled="loading" @click="validateAndSubmit">Sign up</vimu-btn>
         <v-divider class="my-6"></v-divider>
-        <span>Already have an account? <a @click="toggle">Login</a> </span>
+        <span>Already have an account? <a class="accent--text" @click="toggle">Login</a> </span>
     </v-form>
 </template>
 

@@ -8,8 +8,8 @@
         <vimu-btn class="fill-width" :primary="true" :large="true" :loading="loading" :disabled="loading"
             @click="validateAndSubmit">Login</vimu-btn>
         <div class="py-5">
-            <span>Don't have an Account?</span>
-            <a @click="toggle">Sign up</a>
+            <span>Don't have an account?</span>
+            <a class="accent--text" @click="toggle">Sign up</a>
         </div>
         <div class="d-flex align-center">
             <v-divider></v-divider>

@@ -168,7 +168,18 @@ export default class Editor extends Vue {
     const VueRenderPlugin = require("rete-vue-render-plugin").default;
     editor.use(VueRenderPlugin, {
       options: {
-        vuetify: new Vuetify(),
+        vuetify: new Vuetify(
+          {
+            theme: {
+              themes: {
+                light: {
+                  primary: '#000000',
+                  accent: '#2962FF',
+                }
+              }
+            }
+          }
+        ),
       },
     });
     editor.use(MinimapPlugin);

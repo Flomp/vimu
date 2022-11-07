@@ -1,6 +1,6 @@
 <template>
     <v-btn class="vimuBtn" :class="{ 'vimuBtn--secondary': !primary }" :outlined="!primary"
-        :color="primary ? '#2962FF' : null" :dark="primary && !disabled" elevation="0" :x-large="xLarge" :large="large" :to="to"
+        :color="primary ? 'accent' : null" :dark="primary && !disabled" elevation="0" :x-large="xLarge" :large="large" :to="to"
         :loading="loading" :disabled="disabled" :text="text" @click="click">
         <span class="font-weight-bold">
             <slot></slot>

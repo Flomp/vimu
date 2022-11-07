@@ -1,9 +1,8 @@
 const auth = ({$pb, route, redirect}) => {
   const protectedRoutes = [
-    '/dashboard/profile',
+    '/dashboard/account',
     '/dashboard/files/all',
     '/dashboard/files/recent',
-    '/dashboard/files/favorites',
     '/editor'
   ]
 

@@ -1,11 +1,11 @@
 <template>
     <v-app>
         <notification-center />
-        <drawer></drawer>
+        <mobile-menu v-if="$vuetify.breakpoint.smAndDown"></mobile-menu>
+        <drawer v-else></drawer>
 
-        <div class="dashboard-appbar">
-            <vimu-profile-menu></vimu-profile-menu>
-
+        <div class="dashboard-appbar" v-if="!$vuetify.breakpoint.smAndDown">
+            <vimu-profile-menu :logged-in="true"></vimu-profile-menu>
         </div>
         <v-main>
             <nuxt />
@@ -14,10 +14,11 @@
 </template>
   
 <script lang="ts">
-import { Component, ProvideReactive, Vue } from "nuxt-property-decorator";
-import VimuAppBar from "~/components/vimu/vimu_appbar.vue";
-import NotificationCenter from "~/components/vimu/notification-center.vue";
+import { Component, Vue } from "nuxt-property-decorator";
 import Drawer from "~/components/dashboard/drawer.vue";
+import MobileMenu from "~/components/dashboard/mobile_menu.vue";
+import NotificationCenter from "~/components/vimu/notification-center.vue";
+import VimuAppBar from "~/components/vimu/vimu_appbar.vue";
 import VimuProfileMenu from "~/components/vimu/vimu_profile_menu.vue";
 import VimuTextField from "~/components/vimu/vimu_text_field.vue";
 @Component({
@@ -26,12 +27,11 @@ import VimuTextField from "~/components/vimu/vimu_text_field.vue";
         NotificationCenter,
         Drawer,
         VimuProfileMenu,
-        VimuTextField
+        VimuTextField,
+        MobileMenu
     },
 })
 export default class DashboardLayout extends Vue {
-    @ProvideReactive()
-    loggedIn: boolean = true
 }
 </script>
 
@@ -41,12 +41,6 @@ export default class DashboardLayout extends Vue {
     right: 48px;
     top: 13.5px;
     z-index: 1;
-}
-
-@media only screen and (max-width: 536px) {
-    .dashboard-appbar {
-        display:none
-    }
 }
 </style>
   
