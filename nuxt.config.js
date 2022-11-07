@@ -21,6 +21,10 @@ export default {
     ],
   },
 
+  publicRuntimeConfig: {
+    pocketbaseURL: process.env.POCKETBASE_URL,
+  },
+
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
     '~/assets/rete.scss'

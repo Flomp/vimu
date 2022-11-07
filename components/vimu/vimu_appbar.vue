@@ -6,8 +6,8 @@
           <Logo :width=128 />
         </nuxt-link>
       </div>
-      <div class="d-flex align-center justify-space-between" style="flex-basis: 35%" v-if="!$vuetify.breakpoint.mobile">
-        <div>
+      <div class="d-flex align-center justify-space-between" v-if="!$vuetify.breakpoint.mobile">
+        <div style="margin-right: 64px">
           <span class="font-weight-bold px-5">Documentation</span>
           <span class="font-weight-bold px-5">Pricing</span>
         </div>
