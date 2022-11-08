@@ -5,14 +5,32 @@
                 :clearable=true style="max-width: 400px;"></vimu-text-field>
             <span class="vimu-title">{{ title }}</span>
             <div class="py-5">
-                <vimu-btn :primary="true" :large="true" @click="createFile">New file <v-icon>mdi-plus</v-icon>
+                <v-menu offset-y content-class="vimu-menu elevation-0">
+                    <template v-slot:activator="{ on, attrs }">
+                        <vimu-btn :large="true" class="mr-2" v-bind="attrs" v-on="on">From template <v-icon>
+                                mdi-menu-down</v-icon>
+                        </vimu-btn>
+                    </template>
+                    <v-list>
+                        <template v-if="templates.length > 0">
+                            <v-list-item v-for="template in templates" :key="template.id" @click="createFile(template)">
+                                {{ template.name }}
+                            </v-list-item>
+                        </template>
+                        <v-list-item>
+                            <span class="empty-text">You have not created any template yet</span>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
+                <vimu-btn class="mt-3 mt-sm-0" :primary="true" :large="true" @click="createFile">New file <v-icon>
+                        mdi-plus</v-icon>
                 </vimu-btn>
             </div>
             <v-row>
                 <template v-if="!listLoading">
                     <v-col cols="12" sm="6" md="4" lg="3" v-for="file in files" :key="file.id">
                         <file-card :file="file" @remove="removeFile" @rename="renameFile" @favorite="favoriteFile"
-                            @open="openFile" @open-in-new-tab="openFileInNewTab">
+                            @template="createTemplate" @open="openFile" @open-in-new-tab="openFileInNewTab">
                         </file-card>
                     </v-col>
                 </template>
@@ -54,6 +72,7 @@ import { fileStore } from "~/store";
 
 @Component({
     layout: 'dashboard',
+    fetchOnServer: false,
     components: {
         VimuTextField,
         VimuAutocomplete,
@@ -90,6 +109,10 @@ export default class FilesPage extends Vue {
 
     }
 
+    get templates() {
+        return fileStore.files.filter(f => f.template)
+    }
+
     validate({ params }: Context) {
         return ['all', 'recent'].includes(params.slug)
     }
@@ -117,8 +140,8 @@ export default class FilesPage extends Vue {
         this.listLoading = false;
     }
 
-    async createFile() {
-        await fileStore.create();
+    async createFile(file?: File) {
+        await fileStore.create(file);
         await this.list()
 
     }
@@ -146,6 +169,11 @@ export default class FilesPage extends Vue {
 
     async favoriteFile(file: File) {
         await fileStore.update({ id: file.id, favorite: !file.favorite })
+        await this.list(false);
+    }
+
+    async createTemplate(file: File) {
+        await fileStore.update({ id: file.id, template: !file.template })
         await this.list(false);
     }
 

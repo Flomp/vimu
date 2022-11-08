@@ -31,10 +31,12 @@ export default class ViewMenu extends Vue {
       {
         name: "Zoom in",
         key: "view_zoom_in",
+        keybinding: "+"
       },
       {
         name: "Zoom out",
         key: "view_zoom_out",
+        keybinding: "-"
       },
       {
         name: "Zoom to fit",
@@ -67,6 +69,24 @@ export default class ViewMenu extends Vue {
         selected: settingsStore.settings.view.log,
       },
     ];
+  }
+
+  mounted() {
+    this.bindKeys();
+  }
+
+  bindKeys() {
+    document.addEventListener('keydown', e => {
+      const activeElement = document.activeElement as HTMLInputElement;
+      if (activeElement?.tagName == "INPUT" && activeElement.type == "text") {
+        return;
+      }      
+      if (e.key == "+") {
+        this.zoom(1)
+      }else if(e.key == "-") {
+        this.zoom(-1)
+      }
+    });
   }
 
   handleClick(item: MenuItem) {
@@ -108,7 +128,7 @@ export default class ViewMenu extends Vue {
       this.editor.view.container.clientHeight,
     ];
     var rect = area.el.getBoundingClientRect();
-    var delta = 0.3 * direction;
+    var delta = 0.2 * direction;
     var ox = (rect.left - w / 2) * delta;
     var oy = (rect.top - h / 2) * delta;
 

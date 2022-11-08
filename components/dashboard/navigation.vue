@@ -41,8 +41,16 @@
         <v-divider></v-divider>
         <div class="my-4">
             <span class="navigation-heading mx-4">Templates</span>
-            <div class="mx-4 my-2" style="line-height: 1rem">
-                <span class="empty-text">Save a file as a template to make it appear here</span>
+            <template v-if="templates.length > 0">
+                <v-list-item :to="'/editor/' + template.id" v-for="template in templates" :key="template.id">
+                    <v-list-item-title class="favorite-title">
+                        <span class="ml-4">{{ template.name }}</span>
+                    </v-list-item-title>
+
+                </v-list-item>
+            </template>
+            <div class="mx-4 my-2" style="line-height: 1rem" v-else>
+                <span class="empty-text">Create a template from a file to make it appear here</span>
             </div>
         </div>
         <v-divider></v-divider>
@@ -54,6 +62,7 @@
                 Scores
             </v-list-item-title>
         </v-list-item>
+        <v-divider v-if="!showLogo"></v-divider>
     </v-list>
 </template>
 
@@ -73,6 +82,10 @@ export default class DashboardNavigation extends Vue {
 
     get favorites(): File[] {
         return fileStore.files.filter(f => f.favorite);
+    }
+
+    get templates(): File[] {
+        return fileStore.files.filter(f => f.template);
     }
 }
 </script>

@@ -26,6 +26,9 @@
                     <v-list-item @click="favoriteMenu">
                         <v-list-item-title>{{ favoriteText }}</v-list-item-title>
                     </v-list-item>
+                    <v-list-item @click="template">
+                        <v-list-item-title>{{ templateText }}</v-list-item-title>
+                    </v-list-item>
                     <v-list-item>
                         <v-list-item-title>Share</v-list-item-title>
                     </v-list-item>
@@ -40,10 +43,18 @@
             </v-menu>
 
         </div>
-
-        <p class="vimu-text pb-2">
-        </p>
-        <span class="file-card-timestamp">Edited {{ editTimestamp }}</span>
+        <div class="d-flex pt-3">
+            <span class="file-card-timestamp">Edited {{ editTimestamp }}</span>
+            <v-spacer></v-spacer>
+            <v-tooltip bottom v-if="file.template">
+                <template v-slot:activator="{ on, attrs }">
+                    <v-icon class="mr-2" size="20" v-bind="attrs" v-on="on">
+                        mdi-pencil-ruler
+                    </v-icon>
+                </template>
+                <span>This file can be used as a template</span>
+            </v-tooltip>
+        </div>
     </div>
 </template>
 
@@ -70,6 +81,10 @@ export default class FileCard extends Vue {
 
     get favoriteText() {
         return this.file.favorite ? 'Remove from favorites' : 'Add to favorites'
+    }
+
+    get templateText() {
+        return this.file.template ? 'Remove template' : 'Create template'
     }
 
     editTimestamp = getRelativeTime(this.file.updated)
@@ -99,6 +114,11 @@ export default class FileCard extends Vue {
 
     @Emit("favorite")
     favoriteMenu(e: MouseEvent) {
+        return this.file;
+    }
+
+    @Emit()
+    template() {
         return this.file;
     }
 

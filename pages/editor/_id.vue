@@ -1,27 +1,27 @@
 <template>
-  <v-sheet class="main fill-height">
-    <div ref="page" id="panel-grid" @mouseup="endDrag" @mousemove="onDrag">
-      <div id="editor" class="pa-0">
-        <editor-panel></editor-panel>
-      </div>
-      <div class="vertical-dragbar" @mousedown="startLeftDrag"></div>
-      <div id="score" v-show="showScore">
-        <client-only>
-          <OSMD-panel></OSMD-panel>
-        </client-only>
-      </div>
-      <div id="logDragbar" class="horizontal-dragbar" v-show="showScore && showLog" @mousedown="startUpperDrag"></div>
+    <v-sheet class="main fill-height">
+      <div ref="page" id="panel-grid" @mouseup="endDrag" @mousemove="onDrag">
+        <div id="editor" class="pa-0">
+          <editor-panel></editor-panel>
+        </div>
+        <div class="vertical-dragbar" @mousedown="startLeftDrag"></div>
+        <div id="score" v-show="showScore">
+          <client-only>
+            <OSMD-panel></OSMD-panel>
+          </client-only>
+        </div>
+        <div id="logDragbar" class="horizontal-dragbar" v-show="showScore && showLog" @mousedown="startUpperDrag"></div>
 
-      <div class="vertical-dragbar" v-if="showFirstColumn" @mousedown="startRightDrag"></div>
+        <div class="vertical-dragbar" v-if="showFirstColumn" @mousedown="startRightDrag"></div>
 
-      <div id="log" v-show="showLog">
-        <log-panel></log-panel>
+        <div id="log" v-show="showLog">
+          <log-panel></log-panel>
+        </div>
+        <div id="details" class="pa-0">
+          <details-panel />
+        </div>
       </div>
-      <div id="details" class="pa-0">
-        <details-panel />
-      </div>
-    </div>
-  </v-sheet>
+    </v-sheet>
 </template>
 
 <script lang="ts">
@@ -67,6 +67,7 @@ import { zoomAt } from "rete-area-plugin/src/zoom-at";
 
 @Component({
   layout: "editor",
+  fetchOnServer: false,
   components: {
     EditorPanel,
     DetailsPanel,
@@ -124,7 +125,9 @@ export default class Editor extends Vue {
         message: "File not found",
       });
     }
-    await this.initEditor()
+    if (process.client) {
+      await this.initEditor()
+    }
   }
 
 
