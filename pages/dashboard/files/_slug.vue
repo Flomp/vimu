@@ -22,7 +22,7 @@
                         </v-list-item>
                     </v-list>
                 </v-menu>
-                <vimu-btn class="mt-3 mt-sm-0" :primary="true" :large="true" @click="createFile">New file <v-icon>
+                <vimu-btn class="mt-3 mt-sm-0" :primary="true" :large="true" @click="createFile()">New file <v-icon>
                         mdi-plus</v-icon>
                 </vimu-btn>
             </div>

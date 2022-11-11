@@ -33,7 +33,7 @@ export default class LogStore extends VuexModule {
     async create(template?: File): Promise<File | null> {
         try {
             const name = generateName();
-            const json = template !== null ? template!.json : '{"id":"vimu@0.1.0","nodes":{"1":{"id":1,"data":{},"inputs":{"in_0":{"connections":[]}},"outputs":{},"position":[0,0],"name":"output"}}}'
+            const json = template !== undefined ? template!.json : '{"id":"vimu@0.1.0","nodes":{"1":{"id":1,"data":{},"inputs":{"in_0":{"connections":[]}},"outputs":{},"position":[0,0],"name":"output"}}}'           
             const file: File = await $pb.collection('files').create({ 'name': name, 'json': json, 'user_id': $pb.authStore.model!.id })
             return file;
         } catch (error) {
