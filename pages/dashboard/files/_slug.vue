@@ -17,7 +17,7 @@
                                 {{ template.name }}
                             </v-list-item>
                         </template>
-                        <v-list-item>
+                        <v-list-item v-else>
                             <span class="empty-text">You have not created any template yet</span>
                         </v-list-item>
                     </v-list>
@@ -141,14 +141,15 @@ export default class FilesPage extends Vue {
     }
 
     async createFile(file?: File) {
-        await fileStore.create(file);
-        await this.list()
-
+        const newFile = await fileStore.create(file);
+        if (newFile !== null) {
+            this.$router.push('/editor/'+newFile.id)
+        }
     }
 
     async removeFile(file: File) {
         await fileStore.delete(file.id);
-        await this.list();
+        await this.list(false);
     }
 
     renameFile(file: File) {
