@@ -7,6 +7,7 @@
     :rules="rules"
     :hide-details="hideDetails"
     :prepend-inner-icon="prependInnerIcon"
+    :prepend-icon="prependIcon"
     :placeholder="placeholder"
     validate-on-blur
     outlined
@@ -25,6 +26,7 @@ export default class VimuTextField extends Vue {
     @Prop() readonly rules!: Function[];
     @Prop({default: false}) readonly hideDetails!: boolean;
     @Prop() readonly prependInnerIcon!: string;
+    @Prop() readonly prependIcon!: string;
     @Prop() readonly placeholder!: string;
     @Prop({default: false}) readonly clearable!: boolean;
 

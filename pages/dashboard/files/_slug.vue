@@ -50,7 +50,7 @@
                 <v-card-text class="pb-0">
                     <vimu-text-field v-model="filename"></vimu-text-field>
                 </v-card-text>
-                <v-card-actions class="pb-5">
+                <v-card-actions class="py-4">
                     <v-spacer></v-spacer>
                     <vimu-btn @click="saveRename">Save</vimu-btn>
                 </v-card-actions>
