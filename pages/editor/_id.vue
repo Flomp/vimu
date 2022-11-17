@@ -64,6 +64,7 @@ import OSMDPanel from "~/components/editor/panels/osmd_panel.vue";
 import { engineStore, fileStore, osmdStore, settingsStore } from "~/store";
 // @ts-ignore
 import { zoomAt } from "rete-area-plugin/src/zoom-at";
+import SourceScoreComponent from "~/components/editor/rete/components/source/source_score_component";
 
 @Component({
   layout: "editor",
@@ -193,6 +194,8 @@ export default class Editor extends Vue {
     ];
     editor.use(AutoArrangePlugin, { offset: { x: w / 2, y: h / 2 } });
 
+    (editor.view.area as any)._zoom.intensity = 0.03;
+
     const engine = new Rete.Engine("vimu@0.1.0");
 
     editor.on(
@@ -237,6 +240,7 @@ export default class Editor extends Vue {
 
     const components = [
       new SourceCorpusComponent(editor),
+      new SourceScoreComponent(editor),
       new SourceTinynotationComponent(editor),
       new SelectMeasuresComponent(editor),
       new SelectPartComponent(editor),

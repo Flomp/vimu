@@ -1,8 +1,9 @@
 <template>
     <v-sheet class="main">
         <v-container>
-            <vimu-text-field v-model="query" class="mb-12" placeholder="Search" prepend-inner-icon="mdi-magnify"
-                :clearable=true :hide-details="true" style="max-width: 400px;"></vimu-text-field>
+            <vimu-searchbar class="mb-12" v-model="query" :hide-details="true" @update="search" style="max-width: 400px;">
+            </vimu-searchbar>
+
             <span class="vimu-title">{{ title }}</span>
             <div class="py-5">
                 <v-menu offset-y content-class="vimu-menu elevation-0">
@@ -92,10 +93,7 @@ export default class FilesPage extends Vue {
     listLoading: boolean = false;
 
     get files() {
-        if (this.query === null) {
-            this.query = ""
-        }
-        return fileStore.files.filter(f => f.name.includes(this.query));
+        return fileStore.files;
     }
 
     get title() {
@@ -130,8 +128,13 @@ export default class FilesPage extends Vue {
         }
     }
 
-    async fetch() {
-        await this.list();
+    async search(value?: string) {
+        if (!value) {
+            this.filter = ""
+        }else {
+            this.filter = `name~"${value}"`
+        }
+        this.list(true);
     }
 
     async list(showLoading: boolean = true) {
@@ -143,7 +146,7 @@ export default class FilesPage extends Vue {
     async createFile(file?: File) {
         const newFile = await fileStore.create(file);
         if (newFile !== null) {
-            this.$router.push('/editor/'+newFile.id)
+            this.$router.push('/editor/' + newFile.id)
         }
     }
 

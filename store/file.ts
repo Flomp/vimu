@@ -1,5 +1,6 @@
 import { Action, Module, MutationAction, VuexModule } from 'vuex-module-decorators';
 import File from '~/models/file';
+import { Score } from '~/models/score';
 import { generateName } from '~/utils/string';
 import { $pb, notificationStore } from '.';
 
@@ -33,7 +34,20 @@ export default class LogStore extends VuexModule {
     async create(template?: File): Promise<File | null> {
         try {
             const name = generateName();
-            const json = template !== undefined ? template!.json : '{"id":"vimu@0.1.0","nodes":{"1":{"id":1,"data":{},"inputs":{"in_0":{"connections":[]}},"outputs":{},"position":[0,0],"name":"output"}}}'           
+            const json = template !== undefined ? template!.json : '{"id":"vimu@0.1.0","nodes":{"1":{"id":1,"data":{},"inputs":{"in_0":{"connections":[{"node":24,"output":"out_0","data":{}}]}},"outputs":{},"position":[156,-1],"name":"output"},"24":{"id":24,"data":{},"inputs":{},"outputs":{"out_0":{"connections":[{"node":1,"input":"in_0","data":{}}]}},"position":[-119.5,-41],"name":"source_score"}}}'           
+            const file: File = await $pb.collection('files').create({ 'name': name, 'json': json, 'user_id': $pb.authStore.model!.id })
+            return file;
+        } catch (error) {
+            notificationStore.sendNotification({ title: 'Error creating new file', color: 'error' })
+            return null;
+        }
+    }
+
+    @Action
+    async createFileFromScore(score: Score): Promise<File | null> {
+        try {
+            const name = generateName();
+            const json = `{"id":"vimu@0.1.0","nodes":{"1":{"id":1,"data":{},"inputs":{"in_0":{"connections":[{"node":24,"output":"out_0","data":{}}]}},"outputs":{},"position":[156,-1],"name":"output"},"24":{"id":24,"data":{"data":{"id":"${score.id}","name":"${score.name}","data":"${score.data}"}},"inputs":{},"outputs":{"out_0":{"connections":[{"node":1,"input":"in_0","data":{}}]}},"position":[-119.5,-41],"name":"source_score"}}}`          
             const file: File = await $pb.collection('files').create({ 'name': name, 'json': json, 'user_id': $pb.authStore.model!.id })
             return file;
         } catch (error) {

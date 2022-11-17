@@ -1,10 +1,13 @@
 <template>
   <v-navigation-drawer class="score-drawer" v-model="drawer" width="500" right absolute temporary overlay-opacity="0">
-    <v-btn class="pa-8" color="primary" icon @click="drawer = false">
-      <v-icon>mdi-close</v-icon>
-    </v-btn>
-    <div class="score-data px-12 pt-2 pb-6" v-if="score">
-      <span class="score-title">{{ score.name }}</span>
+    <div class="score-data px-8 pb-3" v-if="score" style="padding-top: 64px">
+      <v-btn class="pa-8" color="primary" icon @click="drawer = false" absolute style="top:0; left:0">
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
+      <div class="d-flex justify-space-between"> 
+        <span class="score-title">{{ score.name }}</span>
+        <vimu-btn :primary="true">Create File</vimu-btn>
+      </div>
       <div class="d-flex flex-wrap align-center pt-6">
         <div cols="6" class="d-flex align-center mb-2">
           <span>Composer:</span> <span class="ml-4 mr-5 font-weight-bold">{{ getMeta("composer") }}</span>
@@ -28,7 +31,7 @@
     </div>
     <div>
       <div>
-          <div :class="{ 'd-none': scoreLoading }" id="osmdContainer"></div>
+        <div :class="{ 'd-none': scoreLoading }" id="osmdContainer"></div>
       </div>
     </div>
     <div class="d-flex justify-center align-center pt-6" v-if="scoreLoading">
@@ -42,8 +45,13 @@ import { Component, Prop, VModel, Vue, Watch } from "nuxt-property-decorator";
 import { OpenSheetMusicDisplay } from "opensheetmusicdisplay";
 import { VNavigationDrawer } from "vuetify/lib";
 import { Score, ScoreMeta } from "~/models/score";
+import VimuBtn from "../vimu/vimu_button.vue";
 
-@Component({})
+@Component({
+  components: {
+    VimuBtn
+  }
+})
 export default class ScoreDrawer extends Vue {
   @VModel() drawer!: boolean;
   @Prop() readonly score!: Score;
@@ -90,9 +98,9 @@ export default class ScoreDrawer extends Vue {
 }
 
 .score-title {
-  font-size: 3rem !important;
+  font-size: 2.5rem !important;
   font-weight: 600;
-  line-height: 3rem;
+  line-height: 2.5rem;
   letter-spacing: -0.0083333333em !important;
 
 }

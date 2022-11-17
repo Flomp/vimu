@@ -46,8 +46,12 @@ export default class ScoreStore extends VuexModule {
 
     @MutationAction({ mutate: ['scores'] })
     async list(data: { filter: string, sort: string } = { filter: '', sort: '' }) {
-        const response = await $pb.collection('scores').getList(undefined, undefined, { sort: data.sort, filter: data.filter, expand: 'meta' })
-        return { scores: response.items }
+        try {
+            const response = await $pb.collection('scores').getList(undefined, undefined, { sort: data.sort, filter: data.filter, expand: 'meta' })
+            return { scores: response.items } 
+        }catch {
+            return { scores: this.scores }
+        }
     }
 
     @Action

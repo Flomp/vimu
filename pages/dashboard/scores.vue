@@ -2,8 +2,8 @@
     <v-sheet class="main">
         <v-container>
             <div class="d-flex align-center mb-12">
-                <vimu-text-field v-model="query" placeholder="Search" prepend-inner-icon="mdi-magnify" :clearable=true
-                    style="max-width: 400px;" :hide-details="true"></vimu-text-field>
+                <vimu-searchbar v-model="query" :hide-details="true" @update="search" style="max-width: 400px;">
+                </vimu-searchbar>
                 <v-btn class="mx-5" icon>
                     <v-icon color="primary">mdi-tune</v-icon>
                 </v-btn>
@@ -22,7 +22,8 @@
             <v-row>
                 <template v-if="!listLoading">
                     <v-col cols="12" sm="6" md="4" lg="3" v-for="score in scores" :key="score.id">
-                        <score-card :score="score" @edit="openEditDialog" @remove="removeScore" @click="setDrawerScore">
+                        <score-card :score="score" @create="createFile" @edit="openEditDialog" @remove="removeScore"
+                            @click="setDrawerScore">
                         </score-card>
                     </v-col>
                 </template>
@@ -31,7 +32,6 @@
                         <v-skeleton-loader type="card"></v-skeleton-loader>
                     </v-col>
                 </template>
-
             </v-row>
         </v-container>
         <score-dialog v-model="dialog" :score="editScore" :edit-mode="dialogEditMode" @save="createScore">
@@ -41,16 +41,18 @@
 </template>
 
 <script lang="ts">
+import { query } from "express";
 import { Component, Vue } from "nuxt-property-decorator";
+import { VBtn, VCol, VContainer, VIcon, VRow, VSheet, VSkeletonLoader, VSpacer } from "vuetify/lib";
 import ScoreCard from "~/components/dashboard/score_card.vue";
 import ScoreDialog from "~/components/dashboard/score_dialog.vue";
 import ScoreDrawer from "~/components/dashboard/score_drawer.vue";
 import VimuBtn from "~/components/vimu/vimu_button.vue";
+import VimuSearchbar from "~/components/vimu/vimu_searchbar.vue";
 import VimuTabs from "~/components/vimu/vimu_tabs.vue";
 import VimuTextField from "~/components/vimu/vimu_text_field.vue";
 import { Score } from "~/models/score";
-import { scoreStore } from "~/store";
-
+import { authStore, fileStore, scoreStore } from "~/store";
 
 @Component({
     layout: 'dashboard',
@@ -61,11 +63,12 @@ import { scoreStore } from "~/store";
         VimuBtn,
         ScoreDialog,
         ScoreCard,
-        ScoreDrawer
+        ScoreDrawer,
+        VimuSearchbar
     }
 })
 export default class ScoresPage extends Vue {
-    tabs: string[] = ["My scores", "Explore"]
+    tabs: string[] = ["My scores", "Library"]
     activeTab = 0;
     dialog: boolean = false;
     drawer: boolean = true;
@@ -78,7 +81,11 @@ export default class ScoresPage extends Vue {
     editScore: Score | null = null
     dialogEditMode: boolean = false;
 
-    filter: string = `user_id = "${this.$pb.authStore.model?.id}"`
+    filters = {
+        tab: `user_id="${authStore.userId}"`,
+        query: ""
+    }
+
     sort: string = "name";
     query: string = "";
 
@@ -86,8 +93,12 @@ export default class ScoresPage extends Vue {
         return scoreStore.scores;
     }
 
-    async fetch() {
-        await this.list();
+    get assembledFilter(): string {
+        let filter = this.filters.tab;
+        if (this.filters.query) {
+            filter += '&&' + this.filters.query;
+        }
+        return filter
     }
 
     created() {
@@ -113,17 +124,33 @@ export default class ScoresPage extends Vue {
 
     async onTabChanged(tab: number) {
         if (tab == 0) {
-            this.filter = `user_id = "${this.$pb.authStore.model?.id}"`
+            this.filters.tab = `user_id="${authStore.userId}"`
         } else if (tab == 1) {
-            this.filter = "public = true";
+            this.filters.tab = "public=true";
+        }
+        this.list(true);
+    }
+
+    async search(value?: string) {
+        if (!value) {
+            this.filters.query = ""
+        } else {
+            this.filters.query = `(name~"${value}"||meta.composer~"${value}")`
         }
         this.list(true);
     }
 
     async list(showLoading: boolean = true) {
         this.listLoading = showLoading;
-        await scoreStore.list({ filter: this.filter, sort: this.sort });
+        await scoreStore.list({ filter: this.assembledFilter, sort: this.sort });
         this.listLoading = false;
+    }
+
+    async createFile(score: Score) {
+        const file = await fileStore.createFileFromScore(score)
+        if (file != null) {
+            this.$router.push('/editor/' + file.id)
+        }
     }
 
     async createScore(data: { score: Score, file: File, update: boolean }) {

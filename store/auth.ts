@@ -1,4 +1,4 @@
-import { ClientResponseError } from 'pocketbase';
+import { Getter } from 'nuxt-property-decorator';
 import { Action, Module, VuexModule } from 'vuex-module-decorators';
 import { $pb, notificationStore } from '.';
 
@@ -40,5 +40,9 @@ export default class LogStore extends VuexModule {
     @Action({ rawError: true })
     logout() {
         $pb.authStore.clear();
+    }
+
+    get userId() {
+        return $pb.authStore.model?.id;
     }
 }

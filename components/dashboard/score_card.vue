@@ -5,7 +5,7 @@
             <span class="vimu-card-title score-card-title mr-1">
                 {{ score.name }}
             </span>
-            <v-tooltip bottom v-if="score.public">
+            <v-tooltip bottom v-if="score.public && owned && !readOnly">
                 <template v-slot:activator="{ on, attrs }">
                     <v-icon v-bind="attrs" v-on="on">
                         mdi-earth
@@ -14,9 +14,9 @@
                 <span>Public</span>
             </v-tooltip>
             <v-spacer></v-spacer>
-            <v-tooltip bottom>
+            <v-tooltip bottom v-if="!readOnly">
                 <template v-slot:activator="{ on, attrs }">
-                    <v-btn color="primary" icon v-bind="attrs" v-on="on">
+                    <v-btn color="primary" icon v-bind="attrs" v-on="on" @click.stop="create">
                         <v-icon>
                             mdi-plus
                         </v-icon>
@@ -25,7 +25,7 @@
                 </template>
                 <span>Create file from score</span>
             </v-tooltip>
-            <v-menu offset-y content-class="vimu-menu elevation-0">
+            <v-menu offset-y content-class="vimu-menu elevation-0" v-if="owned && !readOnly">
                 <template v-slot:activator="{ on, attrs }">
                     <v-btn color="primary" icon v-bind="attrs" v-on="on">
                         <v-icon>mdi-dots-vertical</v-icon>
@@ -46,22 +46,34 @@
 </template>
 
 <script lang="ts">
+import { read } from "fs";
 import { Vue, Component, Prop, Emit } from "nuxt-property-decorator";
 import { Score } from "~/models/score";
+import { $pb, authStore } from "~/store";
 
 @Component({
     components: {}
 })
 export default class ScoreCard extends Vue {
     @Prop() readonly score!: Score;
+    @Prop() readonly readOnly!: boolean;
 
 
     get thumbnailPath() {
-        return this.$pb.getFileUrl(this.score as any, this.score.thumbnail)
+        return $pb.getFileUrl(this.score as any, this.score.thumbnail)
+    }
+
+    get owned() {
+        return this.score.user_id == authStore.userId
     }
 
     @Emit()
     click() {
+        return this.score;
+    }
+
+    @Emit()
+    create() {
         return this.score;
     }
 

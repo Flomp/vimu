@@ -7,6 +7,7 @@ interface Score {
     expand: {
         meta: ScoreMeta
     }
+    user_id: string;
 }
 
 interface ScoreMeta {
@@ -33,7 +34,8 @@ const empty_score: Score = {
             language: "",
             times: "",
         }
-    }
+    },
+    user_id: ""
 }
 
 const empty_score_meta: ScoreMeta = {

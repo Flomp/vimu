@@ -48,7 +48,7 @@ const editorMenuItems: MenuItem[] = [
     {
         name: "Source", children:
             [
-                { name: "Corpus", key: "source_corpus" },
+                { name: "Score", key: "source_score" },
                 { name: "Tinynotation", key: "source_tinynotation" }
             ]
     },
