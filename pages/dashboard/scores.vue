@@ -36,7 +36,7 @@
         </v-container>
         <score-dialog v-model="dialog" :score="editScore" :edit-mode="dialogEditMode" @save="createScore">
         </score-dialog>
-        <score-drawer v-model="drawer" :score="drawerScore"></score-drawer>
+        <score-drawer v-model="drawer" :score="drawerScore" @create="createFile"></score-drawer>
     </v-sheet>
 </template>
 

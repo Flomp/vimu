@@ -6,7 +6,7 @@
       </v-btn>
       <div class="d-flex justify-space-between"> 
         <span class="score-title">{{ score.name }}</span>
-        <vimu-btn :primary="true">Create File</vimu-btn>
+        <vimu-btn :primary="true" @click="create">Create File</vimu-btn>
       </div>
       <div class="d-flex flex-wrap align-center pt-6">
         <div cols="6" class="d-flex align-center mb-2">
@@ -41,7 +41,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, VModel, Vue, Watch } from "nuxt-property-decorator";
+import { Component, Emit, Prop, VModel, Vue, Watch } from "nuxt-property-decorator";
 import { OpenSheetMusicDisplay } from "opensheetmusicdisplay";
 import { VNavigationDrawer } from "vuetify/lib";
 import { Score, ScoreMeta } from "~/models/score";
@@ -85,7 +85,11 @@ export default class ScoreDrawer extends Vue {
       this.osmd.zoom = 0.5;
       this.osmd.render();
     }, 500)
+  }
 
+  @Emit()
+  create() {
+    return this.score;
   }
 
 }
