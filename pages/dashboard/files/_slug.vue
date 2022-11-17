@@ -1,8 +1,8 @@
 <template>
     <v-sheet class="main">
         <v-container>
-            <vimu-text-field v-model="query" class="mb-8" placeholder="Search" prepend-inner-icon="mdi-magnify"
-                :clearable=true style="max-width: 400px;"></vimu-text-field>
+            <vimu-text-field v-model="query" class="mb-12" placeholder="Search" prepend-inner-icon="mdi-magnify"
+                :clearable=true :hide-details="true" style="max-width: 400px;"></vimu-text-field>
             <span class="vimu-title">{{ title }}</span>
             <div class="py-5">
                 <v-menu offset-y content-class="vimu-menu elevation-0">

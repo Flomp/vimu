@@ -18,7 +18,7 @@ export default class EngineStore extends VuexModule {
 
     @MutationAction({ mutate: ['data'] })
     async process(data: Data) {
-        const result = await $axios.post('/', data)
+        const result = await $axios.post('/engine', data)
 
         if (result.data.data) {
             return result.data;

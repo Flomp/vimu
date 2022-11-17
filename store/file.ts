@@ -48,7 +48,7 @@ export default class LogStore extends VuexModule {
             const file: File = await $pb.collection('files').update(data.id, { 'name': data.name, 'json': data.json, 'favorite': data.favorite, 'template': data.template })
             return file;
         } catch (error) {
-            notificationStore.sendNotification({ title: 'Error updating new file', color: 'error' })
+            notificationStore.sendNotification({ title: 'Error updating file', color: 'error' })
             return null;
         }
     }
@@ -59,7 +59,7 @@ export default class LogStore extends VuexModule {
             const success: boolean = await $pb.collection('files').delete(id)
             return success;
         } catch (error) {
-            notificationStore.sendNotification({ title: 'Error deleting new file', color: 'error' })
+            notificationStore.sendNotification({ title: 'Error deleting file', color: 'error' })
             return false;
         }
     }

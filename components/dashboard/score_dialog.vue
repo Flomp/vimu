@@ -3,17 +3,23 @@
         :fullscreen="$vuetify.breakpoint.mobile" transition="dialog-transition">
         <v-card>
             <v-card-title>
-                Upload Score
+                {{ editMode ? 'Edit' : 'Upload' }} Score
             </v-card-title>
             <v-card-text>
-                <v-form class="mt-1">
-                    <vimu-text-field v-model="scoreLocal.name" placeholder="Name"></vimu-text-field>
+                <v-form ref="form" class="mt-1">
                     <div class="d-flex">
-                        <v-file-input class="mr-4" outlined chips placeholder="MusicXML File" accept="application/xml"
-                        prepend-icon="mdi-music-clef-bass"></v-file-input>
-                    <v-switch label="Public" v-model="scoreLocal.public" inset></v-switch>
+                        <vimu-text-field v-model="scoreLocal.name" placeholder="Name" :rules="nameRules">
+                        </vimu-text-field>
+                        <v-switch class="ml-4"  label="Public" v-model="scoreLocal.public" inset  v-if="editMode"></v-switch>
+
                     </div>
-    
+                    <div class="d-flex" v-if="!editMode">
+                        <v-file-input v-model="file" class="mr-4" outlined chips placeholder="MusicXML File"
+                            :loading="validationLoading" prepend-icon="mdi-music-clef-bass" :rules="fileRules"
+                            @change="onFileChanged">
+                        </v-file-input>
+                        <v-switch label="Public" v-model="scoreLocal.public" inset></v-switch>
+                    </div>
 
                     <v-expansion-panels flat>
                         <v-expansion-panel>
@@ -21,15 +27,19 @@
                                 Additional information
                             </v-expansion-panel-header>
                             <v-expansion-panel-content>
-                                <vimu-text-field placeholder="Ambitus" prepend-icon="mdi-swap-vertical">
+                                <vimu-text-field v-model="scoreLocal.expand.meta.composer" placeholder="Composer"
+                                    prepend-icon="mdi-account"></vimu-text-field>
+                                <vimu-text-field v-model="scoreLocal.expand.meta.date" placeholder="Date"
+                                    prepend-icon="mdi-calendar-today"></vimu-text-field>
+                                <vimu-text-field v-model="scoreLocal.expand.meta.instruments" placeholder="Instruments"
+                                    prepend-icon="mdi-piano"></vimu-text-field>
+                                <vimu-text-field v-model="scoreLocal.expand.meta.keys" placeholder="Key Signatures"
+                                    prepend-icon="mdi-language-csharp">
                                 </vimu-text-field>
-                                <vimu-text-field placeholder="Composer" prepend-icon="mdi-draw"></vimu-text-field>
-                                <vimu-text-field placeholder="Date" prepend-icon="mdi-calendar-today"></vimu-text-field>
-                                <vimu-text-field placeholder="Instruments" prepend-icon="mdi-piano"></vimu-text-field>
-                                <vimu-text-field placeholder="Key Signatures" prepend-icon="mdi-language-csharp">
-                                </vimu-text-field>
-                                <vimu-text-field placeholder="Language" prepend-icon="mdi-translate"></vimu-text-field>
-                                <vimu-text-field placeholder="Time Signatures" prepend-icon="mdi-fraction-one-half">
+                                <vimu-text-field v-model="scoreLocal.expand.meta.times" placeholder="Time Signatures"
+                                    prepend-icon="mdi-fraction-one-half">
+                                    <vimu-text-field v-model="scoreLocal.expand.meta.language" placeholder="Language"
+                                        prepend-icon="mdi-translate"></vimu-text-field>
                                 </vimu-text-field>
                             </v-expansion-panel-content>
                         </v-expansion-panel>
@@ -40,8 +50,8 @@
             <v-card-actions class="py-4">
                 <v-spacer></v-spacer>
                 <v-btn text color="grey" @click="dialog = false">Cancel</v-btn>
-                <vimu-btn @click="dialog = false">
-                    Upload
+                <vimu-btn @click="validateAndSave" :disabled="validationLoading">
+                    {{ editMode ? 'Save' : 'Upload' }}
                 </vimu-btn>
             </v-card-actions>
         </v-card>
@@ -49,8 +59,10 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, VModel, Prop, Watch } from "nuxt-property-decorator";
+import { Component, Emit, Prop, Ref, VModel, Vue, Watch } from "nuxt-property-decorator";
 import { empty_score, Score } from "~/models/score";
+import { scoreStore } from "~/store";
+import { required } from "~/utils/verification_rules";
 import VimuBtn from "../vimu/vimu_button.vue";
 
 @Component({
@@ -59,6 +71,7 @@ import VimuBtn from "../vimu/vimu_button.vue";
     }
 })
 export default class ScoreDialog extends Vue {
+    [x: string]: any;
     @VModel() dialog!: boolean;
     @Prop({
         default: () => {
@@ -66,13 +79,68 @@ export default class ScoreDialog extends Vue {
         }
     }) score!: Score;
 
-    scoreLocal: Score = JSON.parse(JSON.stringify(this.score));
+    @Prop() readonly editMode!: boolean;
+
+    @Ref() readonly form!: HTMLFormElement;
+
+    scoreLocal: Score = JSON.parse(JSON.stringify(this.score ?? empty_score));
+
+    isValidFile: boolean = true;
+    fileRules = [
+        required, this.validFileRule
+    ]
+
+    nameRules = [
+        required
+    ]
+
+    validationLoading = false;
+
+    file: File | null = null;
+
+    async onFileChanged(file: File) {
+        if (!file) {
+            return;
+        }
+        this.validationLoading = true;
+        const meta = await scoreStore.getMeta(file);
+
+        if (meta === null) {
+            this.isValidFile = false;
+        } else {
+            this.scoreLocal.expand.meta = meta;
+
+            this.isValidFile = true;
+        }
+
+        this.form?.validate();
+        this.validationLoading = false;
+    }
 
     @Watch("dialog")
     onDialogChanged(value: boolean) {
         if (value) {
-            this.scoreLocal = JSON.parse(JSON.stringify(this.score))
+            this.scoreLocal = JSON.parse(JSON.stringify(this.score ?? empty_score))
+            this.file = null;
+            this.validationLoading = false;
         }
+        this.form?.resetValidation();
+    }
+
+    validFileRule() {
+        return this.isValidFile || "Invalid File"
+    }
+
+    validateAndSave() {
+        if (this.form?.validate()) {
+            this.save();
+        }
+    }
+
+    @Emit()
+    save() {
+        this.dialog = false
+        return { score: this.scoreLocal, file: this.file, update: this.editMode };
     }
 
 }

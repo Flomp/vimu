@@ -1,12 +1,16 @@
 interface Score {
     id?: string;
     name: string;
+    thumbnail: string;
+    data: string;
     public: boolean;
-    meta?: ScoreMeta
+    expand: {
+        meta: ScoreMeta
+    }
 }
 
 interface ScoreMeta {
-    ambitus?: string;
+    id?: string;
     composer?: string;
     date?: string;
     instruments?: string;
@@ -18,15 +22,27 @@ interface ScoreMeta {
 const empty_score: Score = {
     name: "",
     public: false,
-    meta: {
-        ambitus: "",
-        composer: "",
-        date: "",
-        instruments: "",
-        keys: "",
-        language: "",
-        times: "",
+    thumbnail: "",
+    data: "",
+    expand: {
+        meta: {
+            composer: "",
+            date: "",
+            instruments: "",
+            keys: "",
+            language: "",
+            times: "",
+        }
     }
 }
 
-export { Score, ScoreMeta, empty_score }
+const empty_score_meta: ScoreMeta = {
+    composer: "",
+    date: "",
+    instruments: "",
+    keys: "",
+    language: "",
+    times: ""
+}
+
+export { Score, ScoreMeta, empty_score, empty_score_meta }

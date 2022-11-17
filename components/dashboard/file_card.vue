@@ -1,5 +1,5 @@
 <template>
-    <div class="vimu-card file-card pa-4" @click="open">
+    <div class="vimu-card hover-card file-card pa-4" @click="open">
         <div class="d-flex">
             <p class="vimu-card-title" v-if="!editMode">
                 {{ file.name }}
@@ -135,11 +135,11 @@ export default class FileCard extends Vue {
 </script>
 
 <style>
-.file-card {
+.hover-card {
     cursor: pointer;
 }
 
-.file-card:hover {
+.hover-card:hover {
     background-color: #f1f1f1;
 }
 

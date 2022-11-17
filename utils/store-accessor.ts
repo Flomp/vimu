@@ -4,6 +4,8 @@ import { getModule } from 'vuex-module-decorators';
 
 import auth from '~/store/auth';
 import file from '~/store/file';
+import score from '~/store/score';
+
 import engine from '~/store/engine';
 import log from '~/store/log';
 import notification from '~/store/notification';
@@ -15,6 +17,7 @@ import settings from '~/store/settings';
 
 let authStore: auth;
 let fileStore: file;
+let scoreStore: score;
 
 let engineStore: engine;
 let logStore: log;
@@ -36,6 +39,7 @@ function initialisePocketbase(pocketbase: PocketBase) {
 function initialiseStores(store: Store<any>): void {
     authStore = getModule(auth, store)
     fileStore = getModule(file, store)
+    scoreStore = getModule(score, store)
 
     engineStore = getModule(engine, store)
     logStore = getModule(log, store)
@@ -52,6 +56,7 @@ export {
     $pb,
     authStore,
     fileStore,
+    scoreStore,
     engineStore,
     logStore,
     notificationStore,

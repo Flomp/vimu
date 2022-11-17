@@ -20,5 +20,4 @@ export default class Drawer extends Vue {
 </script>
 
 <style>
-
 </style>
