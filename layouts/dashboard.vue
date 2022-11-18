@@ -37,10 +37,10 @@ export default class DashboardLayout extends Vue {
 
 <style>
 .dashboard-appbar {
-    position: absolute;
+    position: fixed;
     right: 48px;
     top: 13.5px;
-    z-index: 1;
+    z-index: 3;
 }
 </style>
   

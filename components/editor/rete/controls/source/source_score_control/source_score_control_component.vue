@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="max-width: 200px">
     <p class="vimu-card-title">{{ data.name }}</p>
     <vimu-btn :primary="true" @click="dialog = true">Browse</vimu-btn>
     <source-score-dialog v-model="dialog" @select="selectScore"></source-score-dialog>
@@ -35,7 +35,9 @@ export default class SourceScoreControlComponent extends Vue {
   dialog: boolean = false;
 
   mounted() {
-    this.data = this.getData(this.ikey);
+    if (this.getData(this.ikey)) {
+      this.data = this.getData(this.ikey);
+    }
   }
 
   selectScore(score: Score) {

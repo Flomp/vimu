@@ -1,12 +1,12 @@
 <template>
-    <v-dialog v-model="dialog" scrollable max-width="800px" :fullscreen="$vuetify.breakpoint.mobile"
+    <v-dialog content-class="source-score-dialog" v-model="dialog" scrollable max-width="800px" :fullscreen="$vuetify.breakpoint.mobile"
         transition="dialog-transition">
         <v-card>
             <v-card-title>
                 Choose score
             </v-card-title>
             <v-card-text class="black--text">
-                <div class="d-flex align-center my-6">
+                <div class="d-flex align-center mt-5 mb-4 pb-2 source-score-dialog-toolbar" >
                     <vimu-tabs v-model="activeTab" :tabs="tabs" @change="onTabChanged"></vimu-tabs>
                     <vimu-searchbar :hide-details="true" @update="search"></vimu-searchbar>
                 </div>
@@ -20,7 +20,7 @@
                         </v-col>
                     </template>
                     <template v-else>
-                        <v-col cols="12" sm="6" md="4" v-for="i in 3" :key="i">
+                        <v-col cols="12" sm="6" md="4" v-for="i in 9" :key="i">
                             <v-skeleton-loader type="card" height="173"></v-skeleton-loader>
                         </v-col>
                     </template>
@@ -115,5 +115,14 @@ export default class SourceScoreDialog extends Vue {
 </script>
 
 <style>
+.source-score-dialog {
+    height: 90%
+}
 
+.source-score-dialog-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: white
+}
 </style>

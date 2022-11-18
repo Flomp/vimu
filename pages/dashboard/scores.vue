@@ -1,29 +1,31 @@
 <template>
     <v-sheet class="main">
-        <v-container>
-            <div class="d-flex align-center mb-12">
-                <vimu-searchbar v-model="query" :hide-details="true" @update="search" style="max-width: 400px;">
-                </vimu-searchbar>
-                <v-btn class="mx-5" icon>
-                    <v-icon color="primary">mdi-tune</v-icon>
-                </v-btn>
-                <v-spacer></v-spacer>
-            </div>
-            <span class="vimu-title">Scores</span>
-            <div class="d-flex align-center">
+        <v-container class="pt-0">
+            <div class="header-section pt-4">
+                <div class="d-flex align-center mb-8">
+                    <vimu-searchbar v-model="query" :hide-details="true" @update="search" style="max-width: 400px;">
+                    </vimu-searchbar>
+                    <v-btn class="mx-5" icon>
+                        <v-icon color="primary">mdi-tune</v-icon>
+                    </v-btn>
+                    <v-spacer></v-spacer>
+                </div>
+                <span class="vimu-title">Scores</span>
+                <div class="d-flex align-center">
 
-                <vimu-btn class="score-upload-btn" :loading="createLoading" :disabled="createLoading" :primary="true"
-                    :large="true" @click="openCreateDialog">Upload
-                </vimu-btn>
+                    <vimu-btn class="score-upload-btn" :loading="createLoading" :disabled="createLoading"
+                        :primary="true" :large="true" @click="openCreateDialog">Upload
+                    </vimu-btn>
 
-                <vimu-tabs class="my-6" v-model="activeTab" :tabs="tabs" @change="onTabChanged"></vimu-tabs>
+                    <vimu-tabs class="my-6" v-model="activeTab" :tabs="tabs" @change="onTabChanged"></vimu-tabs>
 
+                </div>
             </div>
             <v-row>
                 <template v-if="!listLoading">
                     <v-col cols="12" sm="6" md="4" lg="3" v-for="score in scores" :key="score.id">
-                        <score-card :score="score" @create="createFile" @edit="openEditDialog" @remove="removeScore"
-                            @click="setDrawerScore">
+                        <score-card :score="score" @create="createFile" @edit="openEditDialog"
+                            @remove="showDeleteConfirm" @click="setDrawerScore">
                         </score-card>
                     </v-col>
                 </template>
@@ -37,6 +39,9 @@
         <score-dialog v-model="dialog" :score="editScore" :edit-mode="dialogEditMode" @save="createScore">
         </score-dialog>
         <score-drawer v-model="drawer" :score="drawerScore" @create="createFile"></score-drawer>
+        <confirm-dialog v-model="deleteConfirmDialog" title="Are you sure?"
+            text="You are about to permanently delete this score." action="Delete" @confirm="removeScore">
+        </confirm-dialog>
     </v-sheet>
 </template>
 
@@ -44,6 +49,7 @@
 import { query } from "express";
 import { Component, Vue } from "nuxt-property-decorator";
 import { VBtn, VCol, VContainer, VIcon, VRow, VSheet, VSkeletonLoader, VSpacer } from "vuetify/lib";
+import ConfirmDialog from "~/components/dashboard/confirm_dialog.vue";
 import ScoreCard from "~/components/dashboard/score_card.vue";
 import ScoreDialog from "~/components/dashboard/score_dialog.vue";
 import ScoreDrawer from "~/components/dashboard/score_drawer.vue";
@@ -64,7 +70,8 @@ import { authStore, fileStore, scoreStore } from "~/store";
         ScoreDialog,
         ScoreCard,
         ScoreDrawer,
-        VimuSearchbar
+        VimuSearchbar,
+        ConfirmDialog
     }
 })
 export default class ScoresPage extends Vue {
@@ -80,6 +87,9 @@ export default class ScoresPage extends Vue {
 
     editScore: Score | null = null
     dialogEditMode: boolean = false;
+
+    deletingScore: Score | null = null;
+    deleteConfirmDialog: boolean = false;
 
     filters = {
         tab: `user_id="${authStore.userId}"`,
@@ -120,6 +130,11 @@ export default class ScoresPage extends Vue {
         this.dialogEditMode = true;
         this.editScore = score;
         this.dialog = true;
+    }
+
+    showDeleteConfirm(score: Score) {
+        this.deletingScore = score;
+        this.deleteConfirmDialog = true
     }
 
     async onTabChanged(tab: number) {
@@ -166,8 +181,11 @@ export default class ScoresPage extends Vue {
         this.createLoading = false;
     }
 
-    async removeScore(score: Score) {
-        await scoreStore.delete(score)
+    async removeScore() {
+        if (!this.deletingScore) {
+            return;
+        }
+        await scoreStore.delete(this.deletingScore)
         await this.list(false);
     }
 }

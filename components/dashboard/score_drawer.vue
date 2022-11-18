@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer class="score-drawer" v-model="drawer" width="500" right absolute temporary overlay-opacity="0">
+  <v-navigation-drawer class="score-drawer" v-model="drawer" width="500" right fixed overlay-opacity="0" >
     <div class="score-data px-8 pb-3" v-if="score" style="padding-top: 64px">
       <v-btn class="pa-8" color="primary" icon @click="drawer = false" absolute style="top:0; left:0">
         <v-icon>mdi-close</v-icon>

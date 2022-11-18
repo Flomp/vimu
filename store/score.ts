@@ -1,7 +1,6 @@
 import { Action, Module, Mutation, MutationAction, VuexModule } from 'vuex-module-decorators';
-import { Log, LogLevel } from '~/models/log';
 import { Score, ScoreMeta } from '~/models/score';
-import { $axios, $pb, notificationStore } from '.';
+import { $axios, $pb, notificationStore, scoreStore } from '.';
 
 @Module({
     name: 'score',
@@ -44,12 +43,18 @@ export default class ScoreStore extends VuexModule {
         }
     }
 
+    @Mutation
+    async increaseClickCount(score: Score) {
+        score.clicks += 1;
+        scoreStore.update(score)
+    }
+
     @MutationAction({ mutate: ['scores'] })
     async list(data: { filter: string, sort: string } = { filter: '', sort: '' }) {
         try {
-            const response = await $pb.collection('scores').getList(undefined, undefined, { sort: data.sort, filter: data.filter, expand: 'meta' })
-            return { scores: response.items } 
-        }catch {
+            const response = await $pb.collection('scores').getList(undefined, 24, { sort: data.sort, filter: data.filter, expand: 'meta' })
+            return { scores: response.items }
+        } catch {
             return { scores: this.scores }
         }
     }

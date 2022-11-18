@@ -1,37 +1,23 @@
 <template>
     <v-sheet class="main">
-        <v-container>
-            <vimu-searchbar class="mb-12" v-model="query" :hide-details="true" @update="search" style="max-width: 400px;">
-            </vimu-searchbar>
-
-            <span class="vimu-title">{{ title }}</span>
-            <div class="py-5">
-                <v-menu offset-y content-class="vimu-menu elevation-0">
-                    <template v-slot:activator="{ on, attrs }">
-                        <vimu-btn :large="true" class="mr-2" v-bind="attrs" v-on="on">From template <v-icon>
-                                mdi-menu-down</v-icon>
-                        </vimu-btn>
-                    </template>
-                    <v-list>
-                        <template v-if="templates.length > 0">
-                            <v-list-item v-for="template in templates" :key="template.id" @click="createFile(template)">
-                                {{ template.name }}
-                            </v-list-item>
-                        </template>
-                        <v-list-item v-else>
-                            <span class="empty-text">You have not created any template yet</span>
-                        </v-list-item>
-                    </v-list>
-                </v-menu>
-                <vimu-btn class="mt-3 mt-sm-0" :primary="true" :large="true" @click="createFile()">New file <v-icon>
-                        mdi-plus</v-icon>
-                </vimu-btn>
+        <v-container class="pt-0">
+            <div class="header-section pt-4">
+                <vimu-searchbar class="mb-8" v-model="query" :hide-details="true" @update="search"
+                    style="max-width: 400px;">
+                </vimu-searchbar>
+                <span class="vimu-title">{{ title }}</span>
+                <div class="py-5">
+                    <vimu-btn class="mt-3 mt-sm-0" :primary="true" :large="true" @click="createFile()">New file <v-icon>
+                            mdi-plus</v-icon>
+                    </vimu-btn>
+                </div>
             </div>
             <v-row>
                 <template v-if="!listLoading">
                     <v-col cols="12" sm="6" md="4" lg="3" v-for="file in files" :key="file.id">
-                        <file-card :file="file" @remove="removeFile" @rename="renameFile" @favorite="favoriteFile"
-                            @template="createTemplate" @open="openFile" @open-in-new-tab="openFileInNewTab">
+                        <file-card :file="file" @remove="showDeleteConfirm" @rename="renameFile"
+                            @favorite="favoriteFile" @duplicate="createFile(file, false)" @open="openFile"
+                            @open-in-new-tab="openFileInNewTab">
                         </file-card>
                     </v-col>
                 </template>
@@ -57,12 +43,16 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <confirm-dialog v-model="deleteConfirmDialog" title="Are you sure?"
+            text="You are about to permanently delete this file." action="Delete" @confirm="removeFile">
+        </confirm-dialog>
     </v-sheet>
 </template>
   
 <script lang="ts">
 import { Context } from "@nuxt/types";
 import { Component, Vue } from "nuxt-property-decorator";
+import ConfirmDialog from "~/components/dashboard/confirm_dialog.vue";
 import FileCard from "~/components/dashboard/file_card.vue";
 import VimuAutocomplete from "~/components/vimu/vimu_autocomplete.vue";
 import VimuBtn from "~/components/vimu/vimu_button.vue";
@@ -78,13 +68,16 @@ import { fileStore } from "~/store";
         VimuTextField,
         VimuAutocomplete,
         VimuBtn,
-        FileCard
+        FileCard,
+        ConfirmDialog
     },
 })
 export default class FilesPage extends Vue {
     renameDialog: boolean = false;
+    deleteConfirmDialog: boolean = false;
     filename: string = ""
     renamingFile: File | null = null;
+    deletingFile: File | null = null;
 
     filter: string = "";
     sort: string = "-created";
@@ -131,7 +124,7 @@ export default class FilesPage extends Vue {
     async search(value?: string) {
         if (!value) {
             this.filter = ""
-        }else {
+        } else {
             this.filter = `name~"${value}"`
         }
         this.list(true);
@@ -143,15 +136,24 @@ export default class FilesPage extends Vue {
         this.listLoading = false;
     }
 
-    async createFile(file?: File) {
+    async createFile(file?: File, navigate: boolean = true) {
         const newFile = await fileStore.create(file);
-        if (newFile !== null) {
+        if (newFile === null) {
+            return;
+        }
+        if (navigate) {
             this.$router.push('/editor/' + newFile.id)
+        } else {
+            this.list(false);
         }
     }
 
-    async removeFile(file: File) {
-        await fileStore.delete(file.id);
+
+    async removeFile() {
+        if (!this.deletingFile) {
+            return;
+        }
+        await fileStore.delete(this.deletingFile.id);
         await this.list(false);
     }
 
@@ -171,13 +173,13 @@ export default class FilesPage extends Vue {
         this.renameDialog = false;
     }
 
-    async favoriteFile(file: File) {
-        await fileStore.update({ id: file.id, favorite: !file.favorite })
-        await this.list(false);
+    showDeleteConfirm(file: File) {
+        this.deletingFile = file;
+        this.deleteConfirmDialog = true
     }
 
-    async createTemplate(file: File) {
-        await fileStore.update({ id: file.id, template: !file.template })
+    async favoriteFile(file: File) {
+        await fileStore.update({ id: file.id, favorite: !file.favorite })
         await this.list(false);
     }
 

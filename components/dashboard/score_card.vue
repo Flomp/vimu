@@ -1,7 +1,7 @@
 <template>
     <div class="vimu-card hover-card score-card" @click="click">
         <img :src="thumbnailPath" width="100%" style="max-height: 256px; object-fit: cover;" />
-        <div class="d-flex align-center pa-4">
+        <div class="d-flex align-center px-4">
             <span class="vimu-card-title score-card-title mr-1">
                 {{ score.name }}
             </span>
@@ -14,17 +14,6 @@
                 <span>Public</span>
             </v-tooltip>
             <v-spacer></v-spacer>
-            <v-tooltip bottom v-if="!readOnly">
-                <template v-slot:activator="{ on, attrs }">
-                    <v-btn color="primary" icon v-bind="attrs" v-on="on" @click.stop="create">
-                        <v-icon>
-                            mdi-plus
-                        </v-icon>
-                    </v-btn>
-
-                </template>
-                <span>Create file from score</span>
-            </v-tooltip>
             <v-menu offset-y content-class="vimu-menu elevation-0" v-if="owned && !readOnly">
                 <template v-slot:activator="{ on, attrs }">
                     <v-btn color="primary" icon v-bind="attrs" v-on="on">
@@ -41,12 +30,14 @@
                 </v-list>
             </v-menu>
         </div>
+        <div class="px-4 pb-4">
+            <span class="score-card-click-count">{{ score.clicks }} Views</span>
+        </div>
     </div>
 
 </template>
 
 <script lang="ts">
-import { read } from "fs";
 import { Vue, Component, Prop, Emit } from "nuxt-property-decorator";
 import { Score } from "~/models/score";
 import { $pb, authStore } from "~/store";
@@ -94,5 +85,9 @@ export default class ScoreCard extends Vue {
     white-space: nowrap;
     overflow-x: hidden;
     text-overflow: ellipsis;
+}
+.score-card-click-count {
+    font-size: 0.75rem;
+    color: #5A5A5A
 }
 </style>

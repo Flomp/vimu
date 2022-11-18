@@ -26,15 +26,15 @@
                     <v-list-item @click="favoriteMenu">
                         <v-list-item-title>{{ favoriteText }}</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="template">
-                        <v-list-item-title>{{ templateText }}</v-list-item-title>
-                    </v-list-item>
                     <v-list-item>
                         <v-list-item-title>Share</v-list-item-title>
                     </v-list-item>
                     <v-divider></v-divider>
                     <v-list-item @click="rename">
                         <v-list-item-title>Rename</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="duplicate">
+                        <v-list-item-title>Duplicate</v-list-item-title>
                     </v-list-item>
                     <v-list-item @click="remove">
                         <v-list-item-title>Delete</v-list-item-title>
@@ -83,10 +83,6 @@ export default class FileCard extends Vue {
         return this.file.favorite ? 'Remove from favorites' : 'Add to favorites'
     }
 
-    get templateText() {
-        return this.file.template ? 'Remove template' : 'Create template'
-    }
-
     editTimestamp = getRelativeTime(this.file.updated)
 
     mounted() {
@@ -118,7 +114,7 @@ export default class FileCard extends Vue {
     }
 
     @Emit()
-    template() {
+    duplicate() {
         return this.file;
     }
 

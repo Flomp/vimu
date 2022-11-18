@@ -4,6 +4,7 @@ interface Score {
     thumbnail: string;
     data: string;
     public: boolean;
+    clicks: number;
     expand: {
         meta: ScoreMeta
     }
@@ -24,6 +25,7 @@ const empty_score: Score = {
     name: "",
     public: false,
     thumbnail: "",
+    clicks: 0,
     data: "",
     expand: {
         meta: {

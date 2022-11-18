@@ -22,9 +22,10 @@ export default class FileMenu extends Vue {
 
   items: MenuItem[] = [
     { name: "Back to files", key: "back_to_files", divider: true },
-    { name: "Open..." },
-    { name: "Open Recent" },
-    { name: "Open from URL", divider: true },
+    { name: "Open...", divider: true},
+    { name: "Share" },
+    { name: "Rename", divider: true },
+    { name: "Import" },
     {
       name: "Export",
       divider: true,
@@ -39,7 +40,6 @@ export default class FileMenu extends Vue {
         },
       ],
     },
-    { name: "Close" },
   ];
   handleClick(item: MenuItem) {
     switch (item.key) {

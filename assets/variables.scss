@@ -42,3 +42,10 @@ $navigation-drawer-mobile-temporary-elevation: 0 !important;
   border: 2px solid currentColor;
   border-radius: 10px !important;
 }
+
+.header-section {
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 2;
+}
