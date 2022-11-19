@@ -24,3 +24,6 @@ import NotificationCenter from "~/components/vimu/notification-center.vue";
 })
 export default class DefaultLayout extends Vue { }
 </script>
+
+<style>
+</style>

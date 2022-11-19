@@ -1,27 +1,27 @@
 <template>
-    <v-sheet class="main fill-height">
-      <div ref="page" id="panel-grid" @mouseup="endDrag" @mousemove="onDrag">
-        <div id="editor" class="pa-0">
-          <editor-panel></editor-panel>
-        </div>
-        <div class="vertical-dragbar" @mousedown="startLeftDrag"></div>
-        <div id="score" v-show="showScore">
-          <client-only>
-            <OSMD-panel></OSMD-panel>
-          </client-only>
-        </div>
-        <div id="logDragbar" class="horizontal-dragbar" v-show="showScore && showLog" @mousedown="startUpperDrag"></div>
-
-        <div class="vertical-dragbar" v-if="showFirstColumn" @mousedown="startRightDrag"></div>
-
-        <div id="log" v-show="showLog">
-          <log-panel></log-panel>
-        </div>
-        <div id="details" class="pa-0">
-          <details-panel />
-        </div>
+  <v-sheet class="main fill-height">
+    <div ref="page" id="panel-grid" @mouseup="endDrag" @mousemove="onDrag">
+      <div id="editor" class="pa-0">
+        <editor-panel></editor-panel>
       </div>
-    </v-sheet>
+      <div class="vertical-dragbar" @mousedown="startLeftDrag"></div>
+      <div id="score" v-show="showScore">
+        <client-only>
+          <OSMD-panel></OSMD-panel>
+        </client-only>
+      </div>
+      <div id="logDragbar" class="horizontal-dragbar" v-show="showScore && showLog" @mousedown="startUpperDrag"></div>
+
+      <div class="vertical-dragbar" v-if="showFirstColumn" @mousedown="startRightDrag"></div>
+
+      <div id="log" v-show="showLog">
+        <log-panel></log-panel>
+      </div>
+      <div id="details" class="pa-0">
+        <details-panel />
+      </div>
+    </div>
+  </v-sheet>
 </template>
 
 <script lang="ts">
@@ -61,10 +61,13 @@ import EditorPanel from "~/components/editor/panels/editor_panel.vue";
 import LogPanel from "~/components/editor/panels/log_panel.vue";
 import OSMDPanel from "~/components/editor/panels/osmd_panel.vue";
 
-import { engineStore, fileStore, osmdStore, settingsStore } from "~/store";
+import { authStore, engineStore, fileStore, osmdStore, settingsStore } from "~/store";
 // @ts-ignore
 import { zoomAt } from "rete-area-plugin/src/zoom-at";
 import SourceScoreComponent from "~/components/editor/rete/components/source/source_score_component";
+import { Context } from "@nuxt/types";
+import { example_files } from "~/models/file";
+import { Data } from "rete/types/core/data";
 
 @Component({
   layout: "editor",
@@ -116,23 +119,15 @@ export default class Editor extends Vue {
     this.editor?.view.resize();
   }
 
+  validate({ params }: Context) {
+    return params.id !== undefined;
+  }
 
-  async fetch() {
-    const fid = this.$route.params.id;
-    await fileStore.get(fid);
-    if (fileStore.file === null) {
-      this.$nuxt.error({
-        statusCode: 404,
-        message: "File not found",
-      });
-    }
+  async mounted() {
     if (process.client) {
       await this.initEditor()
     }
-  }
 
-
-  async mounted() {
     let page = document.getElementById("panel-grid");
 
     const initialTopHeight = 0.7
@@ -154,9 +149,6 @@ export default class Editor extends Vue {
     if (!this.showLog) {
       this.onShowLogChange(false)
     }
-
-
-
   }
 
   async initEditor() {
@@ -198,43 +190,6 @@ export default class Editor extends Vue {
 
     const engine = new Rete.Engine("vimu@0.1.0");
 
-    editor.on(
-      [
-        "process",
-        // "nodecreated",
-        // "noderemoved",
-        "connectioncreated",
-        "connectionremoved",
-      ],
-      async () => {
-        engineStore.setLoading(true);
-        try {
-          console.log(JSON.stringify(editor.toJSON()));
-
-          await engineStore.process(editor.toJSON());
-        } finally {
-          engineStore.setLoading(false);
-        }
-      }
-    );
-
-    editor.on(
-      [
-        "process",
-        "nodecreated",
-        "noderemoved",
-        "nodedragged",
-        "connectioncreated",
-        "connectionremoved",
-      ],
-      async () => {
-        fileStore.update({ id: fileStore.file!.id, json: JSON.stringify(this.editor?.toJSON()) })
-      }
-    );
-
-    editor.on("zoom", ({ source }) => {
-      return source !== "dblclick";
-    });
 
     const out = new OutputComponent(editor);
 
@@ -265,15 +220,72 @@ export default class Editor extends Vue {
       engine.register(component);
     }
 
-    // const outputNode = await out.createNode();
-    // outputNode.position = [w - 2 * 108, h / 2];
-    // editor.addNode(outputNode);
+    const data = await this.loadData();
+    if (data) {
+      await editor!.fromJSON(data)
+      zoomAt(editor)
+      await engineStore.process(editor.toJSON());
+    }
 
-    const deepCopy = JSON.parse(JSON.stringify(fileStore.file!.json))
-    await editor!.fromJSON(deepCopy)
-    zoomAt(editor)
+
+    editor.on(
+      [
+        "process",
+        // "nodecreated",
+        // "noderemoved",
+        "connectioncreated",
+        "connectionremoved",
+      ],
+      async () => {
+        engineStore.setLoading(true);
+        try {
+          console.log(JSON.stringify(editor.toJSON()));
+
+          await engineStore.process(editor.toJSON());
+        } finally {
+          engineStore.setLoading(false);
+        }
+      }
+    );
+
+    editor.on(
+      [
+        "process",
+        "nodecreated",
+        "noderemoved",
+        "nodedragged",
+        "connectioncreated",
+        "connectionremoved",
+      ],
+      async () => {
+        if (fileStore.file != null && !Object.keys(example_files).includes(fileStore.file.id)) {
+          fileStore.update({ id: fileStore.file.id, json: JSON.stringify(this.editor?.toJSON()) })
+        }
+      }
+    );
+
+    editor.on("zoom", ({ source }) => {
+      return source !== "dblclick";
+    });
 
     this.editor = editor;
+    osmdStore.setNeedsUpdate(true);
+  }
+
+  async loadData(): Promise<Data | null> {
+    const fid = this.$route.params.id;
+    if (fileStore.file == null || fileStore.file.id != fid) {
+      await fileStore.get(fid);
+    }
+
+    if (fileStore.file == null) {
+      return null
+    }
+
+    let deepCopy: Data;
+    deepCopy = JSON.parse(JSON.stringify(fileStore.file!.json))
+
+    return deepCopy;
   }
 
   setCursor(cursor: CSSStyleDeclaration["cursor"]) {

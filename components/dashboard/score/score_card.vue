@@ -1,7 +1,7 @@
 <template>
     <div class="vimu-card hover-card score-card" @click="click">
-        <img :src="thumbnailPath" width="100%" style="max-height: 256px; object-fit: cover;" />
-        <div class="d-flex align-center px-4">
+        <img :src="thumbnailPath" width="100%" style="height: 128px; object-fit: cover;" />
+        <div class="d-flex align-center pa-4">
             <span class="vimu-card-title score-card-title mr-1">
                 {{ score.name }}
             </span>
@@ -30,17 +30,14 @@
                 </v-list>
             </v-menu>
         </div>
-        <div class="px-4 pb-4">
-            <span class="score-card-click-count">{{ score.clicks }} Views</span>
-        </div>
     </div>
 
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Emit } from "nuxt-property-decorator";
+import { Component, Emit, Prop, Vue } from "nuxt-property-decorator";
 import { Score } from "~/models/score";
-import { $pb, authStore } from "~/store";
+import { $pb } from "~/store";
 
 @Component({
     components: {}
@@ -55,7 +52,7 @@ export default class ScoreCard extends Vue {
     }
 
     get owned() {
-        return this.score.user_id == authStore.userId
+        return this.score.user_id == $pb.authStore.model?.id
     }
 
     @Emit()

@@ -7,9 +7,11 @@
         <vimu-text-field v-model="password" type="password" :rules="passwordRules"></vimu-text-field>
         <span class="font-weight-bold">Repeat password</span>
         <vimu-text-field v-model="passwordConfirm" type="password" :rules="passwordConfirmRules"></vimu-text-field>
-        <vimu-btn class="fill-width" :primary="true" :large="true" :loading="loading" :disabled="loading" @click="validateAndSubmit">Sign up</vimu-btn>
+        <vimu-btn class="fill-width" :primary="true" :large="true" :loading="loading" :disabled="loading"
+            @click="validateAndSubmit">Sign up</vimu-btn>
         <v-divider class="my-6"></v-divider>
-        <span>Already have an account? <a class="accent--text" @click="toggle">Login</a> </span>
+        <span>Already have an account? </span>
+        <a class="text-decoration-underline" @click="toggle">Login</a>
     </v-form>
 </template>
 

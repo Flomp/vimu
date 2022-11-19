@@ -78,10 +78,6 @@ export default class DashboardNavigation extends Vue {
     get favorites(): File[] {
         return fileStore.files.filter(f => f.favorite);
     }
-
-    get templates(): File[] {
-        return fileStore.files.filter(f => f.template);
-    }
 }
 </script>
 

@@ -10,7 +10,8 @@
                     <div class="d-flex">
                         <vimu-text-field v-model="scoreLocal.name" placeholder="Name" :rules="nameRules">
                         </vimu-text-field>
-                        <v-switch class="ml-4"  label="Public" v-model="scoreLocal.public" inset  v-if="editMode"></v-switch>
+                        <v-switch class="ml-4" label="Public" v-model="scoreLocal.public" inset v-if="editMode">
+                        </v-switch>
 
                     </div>
                     <div class="d-flex" v-if="!editMode">
@@ -29,6 +30,9 @@
                             <v-expansion-panel-content>
                                 <vimu-text-field v-model="scoreLocal.expand.meta.composer" placeholder="Composer"
                                     prepend-icon="mdi-account"></vimu-text-field>
+                                <vimu-text-field v-model="scoreLocal.expand.meta.opus" placeholder="Opus"
+                                    prepend-icon="mdi-folder">
+                                </vimu-text-field>
                                 <vimu-text-field v-model="scoreLocal.expand.meta.date" placeholder="Date"
                                     prepend-icon="mdi-calendar-today"></vimu-text-field>
                                 <vimu-text-field v-model="scoreLocal.expand.meta.instruments" placeholder="Instruments"
@@ -63,7 +67,7 @@ import { Component, Emit, Prop, Ref, VModel, Vue, Watch } from "nuxt-property-de
 import { empty_score, Score } from "~/models/score";
 import { scoreStore } from "~/store";
 import { required } from "~/utils/verification_rules";
-import VimuBtn from "../vimu/vimu_button.vue";
+import VimuBtn from "../../vimu/vimu_button.vue";
 
 @Component({
     components: {

@@ -1,5 +1,4 @@
-import { Getter } from 'nuxt-property-decorator';
-import { Action, Module, VuexModule } from 'vuex-module-decorators';
+import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators';
 import { $pb, notificationStore } from '.';
 
 @Module({
@@ -8,6 +7,13 @@ import { $pb, notificationStore } from '.';
     namespaced: true,
 })
 export default class LogStore extends VuexModule {
+    redirectPath: string = "/dashboard/files/all"
+
+    @Mutation
+    setRedirectPath(redirectPath: string) {
+        this.redirectPath = redirectPath;
+    }
+
     @Action({ rawError: true })
     async signup(data: { email: string, password: string, passwordConfirm: string }) {
         try {
@@ -42,7 +48,7 @@ export default class LogStore extends VuexModule {
         $pb.authStore.clear();
     }
 
-    get userId() {
-        return $pb.authStore.model?.id;
+    get loggedIn() {
+        return $pb.authStore.model?.id !== undefined;
     }
 }

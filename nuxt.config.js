@@ -33,6 +33,7 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '~/plugins/axios.ts',
+    { src: '~/plugins/infinite-scroll.ts', mode: 'client'},
     { src: '~/plugins/pocketbase.ts' }
   ],
 

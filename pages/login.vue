@@ -7,13 +7,16 @@
             <bunny-balloon class="balloon bunny-balloon" :width="400"></bunny-balloon>
             <carrot-balloon class="balloon carrot-balloon" :width="400"></carrot-balloon>
         </v-col>
-        <v-col>
-            <transition name="bounce" mode="out-in">
-                <login-form @toggle="showSignup = true" :loading="loginLoading" @submit="loginSubmit"
-                    v-if="!showSignup"></login-form>
-                <signup-form @toggle="showSignup = false" :loading="signupLoading" @submit="signupSubmit" v-else>
-                </signup-form>
-            </transition>
+        <v-col class="fill-height">
+            <vimu-flipper :flipped="showSignup">
+                <template v-slot:front>
+                    <login-form @toggle="showSignup = true" :loading="loginLoading" @submit="loginSubmit"></login-form>
+                </template>
+                <template v-slot:back>
+                    <signup-form @toggle="showSignup = false" :loading="signupLoading" @submit="signupSubmit">
+                    </signup-form>
+                </template>
+            </vimu-flipper>
         </v-col>
     </v-row>
 </template>
@@ -30,6 +33,7 @@ import VimuTextField from "~/components/vimu/vimu_text_field.vue";
 import LoginForm from "~/components/forms/login_form.vue";
 import SignupForm from "~/components/forms/signup_form.vue";
 import { authStore } from "~/store";
+import VimuFlipper from "~/components/vimu/vimu_flipper.vue";
 
 @Component({
     layout: "default_no_footer",
@@ -38,12 +42,13 @@ import { authStore } from "~/store";
         SignupForm,
         VimuTextField,
         VimuBtn,
+        VimuFlipper,
         BunnyBalloon,
         CarrotBalloon,
         Cloud1,
         Cloud2,
         Cloud3
-    }
+    },
 })
 export default class LoginPage extends Vue {
     showSignup: boolean = false;
@@ -66,7 +71,7 @@ export default class LoginPage extends Vue {
 
         const success: boolean = await authStore.login(data)
         if (success) {
-            this.$router.push('/dashboard/files/all')
+            this.$router.push(authStore.redirectPath)
         }
         this.loginLoading = false;
     }
@@ -134,27 +139,5 @@ export default class LoginPage extends Vue {
 .cloud-3 {
     left: 128px;
     bottom: 312px
-}
-
-.bounce-enter-active {
-    animation: bounce-in .5s;
-}
-
-.bounce-leave-active {
-    animation: bounce-in .5s reverse;
-}
-
-@keyframes bounce-in {
-    0% {
-        transform: scale(0);
-    }
-
-    50% {
-        transform: scale(1.1);
-    }
-
-    100% {
-        transform: scale(1);
-    }
 }
 </style>

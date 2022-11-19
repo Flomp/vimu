@@ -21,26 +21,16 @@
 
                 </div>
             </div>
-            <v-row>
-                <template v-if="!listLoading">
-                    <v-col cols="12" sm="6" md="4" lg="3" v-for="score in scores" :key="score.id">
-                        <score-card :score="score" @create="createFile" @edit="openEditDialog"
-                            @remove="showDeleteConfirm" @click="setDrawerScore">
-                        </score-card>
-                    </v-col>
-                </template>
-                <template v-else>
-                    <v-col cols="12" sm="6" md="4" lg="3" v-for="i in 4" :key="i">
-                        <v-skeleton-loader type="card"></v-skeleton-loader>
-                    </v-col>
-                </template>
-            </v-row>
+            <score-list :scores="scores" :loading="listLoading || nextPageLoading" :initialLoading="listLoading"
+                :nextPageLoading="nextPageLoading" @create="createFile" @edit="openEditDialog"
+                @remove="showDeleteConfirm" @click="setDrawerScore" @next="nextPage">
+            </score-list>
         </v-container>
         <score-dialog v-model="dialog" :score="editScore" :edit-mode="dialogEditMode" @save="createScore">
         </score-dialog>
-        <score-drawer v-model="drawer" :score="drawerScore" @create="createFile"></score-drawer>
+        <score-drawer v-model="drawer" :score="score" @create="createFile"></score-drawer>
         <confirm-dialog v-model="deleteConfirmDialog" title="Are you sure?"
-            text="You are about to permanently delete this score." action="Delete" @confirm="removeScore">
+            text="You are about to permanently delete this score" action="Delete" @confirm="removeScore">
         </confirm-dialog>
     </v-sheet>
 </template>
@@ -48,17 +38,18 @@
 <script lang="ts">
 import { query } from "express";
 import { Component, Vue } from "nuxt-property-decorator";
-import { VBtn, VCol, VContainer, VIcon, VRow, VSheet, VSkeletonLoader, VSpacer } from "vuetify/lib";
+import { VBtn, VContainer, VIcon, VSheet, VSpacer } from "vuetify/lib";
 import ConfirmDialog from "~/components/dashboard/confirm_dialog.vue";
-import ScoreCard from "~/components/dashboard/score_card.vue";
-import ScoreDialog from "~/components/dashboard/score_dialog.vue";
-import ScoreDrawer from "~/components/dashboard/score_drawer.vue";
+import ScoreCard from "~/components/dashboard/score/score_card.vue";
+import ScoreDialog from "~/components/dashboard/score/score_dialog.vue";
+import ScoreDrawer from "~/components/dashboard/score/score_drawer.vue";
+import ScoreList from "~/components/dashboard/score/score_list.vue";
 import VimuBtn from "~/components/vimu/vimu_button.vue";
 import VimuSearchbar from "~/components/vimu/vimu_searchbar.vue";
 import VimuTabs from "~/components/vimu/vimu_tabs.vue";
 import VimuTextField from "~/components/vimu/vimu_text_field.vue";
 import { Score } from "~/models/score";
-import { authStore, fileStore, scoreStore } from "~/store";
+import { $pb, fileStore, scoreStore } from "~/store";
 
 @Component({
     layout: 'dashboard',
@@ -71,7 +62,8 @@ import { authStore, fileStore, scoreStore } from "~/store";
         ScoreCard,
         ScoreDrawer,
         VimuSearchbar,
-        ConfirmDialog
+        ConfirmDialog,
+        ScoreList
     }
 })
 export default class ScoresPage extends Vue {
@@ -81,9 +73,8 @@ export default class ScoresPage extends Vue {
     drawer: boolean = true;
 
     listLoading: boolean = false;
+    nextPageLoading: boolean = false;
     createLoading: boolean = false;
-
-    drawerScore: Score | null = null
 
     editScore: Score | null = null
     dialogEditMode: boolean = false;
@@ -92,15 +83,21 @@ export default class ScoresPage extends Vue {
     deleteConfirmDialog: boolean = false;
 
     filters = {
-        tab: `user_id="${authStore.userId}"`,
+        tab: `user_id="${$pb.authStore.model?.id}"`,
         query: ""
     }
 
     sort: string = "name";
     query: string = "";
 
+    currentPage = 1;
+
     get scores() {
         return scoreStore.scores;
+    }
+
+    get score() {
+        return scoreStore.score;
     }
 
     get assembledFilter(): string {
@@ -117,7 +114,7 @@ export default class ScoresPage extends Vue {
 
     setDrawerScore(score: Score) {
         this.drawer = true;
-        this.drawerScore = score;
+        scoreStore.setScore(score);
     }
 
     openCreateDialog() {
@@ -137,12 +134,24 @@ export default class ScoresPage extends Vue {
         this.deleteConfirmDialog = true
     }
 
+    async nextPage() {
+        this.currentPage += 1;
+
+        if (this.currentPage <= scoreStore.maxPage || scoreStore.maxPage == -1) {
+            this.nextPageLoading = true;
+            await this.list(false)
+            this.nextPageLoading = false;
+        }
+
+    }
+
     async onTabChanged(tab: number) {
         if (tab == 0) {
-            this.filters.tab = `user_id="${authStore.userId}"`
+            this.filters.tab = `user_id="${$pb.authStore.model?.id}"`
         } else if (tab == 1) {
             this.filters.tab = "public=true";
         }
+        this.currentPage = 1;
         this.list(true);
     }
 
@@ -152,12 +161,13 @@ export default class ScoresPage extends Vue {
         } else {
             this.filters.query = `(name~"${value}"||meta.composer~"${value}")`
         }
+        this.currentPage = 1;
         this.list(true);
     }
 
     async list(showLoading: boolean = true) {
         this.listLoading = showLoading;
-        await scoreStore.list({ filter: this.assembledFilter, sort: this.sort });
+        await scoreStore.list({ page: this.currentPage, perPage: 24, filter: this.assembledFilter, sort: this.sort });
         this.listLoading = false;
     }
 
@@ -175,9 +185,9 @@ export default class ScoresPage extends Vue {
         } else {
             const thumbnail = await scoreStore.getThumbnail(data.file);
             await scoreStore.create({ ...data, thumbnail: thumbnail ?? undefined })
+            await this.list(true);
         }
 
-        await this.list(!data.update);
         this.createLoading = false;
     }
 
@@ -186,7 +196,6 @@ export default class ScoresPage extends Vue {
             return;
         }
         await scoreStore.delete(this.deletingScore)
-        await this.list(false);
     }
 }
 </script>

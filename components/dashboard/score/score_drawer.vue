@@ -4,7 +4,7 @@
       <v-btn class="pa-8" color="primary" icon @click="drawer = false" absolute style="top:0; left:0">
         <v-icon>mdi-close</v-icon>
       </v-btn>
-      <div class="d-flex justify-space-between"> 
+      <div class="d-flex justify-space-between mr-3"> 
         <span class="score-title">{{ score.name }}</span>
         <vimu-btn :primary="true" @click="create">Create File</vimu-btn>
       </div>
@@ -45,7 +45,7 @@ import { Component, Emit, Prop, VModel, Vue, Watch } from "nuxt-property-decorat
 import { OpenSheetMusicDisplay } from "opensheetmusicdisplay";
 import { VNavigationDrawer } from "vuetify/lib";
 import { Score, ScoreMeta } from "~/models/score";
-import VimuBtn from "../vimu/vimu_button.vue";
+import VimuBtn from "../../vimu/vimu_button.vue";
 
 @Component({
   components: {

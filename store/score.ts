@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import { Action, Module, Mutation, MutationAction, VuexModule } from 'vuex-module-decorators';
 import { Score, ScoreMeta } from '~/models/score';
 import { $axios, $pb, notificationStore, scoreStore } from '.';
@@ -9,6 +10,14 @@ import { $axios, $pb, notificationStore, scoreStore } from '.';
 })
 export default class ScoreStore extends VuexModule {
     scores: Score[] = []
+    score: Score | null = null;
+
+    maxPage: number = -1;
+
+    @Mutation
+    setScore(score: Score) {
+        this.score = score;
+    }
 
     @Action({ rawError: true })
     async getMeta(file: File): Promise<ScoreMeta | null> {
@@ -49,13 +58,17 @@ export default class ScoreStore extends VuexModule {
         scoreStore.update(score)
     }
 
-    @MutationAction({ mutate: ['scores'] })
-    async list(data: { filter: string, sort: string } = { filter: '', sort: '' }) {
+    @MutationAction({ mutate: ['scores', 'maxPage'] })
+    async list(data: { page: number, filter: string, sort: string, perPage?: number }) {
         try {
-            const response = await $pb.collection('scores').getList(undefined, 24, { sort: data.sort, filter: data.filter, expand: 'meta' })
-            return { scores: response.items }
+            const response = await $pb.collection('scores').getList(data.page, data.perPage, { sort: data.sort, filter: data.filter, expand: 'meta' })
+            if (data.page == 1) {
+                return { scores: response.items, maxPage: response.totalPages }
+            } else {
+                return { scores: this.scores.concat(response.items as any), maxPage: response.totalPages }
+            }
         } catch {
-            return { scores: this.scores }
+            return { scores: this.scores, maxPage: this.maxPage }
         }
     }
 
@@ -89,10 +102,34 @@ export default class ScoreStore extends VuexModule {
         try {
             const updatedMeta: ScoreMeta = await $pb.collection('score_meta').update(score.expand.meta.id!, score.expand.meta)
             const updatedScore: Score = await $pb.collection('scores').update(score.id!, score, { expand: 'meta' })
+            scoreStore.updateClient({ score, updatedScore });
             return updatedScore;
         } catch (error) {
             notificationStore.sendNotification({ title: 'Error updating score', color: 'error' })
             return null;
+        }
+    }
+
+    @Mutation
+    updateClient(data: { score: Score, updatedScore?: Score }) {
+        const fileIndex = this.scores.findIndex((s) => s.id == data.score.id)
+        const isCurrentFile = this.score?.id == data.updatedScore?.id;
+        if (data.updatedScore !== undefined) {
+            if (isCurrentFile) {
+                this.score = data.updatedScore;
+            }
+            if (fileIndex !== -1) {
+                if (data.updatedScore !== undefined) {
+                    Vue.set(this.scores, fileIndex, data.updatedScore)
+                } 
+            }
+        } else {
+            if (isCurrentFile) {
+                this.score = null;
+            }
+            if (fileIndex !== -1) {
+                this.scores.splice(fileIndex, 1);
+            }
         }
     }
 
@@ -101,6 +138,7 @@ export default class ScoreStore extends VuexModule {
         try {
             const successMeta: boolean = await $pb.collection('score_meta').delete(score.expand.meta.id!)
             const success: boolean = await $pb.collection('scores').delete(score.id!)
+            scoreStore.updateClient({ score })
             return success && successMeta;
         } catch (error) {
             notificationStore.sendNotification({ title: 'Error deleting score', color: 'error' })

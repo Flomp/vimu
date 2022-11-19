@@ -10,7 +10,7 @@ interface Settings {
 const default_settings: Settings  = {
     view: {
         score: true,
-        log: true,
+        log: false,
         minimap: true,
         pixelGrid: true
     }

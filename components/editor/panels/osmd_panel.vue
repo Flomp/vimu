@@ -159,14 +159,15 @@ export default class OSMDPanel extends Vue {
   }
 
   async loadScore(data: string) {
+    console.log("Loading Score...")
     try {
-      this.audioPlayer?.stop();
       this.downloadDisabled = true;
       this.playDisabled = true;
       await this.osmd.load(data);
       this.osmd.zoom = 0.5;
       this.osmd.render();
       this.downloadDisabled = false;
+      this.audioPlayer?.stop().catch(()=>{});
       await this.audioPlayer.loadScore(this.osmd as any);
       this.maxIterationStep = (this.audioPlayer as any).iterationSteps;
       this.playDisabled = false;

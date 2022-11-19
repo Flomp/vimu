@@ -18,7 +18,18 @@ interface ScoreMeta {
     instruments?: string;
     keys?: string;
     language?: string;
+    opus?: string;
     times?: string;
+}
+
+const empty_score_meta: ScoreMeta = {
+    composer: "",
+    date: "",
+    instruments: "",
+    keys: "",
+    language: "",
+    opus: "",
+    times: ""
 }
 
 const empty_score: Score = {
@@ -28,25 +39,11 @@ const empty_score: Score = {
     clicks: 0,
     data: "",
     expand: {
-        meta: {
-            composer: "",
-            date: "",
-            instruments: "",
-            keys: "",
-            language: "",
-            times: "",
-        }
+        meta: empty_score_meta
     },
     user_id: ""
 }
 
-const empty_score_meta: ScoreMeta = {
-    composer: "",
-    date: "",
-    instruments: "",
-    keys: "",
-    language: "",
-    times: ""
-}
+
 
 export { Score, ScoreMeta, empty_score, empty_score_meta }

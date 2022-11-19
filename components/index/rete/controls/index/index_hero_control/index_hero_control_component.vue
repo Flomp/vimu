@@ -1,9 +1,8 @@
 <template>
     <div class="px-6">
-        <p class="pb-4" style="max-width: 400px">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Faucibus viverra maecenas est, lacus, lectus
-            viverra.
-            Viverra scelerisque nisl id cursus porta ut vel. Adipiscing semper congue.
+        <p class="pb-4" style="max-width: 400px; font-size:1.1rem">
+            <b>vimu</b> is the modern way to analyse your music. 
+            It provides a rich toolbox for researchers, students and enthusiasts.
         </p>
         <div class="d-flex pb-4 align-center">
             <vimu-btn class="mx-2" :large="true">Documentation</vimu-btn>
@@ -29,7 +28,7 @@ export default class IndexHeroControlComponent extends Vue {
     @Prop() getData!: Function;
     @Prop() putData!: Function;
 
-    action(trigger: string) {       
+    action(trigger: string) {
         this.emitter.trigger("process", {
             trigger: trigger
         });
@@ -42,13 +41,12 @@ export default class IndexHeroControlComponent extends Vue {
 <style>
 .the-visual-musicology-editor .title {
     margin-left: 24px;
-	font-size: 3.75rem !important;
-	font-weight: 700;
-	line-height: 3.75rem;
-	letter-spacing: -0.0083333333em !important;
-	font-family: Inter !important;
-    padding-top: 24px !important; 
+    font-size: 3.75rem !important;
+    font-weight: 700;
+    line-height: 3.75rem;
+    letter-spacing: -0.0083333333em !important;
+    font-family: Inter !important;
+    padding-top: 24px !important;
     max-width: 600px;
 }
-
 </style>

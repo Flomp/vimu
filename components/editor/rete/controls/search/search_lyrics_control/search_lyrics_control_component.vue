@@ -31,7 +31,7 @@ export default class SearchLyricsControlComponent extends Vue {
   color: string = "#ff0000"
 
   mounted() {
-    this.putData(this.ikey, this.value);
+    this.value = this.getData(this.ikey)
     this.putData("color", this.color);
   }
 

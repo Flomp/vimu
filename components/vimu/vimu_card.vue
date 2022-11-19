@@ -6,7 +6,7 @@
         <p class="vimu-text pb-2">
             <slot></slot>
         </p>
-        <vimu-btn >{{ callToAction }}</vimu-btn>
+        <vimu-btn :to="to">{{ callToAction }}</vimu-btn>
     </div>
 </template>
 
@@ -22,6 +22,7 @@ import VimuBtn from "./vimu_button.vue";
 export default class VimuCard extends Vue {
     @Prop() readonly title!: string;
     @Prop() readonly callToAction!: string;
+    @Prop() readonly to!: string;
 
 }
 </script>

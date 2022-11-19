@@ -9,7 +9,7 @@
             @click="validateAndSubmit">Login</vimu-btn>
         <div class="py-5">
             <span>Don't have an account?</span>
-            <a class="accent--text" @click="toggle">Sign up</a>
+            <a class="text-decoration-underline" @click="toggle">Sign up</a>
         </div>
         <div class="d-flex align-center">
             <v-divider></v-divider>

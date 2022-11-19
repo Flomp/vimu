@@ -45,15 +45,6 @@
         </div>
         <div class="d-flex pt-3">
             <span class="file-card-timestamp">Edited {{ editTimestamp }}</span>
-            <v-spacer></v-spacer>
-            <v-tooltip bottom v-if="file.template">
-                <template v-slot:activator="{ on, attrs }">
-                    <v-icon class="mr-2" size="20" v-bind="attrs" v-on="on">
-                        mdi-pencil-ruler
-                    </v-icon>
-                </template>
-                <span>This file can be used as a template</span>
-            </v-tooltip>
         </div>
     </div>
 </template>

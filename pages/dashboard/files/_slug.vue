@@ -29,22 +29,9 @@
 
             </v-row>
         </v-container>
-        <v-dialog v-model="renameDialog" width="500">
-            <v-card>
-                <v-card-title>
-                    Rename file
-                </v-card-title>
-                <v-card-text class="pb-0">
-                    <vimu-text-field v-model="filename"></vimu-text-field>
-                </v-card-text>
-                <v-card-actions class="py-4">
-                    <v-spacer></v-spacer>
-                    <vimu-btn @click="saveRename">Save</vimu-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
+        <file-rename-dialog v-model="renameDialog" :filename="filename" @save="saveRename"></file-rename-dialog>
         <confirm-dialog v-model="deleteConfirmDialog" title="Are you sure?"
-            text="You are about to permanently delete this file." action="Delete" @confirm="removeFile">
+            text="You are about to permanently delete this file" action="Delete" @confirm="removeFile">
         </confirm-dialog>
     </v-sheet>
 </template>
@@ -53,7 +40,8 @@
 import { Context } from "@nuxt/types";
 import { Component, Vue } from "nuxt-property-decorator";
 import ConfirmDialog from "~/components/dashboard/confirm_dialog.vue";
-import FileCard from "~/components/dashboard/file_card.vue";
+import FileCard from "~/components/dashboard/file/file_card.vue";
+import FileRenameDialog from "~/components/dashboard/file/file_rename_dialog.vue";
 import VimuAutocomplete from "~/components/vimu/vimu_autocomplete.vue";
 import VimuBtn from "~/components/vimu/vimu_button.vue";
 import VimuTextField from "~/components/vimu/vimu_text_field.vue";
@@ -69,6 +57,7 @@ import { fileStore } from "~/store";
         VimuAutocomplete,
         VimuBtn,
         FileCard,
+        FileRenameDialog,
         ConfirmDialog
     },
 })
@@ -98,10 +87,6 @@ export default class FilesPage extends Vue {
         }
         return 'Files'
 
-    }
-
-    get templates() {
-        return fileStore.files.filter(f => f.template)
     }
 
     validate({ params }: Context) {
@@ -153,8 +138,7 @@ export default class FilesPage extends Vue {
         if (!this.deletingFile) {
             return;
         }
-        await fileStore.delete(this.deletingFile.id);
-        await this.list(false);
+        await fileStore.delete(this.deletingFile);
     }
 
     renameFile(file: File) {
@@ -163,12 +147,11 @@ export default class FilesPage extends Vue {
         this.renameDialog = true;
     }
 
-    async saveRename() {
+    async saveRename(newFilename: string) {
         if (!this.renamingFile) {
             return;
         }
-        await fileStore.update({ id: this.renamingFile.id, name: this.filename })
-        await this.list()
+        await fileStore.update({ id: this.renamingFile.id, name: newFilename })
         this.renamingFile = null;
         this.renameDialog = false;
     }
@@ -180,10 +163,10 @@ export default class FilesPage extends Vue {
 
     async favoriteFile(file: File) {
         await fileStore.update({ id: file.id, favorite: !file.favorite })
-        await this.list(false);
     }
 
     openFile(file: File) {
+        fileStore.setFile(file);
         this.$router.push('/editor/' + file.id);
     }
 

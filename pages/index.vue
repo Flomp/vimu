@@ -6,12 +6,11 @@
             <section>
                 <v-row>
                     <v-col>
-                        <vimu-article title="Fully visual, fully intuitive" callToAction="Read Documentation">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit. Faucibus viverra maecenas est, lacus, lectus viverra. Viverra scelerisque nisl id
-                            cursus
-                            porta
-                            ut vel. Adipiscing semper congue.
+                        <vimu-article title="Fully visual, fully intuitive" callToAction="Try it now">
+                            <b>vimu</b> works with a node based, graphical editor. You can create complex functionality
+                            with
+                            a few clicks. Just drag and connect the components that you need for your analysis and let
+                            <b>vimu</b> do the rest.
                         </vimu-article>
                     </v-col>
 
@@ -25,11 +24,10 @@
                     </v-col>
                     <v-col>
                         <vimu-article title="Speed up your research" callToAction="Explore">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit. Faucibus viverra maecenas est, lacus, lectus viverra. Viverra scelerisque nisl id
-                            cursus
-                            porta
-                            ut vel. Adipiscing semper congue.
+                            <b>vimu</b> does the grunt work for you, so you can focus more on the core of your
+                            musicology
+                            research questions.
+                            It does the job more accurately and faster than any human ever could.
                         </vimu-article>
                     </v-col>
 
@@ -37,11 +35,10 @@
                 <v-row>
                     <v-col>
                         <vimu-article title="100% Open Source" callToAction="How to install">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit. Faucibus viverra maecenas est, lacus, lectus viverra. Viverra scelerisque nisl id
-                            cursus
-                            porta
-                            ut vel. Adipiscing semper congue.
+                            We believe that software should be free for everyone. Thus <b>vimu</b> is fully open source.
+                            If you do not want to use our hosted service read the docs and learn how to get <b>vimu</b>
+                            up and
+                            running on your server.
                         </vimu-article>
                     </v-col>
                     <v-col v-if="!$vuetify.breakpoint.mobile">
@@ -52,33 +49,28 @@
             <section>
                 <div style="padding-top: 64px;">
                     <h1 class="vimu-title">What can you do with vimu?</h1>
-                    <p class="vimu-subtitle py-3">There are many templates and examples to get you started!</p>
+                    <p class="vimu-subtitle py-3">There are many <nuxt-link to="/examples">templates and
+                            examples</nuxt-link> to get you started!</p>
                     <v-row class="pt-6">
                         <v-col>
-                            <vimu-card title="Detect Modulation" callToAction="Open Example">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing
-                                elit. Faucibus viverra maecenas est, lacus, lectus viverra. Viverra scelerisque nisl id
-                                cursus
-                                porta
-                                ut vel. Adipiscing semper congue.
+                            <vimu-card title="Detect Modulation" callToAction="Open Example"
+                                to="/editor/example-modulation">
+                                Learn how to employ <b>vimu's</b> sophisticated statistical model to accurately detect
+                                possible
+                                modulation sites in one of Bach chorales.
                             </vimu-card>
                         </v-col>
                         <v-col>
-                            <vimu-card title="Search for a melody" callToAction="Open Example">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing
-                                elit. Faucibus viverra maecenas est, lacus, lectus viverra. Viverra scelerisque nisl id
-                                cursus
-                                porta
-                                ut vel. Adipiscing semper congue.
+                            <vimu-card title="Search for a melody" callToAction="Open Example"
+                                to="/editor/example-search">
+                                Search for melody or rythm fragments in a score. The search comes with many
+                                configurable options allowing you to find the exact matches you need.
                             </vimu-card>
                         </v-col>
                         <v-col>
-                            <vimu-card title="Realize a figured bass line" callToAction="Open Example">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing
-                                elit. Faucibus viverra maecenas est, lacus, lectus viverra. Viverra scelerisque nisl id
-                                cursus
-                                porta
-                                ut vel. Adipiscing semper congue.
+                            <vimu-card title="Plot a pitch distribution" callToAction="Open Example">
+                                In this example you will learn how to plot a pitch distribution bar chart. <b>vimu</b>
+                                comes with the ability to graphically represent a wide range of score properties.
                             </vimu-card>
                         </v-col>
                     </v-row>
@@ -120,7 +112,7 @@ import BunnyDeadCarrot from "~/components/vimu/bunny_dead_carrot.vue";
         SpeedCarrot,
         MatrixBunny,
         BunnyDeadCarrot
-    }
+    },
 })
 export default class IndexPage extends Vue {
 
