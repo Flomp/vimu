@@ -18,6 +18,9 @@ export default class VimuSearchbar<T> extends Vue {
 
   @Emit()
   update(value: string) {
+    if(value !== null) {
+      this.query = value;
+    }
     return value;
   }
 

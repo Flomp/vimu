@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="dialog" scrollable persistent :overlay="false" max-width="600px"
+    <v-dialog v-model="dialog" scrollable persistent :overlay="false" max-width="650px"
         :fullscreen="$vuetify.breakpoint.mobile" transition="dialog-transition">
         <v-card>
             <v-card-title>
@@ -14,12 +14,23 @@
                         </v-switch>
 
                     </div>
-                    <div class="d-flex" v-if="!editMode">
+                    <div class="d-flex flex-wrap" v-if="!editMode">
                         <v-file-input v-model="file" class="mr-4" outlined chips placeholder="MusicXML File"
                             :loading="validationLoading" prepend-icon="mdi-music-clef-bass" :rules="fileRules"
                             @change="onFileChanged">
                         </v-file-input>
-                        <v-switch label="Public" v-model="scoreLocal.public" inset></v-switch>
+                        <v-switch label="Public" v-bind="attrs" v-on="on" v-model="scoreLocal.public" inset>
+                        </v-switch>
+                        <v-menu class="white" open-on-hover bottom offset-y content-class="vimu-menu">
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn style="margin-top: 14px" v-bind="attrs" v-on="on" icon>
+                                    <v-icon>mdi-help-circle-outline</v-icon>
+                                </v-btn>
+                            </template>
+
+                            <p class="ma-3" style="width:200px">A public score will be visible for other
+                                users in the library.</p>
+                        </v-menu>
                     </div>
 
                     <v-expansion-panels flat>

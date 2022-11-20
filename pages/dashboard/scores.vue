@@ -3,7 +3,7 @@
         <v-container class="pt-0">
             <div class="header-section pt-4">
                 <div class="d-flex align-center mb-8">
-                    <vimu-searchbar v-model="query" :hide-details="true" @update="search" style="max-width: 400px;">
+                    <vimu-searchbar v-model="filters.query" :hide-details="true" @update="search" style="max-width: 400px;">
                     </vimu-searchbar>
                     <v-btn class="mx-5" icon>
                         <v-icon color="primary">mdi-tune</v-icon>
@@ -23,6 +23,7 @@
             </div>
             <score-list :scores="scores" :loading="listLoading || nextPageLoading" :initialLoading="listLoading"
                 :nextPageLoading="nextPageLoading" @create="createFile" @edit="openEditDialog"
+                :searching="filters.query.length > 0"
                 @remove="showDeleteConfirm" @click="setDrawerScore" @next="nextPage">
             </score-list>
         </v-container>
@@ -88,7 +89,6 @@ export default class ScoresPage extends Vue {
     }
 
     sort: string = "name";
-    query: string = "";
 
     currentPage = 1;
 

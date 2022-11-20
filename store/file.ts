@@ -14,16 +14,26 @@ export default class LogStore extends VuexModule {
     files: File[] = []
     file: File | null = null;
 
+    maxPage: number = -1;
+
     @Mutation
     setFile(file: File | null) {
         this.file = file;
     }
 
 
-    @MutationAction({ mutate: ['files'] })
-    async list(data: { filter: string, sort: string } = { filter: '', sort: '' }) {
-        const response = await $pb.collection('files').getList(undefined, undefined, { sort: data.sort, filter: data.filter })
-        return { files: response.items }
+    @MutationAction({ mutate: ['files', 'maxPage'] })
+    async list(data: { page:number, filter: string, sort: string, perPage?: number }) {
+        try {
+            const response = await $pb.collection('files').getList(undefined, undefined, { sort: data.sort, filter: data.filter })
+            if (data.page == 1) {
+                return { files: response.items, maxPage: response.totalPages }
+            } else {
+                return { files: this.files.concat(response.items as any), maxPage: response.totalPages }
+            }
+        }catch {
+            return { files: this.files, maxPage: this.maxPage }
+        }
     }
 
     @MutationAction({ mutate: ['file'] })

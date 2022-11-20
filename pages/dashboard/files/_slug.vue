@@ -12,22 +12,11 @@
                     </vimu-btn>
                 </div>
             </div>
-            <v-row>
-                <template v-if="!listLoading">
-                    <v-col cols="12" sm="6" md="4" lg="3" v-for="file in files" :key="file.id">
-                        <file-card :file="file" @remove="showDeleteConfirm" @rename="renameFile"
-                            @favorite="favoriteFile" @duplicate="createFile(file, false)" @open="openFile"
-                            @open-in-new-tab="openFileInNewTab">
-                        </file-card>
-                    </v-col>
-                </template>
-                <template v-else>
-                    <v-col cols="12" sm="6" md="4" lg="3" v-for="i in 4" :key="i">
-                        <v-skeleton-loader type="card"></v-skeleton-loader>
-                    </v-col>
-                </template>
-
-            </v-row>
+            <file-list :files="files" :loading="listLoading || nextPageLoading" :initialLoading="listLoading"
+                :nextPageLoading="nextPageLoading" @create="createFile" :searching="query.length > 0"
+                @remove="showDeleteConfirm" @rename="renameFile" @favorite="favoriteFile" @duplicate="duplicateFile"
+                @open="openFile" @open-in-new-tab="openFileInNewTab" @next="nextPage">
+            </file-list>
         </v-container>
         <file-rename-dialog v-model="renameDialog" :filename="filename" @save="saveRename"></file-rename-dialog>
         <confirm-dialog v-model="deleteConfirmDialog" title="Are you sure?"
@@ -41,6 +30,7 @@ import { Context } from "@nuxt/types";
 import { Component, Vue } from "nuxt-property-decorator";
 import ConfirmDialog from "~/components/dashboard/confirm_dialog.vue";
 import FileCard from "~/components/dashboard/file/file_card.vue";
+import FileList from "~/components/dashboard/file/file_list.vue";
 import FileRenameDialog from "~/components/dashboard/file/file_rename_dialog.vue";
 import VimuAutocomplete from "~/components/vimu/vimu_autocomplete.vue";
 import VimuBtn from "~/components/vimu/vimu_button.vue";
@@ -58,7 +48,8 @@ import { fileStore } from "~/store";
         VimuBtn,
         FileCard,
         FileRenameDialog,
-        ConfirmDialog
+        ConfirmDialog,
+        FileList
     },
 })
 export default class FilesPage extends Vue {
@@ -73,6 +64,9 @@ export default class FilesPage extends Vue {
     query: string = "";
 
     listLoading: boolean = false;
+    nextPageLoading: boolean = false;
+
+    currentPage = 1;
 
     get files() {
         return fileStore.files;
@@ -106,7 +100,19 @@ export default class FilesPage extends Vue {
         }
     }
 
+    async nextPage() {
+        this.currentPage += 1;
+
+        if (this.currentPage <= fileStore.maxPage || fileStore.maxPage == -1) {
+            this.nextPageLoading = true;
+            await this.list(false)
+            this.nextPageLoading = false;
+        }
+
+    }
     async search(value?: string) {
+        console.log(this.query);
+        
         if (!value) {
             this.filter = ""
         } else {
@@ -117,7 +123,7 @@ export default class FilesPage extends Vue {
 
     async list(showLoading: boolean = true) {
         this.listLoading = showLoading;
-        await fileStore.list({ filter: this.filter, sort: this.sort });
+        await fileStore.list({ page: this.currentPage, perPage: 24, filter: this.filter, sort: this.sort });
         this.listLoading = false;
     }
 
@@ -131,6 +137,10 @@ export default class FilesPage extends Vue {
         } else {
             this.list(false);
         }
+    }
+
+    async duplicateFile(file: File) {
+        await this.createFile(file, false);
     }
 
 

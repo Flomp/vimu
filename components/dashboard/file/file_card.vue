@@ -100,7 +100,7 @@ export default class FileCard extends Vue {
     }
 
     @Emit("favorite")
-    favoriteMenu(e: MouseEvent) {
+    favoriteMenu() {
         return this.file;
     }
 

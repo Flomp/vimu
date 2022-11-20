@@ -88,7 +88,7 @@ export default class SourceScoreDialog extends Vue {
 
     async list(showLoading: boolean = true) {
         this.loading = showLoading;
-        await scoreStore.list({ page: this.currentPage, perPage: 6, filter: this.assembledFilter, sort: this.sort });
+        await scoreStore.list({ page: this.currentPage, perPage: 12, filter: this.assembledFilter, sort: this.sort });
         this.loading = false;
     }
 

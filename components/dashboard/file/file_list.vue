@@ -1,13 +1,13 @@
 <template>
     <div v-infinite-scroll="next" infinite-scroll-disabled="loading" infinite-scroll-immediate-check="false"
         infinite-scroll-distance="10">
-        <div v-if="scores.length && !initialLoading">
+        <div v-if="files.length && !initialLoading">
             <v-row>
                 <template>
-                    <v-col :cols="cols" :sm="sm" :md="md" :lg="lg" v-for="score in scores" :key="score.id">
-                        <score-card :score="score" :read-only="readOnly" @click="click" @create="create" @edit="edit"
-                            @remove="remove">
-                        </score-card>
+                    <v-col :cols="cols" :sm="sm" :md="md" :lg="lg" v-for="file in files" :key="file.id">
+                        <file-card :file="file" :read-only="readOnly" @remove="remove" @rename="rename"
+                            @favorite="favorite" @duplicate="duplicate" @open="open" @open-in-new-tab="openInNewTab">
+                        </file-card>
                     </v-col>
                 </template>
             </v-row>
@@ -16,13 +16,12 @@
             </div>
         </div>
         <div class="fill-width d-flex flex-column justify-center align-center mt-12"
-            v-else-if="!scores.length && !initialLoading && !searching">
+            v-else-if="!files.length && !initialLoading && !searching">
             <bunny-wanted :width="150" />
-            <span class="vimu-card-title mt-5">There are no scores here</span>
+            <span class="vimu-card-title mt-5">There are no files here</span>
             <span class="vimu-text">But you could upload some...</span>
         </div>
-        <search-empty-state class="mt-12"
-            v-else-if="!scores.length && !initialLoading && searching">
+        <search-empty-state class="mt-12" v-else-if="!files.length && !initialLoading && searching">
         </search-empty-state>
         <v-row v-else>
             <v-col :cols="cols" :sm="sm" :md="md" :lg="lg" v-for="i in 4" :key="i">
@@ -31,24 +30,27 @@
         </v-row>
     </div>
 </template>
+<v-row>
+
+</v-row>
 
 <script lang="ts">
 import { Vue, Component, Prop, Emit } from "nuxt-property-decorator";
 import BunnyWanted from "~/components/vimu/bunny_wanted.vue";
-import { Score } from "~/models/score";
+import File from "~/models/file";
 import SearchEmptyState from "../search_empty_state.vue";
-import ScoreCard from "./score_card.vue";
+import FileCard from "./file_card.vue";
 
 @Component({
     components: {
-        ScoreCard,
+        FileCard,
         BunnyWanted,
         SearchEmptyState
     }
 })
-export default class ScoreList extends Vue {
+export default class FileList extends Vue {
 
-    @Prop() readonly scores!: Score[];
+    @Prop() readonly files!: File[];
     @Prop() readonly initialLoading!: boolean;
     @Prop() readonly nextPageLoading!: boolean;
     @Prop() readonly loading!: boolean;
@@ -62,23 +64,33 @@ export default class ScoreList extends Vue {
 
 
     @Emit()
-    click(score: Score): any {
-        return score;
+    rename(file: File) {
+        return file;
     }
 
     @Emit()
-    create(score: Score) {
-        return score;
+    remove(file: File) {
+        return file;
     }
 
     @Emit()
-    edit(score: Score) {
-        return score;
+    favorite(file: File) {
+        return file;
     }
 
     @Emit()
-    remove(score: Score) {
-        return score;
+    duplicate(file: File) {
+        return file;
+    }
+
+    @Emit()
+    open(file: File) {
+        return file;
+    }
+
+    @Emit()
+    openInNewTab(file: File) {
+        return file;
     }
 
     @Emit()

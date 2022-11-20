@@ -39,12 +39,7 @@
 
 <script lang="ts">
 import {
-  Vue,
-  Component,
-  Prop,
-  Emit,
-  VModel,
-  Watch,
+Component, Emit, Prop, VModel, Vue
 } from "nuxt-property-decorator";
 import { MenuItem } from "./menu_item";
 
