@@ -5,7 +5,7 @@
             <v-row>
                 <template>
                     <v-col :cols="cols" :sm="sm" :md="md" :lg="lg" v-for="file in files" :key="file.id">
-                        <file-card :file="file" :read-only="readOnly" @remove="remove" @rename="rename"
+                        <file-card :file="file" :read-only="readOnly" @share="share" @remove="remove" @rename="rename"
                             @favorite="favorite" @duplicate="duplicate" @open="open" @open-in-new-tab="openInNewTab">
                         </file-card>
                     </v-col>
@@ -62,6 +62,10 @@ export default class FileList extends Vue {
     @Prop({ default: 4 }) readonly md!: number;
     @Prop({ default: 3 }) readonly lg!: number;
 
+    @Emit()
+    share(file: File) {
+        return file;
+    }
 
     @Emit()
     rename(file: File) {

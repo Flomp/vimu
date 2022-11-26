@@ -7,7 +7,6 @@ const auth = ({$pb, route, redirect, store}: Context & {$pb: PocketBase}) => {
     '/dashboard/files/all',
     '/dashboard/files/recent',
     '/dashboard/scores',
-    '/editor'
   ]
 
   const loggedIn = $pb.authStore.model !== null;

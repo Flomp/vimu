@@ -14,14 +14,15 @@
             </div>
             <file-list :files="files" :loading="listLoading || nextPageLoading" :initialLoading="listLoading"
                 :nextPageLoading="nextPageLoading" @create="createFile" :searching="query.length > 0"
-                @remove="showDeleteConfirm" @rename="renameFile" @favorite="favoriteFile" @duplicate="duplicateFile"
-                @open="openFile" @open-in-new-tab="openFileInNewTab" @next="nextPage">
+                @share="showShareDialog" @remove="showDeleteConfirm" @rename="renameFile" @favorite="favoriteFile"
+                @duplicate="duplicateFile" @open="openFile" @open-in-new-tab="openFileInNewTab" @next="nextPage">
             </file-list>
         </v-container>
         <file-rename-dialog v-model="renameDialog" :filename="filename" @save="saveRename"></file-rename-dialog>
         <confirm-dialog v-model="deleteConfirmDialog" title="Are you sure?"
             text="You are about to permanently delete this file" action="Delete" @confirm="removeFile">
         </confirm-dialog>
+        <file-share-dialog v-model="shareDialog" :file="sharingFile"></file-share-dialog>
     </v-sheet>
 </template>
   
@@ -32,6 +33,7 @@ import ConfirmDialog from "~/components/dashboard/confirm_dialog.vue";
 import FileCard from "~/components/dashboard/file/file_card.vue";
 import FileList from "~/components/dashboard/file/file_list.vue";
 import FileRenameDialog from "~/components/dashboard/file/file_rename_dialog.vue";
+import FileShareDialog from "~/components/dashboard/file/file_share_dialog.vue";
 import VimuAutocomplete from "~/components/vimu/vimu_autocomplete.vue";
 import VimuBtn from "~/components/vimu/vimu_button.vue";
 import VimuTextField from "~/components/vimu/vimu_text_field.vue";
@@ -49,15 +51,19 @@ import { fileStore } from "~/store";
         FileCard,
         FileRenameDialog,
         ConfirmDialog,
-        FileList
+        FileList,
+        FileShareDialog
     },
 })
 export default class FilesPage extends Vue {
     renameDialog: boolean = false;
     deleteConfirmDialog: boolean = false;
+    shareDialog: boolean = false;
+
     filename: string = ""
     renamingFile: File | null = null;
     deletingFile: File | null = null;
+    sharingFile: File | null = null;
 
     filter: string = "";
     sort: string = "-created";
@@ -112,7 +118,7 @@ export default class FilesPage extends Vue {
     }
     async search(value?: string) {
         console.log(this.query);
-        
+
         if (!value) {
             this.filter = ""
         } else {
@@ -169,6 +175,11 @@ export default class FilesPage extends Vue {
     showDeleteConfirm(file: File) {
         this.deletingFile = file;
         this.deleteConfirmDialog = true
+    }
+
+    showShareDialog(file: File) {
+        this.sharingFile = JSON.parse(JSON.stringify(file));
+        this.shareDialog = true;
     }
 
     async favoriteFile(file: File) {

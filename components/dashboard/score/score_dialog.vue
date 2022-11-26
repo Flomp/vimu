@@ -19,7 +19,7 @@
                             :loading="validationLoading" prepend-icon="mdi-music-clef-bass" :rules="fileRules"
                             @change="onFileChanged">
                         </v-file-input>
-                        <v-switch label="Public" v-bind="attrs" v-on="on" v-model="scoreLocal.public" inset>
+                        <v-switch label="Public" v-model="scoreLocal.public" inset>
                         </v-switch>
                         <v-menu class="white" open-on-hover bottom offset-y content-class="vimu-menu">
                             <template v-slot:activator="{ on, attrs }">

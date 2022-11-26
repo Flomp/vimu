@@ -4,8 +4,7 @@
         <v-progress-linear absolute indeterminate color="black" height="2" v-if="apiLoading"></v-progress-linear>
         <div id="rete" @contextmenu="showContextMenu"></div>
         <sub-menu v-model="showMenu" :absolute="true" :positionX="x" :positionY="y" :items="menuItems"
-            @menu-click="createNode" />
-
+            @menu-click="createNode" v-if="!readonly"/>
     </div>
 </template>
 
@@ -34,6 +33,10 @@ export default class EditorPanel extends Vue {
     y = 0;
     editorX = 0;
     editorY = 0;
+
+    get readonly() {
+        return fileStore.readonly
+    }
 
     get apiLoading() {
         return engineStore.loading;

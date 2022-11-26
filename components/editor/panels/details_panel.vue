@@ -70,7 +70,7 @@
 import { Component, InjectReactive, Vue } from "nuxt-property-decorator";
 import { Node, NodeEditor } from "rete";
 import { LogLevel } from "~/models/log";
-import { logStore } from "~/store";
+import { fileStore, logStore } from "~/store";
 
 @Component({})
 export default class DetailsPanel extends Vue {
@@ -78,7 +78,7 @@ export default class DetailsPanel extends Vue {
   editor!: NodeEditor;
 
   get showDelete() {
-    return this.selectedNode && this.selectedNode.name != "output"
+    return !fileStore.readonly && this.selectedNode && this.selectedNode.name != "output"
   }
 
   get selectedNode(): Node | undefined {

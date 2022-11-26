@@ -1,5 +1,5 @@
 <template>
-  <div id="lololo" >
+  <div >
     <v-combobox class="pr-5" v-model="value" :items="items" @change="change($event)" outlined style="max-width: 200px">
     </v-combobox>
   </div>

@@ -121,4 +121,8 @@ export default class LogStore extends VuexModule {
             return false;
         }
     }
+
+    get readonly() {
+        return this.file?.public ?? true
+    }
 }

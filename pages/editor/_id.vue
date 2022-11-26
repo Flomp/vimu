@@ -87,6 +87,10 @@ export default class Editor extends Vue {
   isRightDragging: boolean = false;
   isUpperDragging: boolean = false;
 
+  get loggedIn() {
+    return authStore.loggedIn;
+  }
+
   get showFirstColumn() {
     return settingsStore.settings.view.score || settingsStore.settings.view.log;
   }

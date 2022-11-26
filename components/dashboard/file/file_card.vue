@@ -26,7 +26,7 @@
                     <v-list-item @click="favoriteMenu">
                         <v-list-item-title>{{ favoriteText }}</v-list-item-title>
                     </v-list-item>
-                    <v-list-item>
+                    <v-list-item @click="share">
                         <v-list-item-title>Share</v-list-item-title>
                     </v-list-item>
                     <v-divider></v-divider>
@@ -80,6 +80,11 @@ export default class FileCard extends Vue {
         this.checkTimeInterval = setInterval(() => {
             this.editTimestamp = getRelativeTime(this.file.updated);
         }, 1000);
+    }
+
+    @Emit()
+    share() {
+        return this.file;
     }
 
     @Emit()

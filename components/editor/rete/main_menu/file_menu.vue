@@ -12,11 +12,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "nuxt-property-decorator";
+import { Component, Vue } from "nuxt-property-decorator";
 import FileRenameDialog from "~/components/dashboard/file/file_rename_dialog.vue";
 import { MenuItem } from "~/components/editor/palette/menu_item";
 import SubMenu from "~/components/editor/palette/sub_menu.vue";
-import File from "~/models/file";
 import { fileStore } from "~/store";
 
 @Component({
@@ -31,8 +30,7 @@ export default class FileMenu extends Vue {
   dialog: boolean = false;
 
   items: MenuItem[] = [
-    { name: "Back to files", key: "back_to_files", divider: true },
-    { name: "Open...", divider: true },
+    ...this.readonly ? [] : [{ name: "Open...", divider: true },
     { name: "Share" },
     { name: "Rename", divider: true, key: "file_rename" },
     { name: "Import" },
@@ -49,7 +47,8 @@ export default class FileMenu extends Vue {
           key: "file_export_json",
         },
       ],
-    },
+    },],
+    { name: "Back", key: "file_back"},
   ];
 
   get file() {
@@ -60,17 +59,19 @@ export default class FileMenu extends Vue {
     return this.file?.name ?? ""
   }
 
-  handleClick(item: MenuItem) {
-    switch (item.key) {
-      case "back_to_files":
-        this.backToFiles();
-      case "file_rename":
-        this.dialog = true;
-    }
+  get readonly() {
+    return fileStore.readonly;
   }
 
-  backToFiles() {
-    this.$router.push('/dashboard/files/all');
+  handleClick(item: MenuItem) {
+    switch (item.key) {
+      case "file_back":
+        this.$router.back();
+        break;
+      case "file_rename":
+        this.dialog = true;
+        break;
+    }
   }
 
   async renameFile(newFilename: string) {

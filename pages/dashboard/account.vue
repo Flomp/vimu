@@ -9,7 +9,8 @@
                 <v-col cols="12" sm="6">
                     <div class="py-5" style="max-width: 400px">
                         <span class="font-weight-bold">Name</span>
-                        <vimu-text-field v-model="name"></vimu-text-field>
+                        <vimu-text-field v-model="name">
+                        <span class="vimu-text">#{{ userId }}</span></vimu-text-field>
                         <span class="font-weight-bold">Email</span>
                         <vimu-text-field v-model="email"></vimu-text-field>
                     </div>
@@ -42,7 +43,10 @@ export default class AccountPage extends Vue {
     name: string = ""
     currentName: string = this.name
 
+    userId: string = "";
+
     saveLoading: boolean = false;
+
 
     get emailChanged(): boolean {
         return this.email !== this.currentEmail;
@@ -61,6 +65,7 @@ export default class AccountPage extends Vue {
 
 
     initValues() {
+        this.userId = this.$pb.authStore.model?.username.replace("users", "");
         this.email = this.$pb.authStore.model?.email
         this.currentEmail = this.email;
 
