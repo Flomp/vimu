@@ -2,33 +2,44 @@
     <v-sheet class="main">
         <v-container>
             <span class="vimu-title">Account</span>
-            <v-row class="pt-10 align-center">
-                <v-col cols="12" sm="auto" class="pr-sm-12 d-flex justify-center">
-                    <vimu-avatar :seed="avatarSeed" :size="172"></vimu-avatar>
-                </v-col>
-                <v-col cols="12" sm="6">
-                    <div class="py-5" style="max-width: 400px">
-                        <span class="font-weight-bold">Name</span>
-                        <vimu-text-field v-model="name">
-                        <span class="vimu-text">#{{ userId }}</span></vimu-text-field>
-                        <span class="font-weight-bold">Email</span>
-                        <vimu-text-field v-model="email"></vimu-text-field>
-                    </div>
-                    <vimu-btn :disabled="!nameChanged && !emailChanged" :loading="saveLoading" @click="save">Save
-                    </vimu-btn>
-                </v-col>
-            </v-row>
+            <v-form ref="account-form">
+                <v-row class="pt-10 align-center">
+                    <v-col cols="12" sm="auto" class="pr-sm-12 d-flex justify-center" style="position: relative">
+                        <vimu-avatar :seed="avatarSeed" :size="172"></vimu-avatar>
+                        <v-btn color="primary" :loading="seedLoading" :disabled="seedLoading" absolute icon bottom right
+                            @click="regenSeed">
+                            <v-icon>mdi-cached</v-icon>
+                        </v-btn>
 
+                    </v-col>
+                    <v-col cols="12" sm="6">
+                        <div class="py-5" style="max-width: 400px">
+                            <span class="font-weight-bold">Username</span>
+                            <vimu-text-field v-model="username" :rules="usernameRules">
+                            </vimu-text-field>
+                            <span class="font-weight-bold">Email</span>
+                            <vimu-text-field v-model="email"></vimu-text-field>
+                        </div>
+                        <vimu-btn :disabled="(!usernameChanged && !emailChanged) || !username.length || !email.length"
+                            :loading="saveLoading" @click="save">
+                            Save
+                        </vimu-btn>
+                    </v-col>
+                </v-row>
+            </v-form>
 
         </v-container>
     </v-sheet>
 </template>
   
 <script lang="ts">
-import { Vue, Component } from "nuxt-property-decorator";
+import { Vue, Component, Ref, Watch } from "nuxt-property-decorator";
 import VimuTextField from "~/components/vimu/vimu_text_field.vue";
 import VimuBtn from "~/components/vimu/vimu_button.vue";
-import { notificationStore } from "~/store";
+import { $pb, authStore, notificationStore } from "~/store";
+import { ClientResponseError } from "pocketbase";
+import { required } from "~/utils/verification_rules";
+import { generateSeed } from "~/utils/string";
 @Component({
     layout: 'dashboard',
     components: {
@@ -37,60 +48,87 @@ import { notificationStore } from "~/store";
     },
 })
 export default class AccountPage extends Vue {
+
+    @Ref("account-form")
+    form!: HTMLFormElement;
     email: string = ""
     currentEmail: string = this.email;
 
-    name: string = ""
-    currentName: string = this.name
-
-    userId: string = "";
+    username: string = ""
+    currentUsername: string = this.username
 
     saveLoading: boolean = false;
+    seedLoading: boolean = false;
 
+    avatarSeed = $pb.authStore.model?.avatar ?? '';
+
+    usernameRules = [
+        required,
+    ]
 
     get emailChanged(): boolean {
         return this.email !== this.currentEmail;
     }
 
-    get nameChanged(): boolean {
-        return this.name !== this.currentName;
+    get usernameChanged(): boolean {
+        return this.username !== this.currentUsername;
     }
 
-    get avatarSeed() {
-        return this.$pb.authStore.model?.email ?? '';
-    }
+
+
     mounted() {
         this.initValues();
     }
 
 
     initValues() {
-        this.userId = this.$pb.authStore.model?.username.replace("users", "");
-        this.email = this.$pb.authStore.model?.email
+        this.email = $pb.authStore.model?.email
         this.currentEmail = this.email;
 
-        this.name = this.$pb.authStore.model?.name
-        this.currentName = this.name
+        this.username = $pb.authStore.model?.username
+        this.currentUsername = this.username
+    }
+
+    async regenSeed() {
+        if (!$pb.authStore.model) {
+            return;
+        }
+        this.seedLoading = true;
+        const newSeed = generateSeed();
+        await $pb.collection('users').update($pb.authStore.model.id, { avatar: newSeed });
+        this.avatarSeed = $pb.authStore.model.avatar
+        authStore.setAvatar(this.avatarSeed);
+
+        this.seedLoading = false;
     }
 
     async save() {
-        if (!this.$pb.authStore.model) {
+        if (!$pb.authStore.model) {
             return;
         }
         this.saveLoading = true;
         try {
-            if (this.emailChanged) {
-                await this.$pb.collection('users').requestEmailChange(this.email);
+            if (this.emailChanged && this.email.length) {
+                await $pb.collection('users').requestEmailChange(this.email);
             }
-            await this.$pb.collection('users').update(this.$pb.authStore.model.id, { name: this.name });
+            if (this.usernameChanged && this.username.length) {
+                await $pb.collection('users').update($pb.authStore.model.id, { username: this.username });
+                authStore.setUsername(this.username);
+            }
+            notificationStore.sendNotification({ title: "Profile saved", color: 'primary' })
+            this.initValues();
         } catch (error) {
-            notificationStore.sendNotification({ title: "An error occurred while saveing the profile", color: 'error' })
-            return;
-        }
-        notificationStore.sendNotification({ title: "Profile saved", color: 'primary' })
+            if (error instanceof ClientResponseError && error.data.data?.username?.message == "The username is invalid or already in use.") {
+                notificationStore.sendNotification({ title: "Username already in use", color: 'error' })
+            } else {
+                notificationStore.sendNotification({ title: "An error occurred while saveing the profile", color: 'error' })
+            }
 
-        this.initValues();
-        this.saveLoading = false;
+            return;
+        } finally {
+            this.saveLoading = false;
+        }
+
 
     }
 }

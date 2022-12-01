@@ -81,7 +81,7 @@
                     <h1 class="vimu-title">
                         Drag, connect, analyse
                     </h1>
-                    <vimu-button class="my-10" :primary="true" :x-large="true" to="/dashboard/files/all">Get started
+                    <vimu-button class="my-10" :primary="true" :x-large="true" to="/dashboard/files/my">Get started
                     </vimu-button>
                 </div>
             </section>
@@ -190,7 +190,7 @@ export default class IndexPage extends Vue {
         editor.on(["process"], (params) => {
             const trigger = (params as any).trigger
             if (trigger === "primary") {
-                this.$router.push('/dashboard/files/all')
+                this.$router.push('/dashboard/files/my')
             }
 
         });

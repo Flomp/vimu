@@ -262,8 +262,8 @@ export default class Editor extends Vue {
         "connectionremoved",
       ],
       async () => {
-        if (fileStore.file != null && !Object.keys(example_files).includes(fileStore.file.id)) {
-          fileStore.update({ id: fileStore.file.id, json: JSON.stringify(this.editor?.toJSON()) })
+        if (fileStore.file != null && !fileStore.readonly && !Object.keys(example_files).includes(fileStore.file.id)) {
+          fileStore.updateData({ id: fileStore.file.data, json: JSON.stringify(this.editor?.toJSON()) })
         }
       }
     );
@@ -287,7 +287,7 @@ export default class Editor extends Vue {
     }
 
     let deepCopy: Data;
-    deepCopy = JSON.parse(JSON.stringify(fileStore.file!.json))
+    deepCopy = JSON.parse(JSON.stringify(fileStore.file!.expand.data.json))
 
     return deepCopy;
   }

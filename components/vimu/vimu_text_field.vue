@@ -10,7 +10,7 @@
     :prepend-icon="prependIcon"
     :placeholder="placeholder"
     :disabled="disabled"
-    validate-on-blur
+    :validate-on-blur="validateOnBlur"
     outlined
     :clearable="clearable"
   ><template v-slot:append>
@@ -33,6 +33,7 @@ export default class VimuTextField extends Vue {
     @Prop() readonly placeholder!: string;
     @Prop({default: false}) readonly clearable!: boolean;
     @Prop({default: false}) readonly disabled!: boolean;
+    @Prop({default: true}) readonly validateOnBlur!: boolean;
 
 }
 </script>
@@ -43,6 +44,6 @@ export default class VimuTextField extends Vue {
 }
 
 .vimu-text-field .v-input__append-inner {
-  margin-top: 19px !important
+  margin-top: 10px !important
 }
 </style>

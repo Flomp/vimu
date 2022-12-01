@@ -8,7 +8,7 @@
         <v-list dense>
             <v-list-item>
                 <v-list-item-title>
-                    <span class="grey--text">User-ID: </span><span>{{userId}}</span>
+                    <span class="grey--text">User: </span><span>{{username}}</span>
                 </v-list-item-title>
             </v-list-item>
             <v-list-item to="/dashboard/account">
@@ -19,7 +19,7 @@
                     <span>Account</span>
                 </v-list-item-title>
             </v-list-item>
-            <v-list-item to="/dashboard/files/all">
+            <v-list-item to="/dashboard/files/my">
                 <v-list-item-avatar>
                     <v-icon>mdi-file</v-icon>
                 </v-list-item-avatar>
@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "nuxt-property-decorator";
+import { Component, Prop, Vue, Watch } from "nuxt-property-decorator";
 import { $pb, authStore } from "~/store";
 import VimuAvatar from "./vimu_avatar.vue";
 import VimuBtn from "./vimu_button.vue";
@@ -61,11 +61,11 @@ export default class VimuProfileMenu extends Vue {
     loggedIn!: boolean;
 
     get avatarSeed() {
-        return this.$pb.authStore.model?.email ?? '';
+        return authStore.avatar
     }
 
-    get userId() {
-        return ($pb.authStore.model?.username ?? '').replace('users', '');
+    get username() {
+        return authStore.username
     }
 
     logout() {

@@ -13,7 +13,7 @@
         </div>
 
         <div>
-          <vimu-btn class="mr-4" :primary="true" to="/dashboard/files/all" v-if="loggedIn">Dashboard</vimu-btn>
+          <vimu-btn class="mr-4" :primary="true" to="/dashboard/files/my" v-if="loggedIn">Dashboard</vimu-btn>
           <vimu-profile-menu :logged-in="loggedIn"></vimu-profile-menu>
         </div>
       </div>
@@ -42,6 +42,7 @@ import { Vue, Component, ProvideReactive } from "nuxt-property-decorator";
 import VimuBtn from "./vimu_button.vue";
 import Logo from "./logo.vue";
 import VimuProfileMenu from "./vimu_profile_menu.vue";
+import { $pb } from "~/store";
 
 @Component({
   components: {
@@ -53,10 +54,10 @@ import VimuProfileMenu from "./vimu_profile_menu.vue";
 export default class VimuAppBar extends Vue {
   showMenu: boolean = false;
 
-  loggedIn: boolean = this.$pb.authStore.model !== null;
+  loggedIn: boolean = $pb.authStore.model !== null;
 
   mounted() {
-    this.$pb.authStore.onChange((token, model) => {
+    $pb.authStore.onChange((token, model) => {
       this.loggedIn = token !== null && model !== null;
     });
   }

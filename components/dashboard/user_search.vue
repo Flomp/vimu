@@ -1,42 +1,39 @@
 <template>
-    <v-autocomplete v-model="model" class="vimu-searchbar" placeholder="User-Id" :persistent-placeholder="true"
-        :hide-details="true" prepend-inner-icon="mdi-magnify" append-icon="" outlined hide-no-data chips
-        @update:search-input="search" :items="items">
+    <vimu-text-field v-model="query" placeholder="Username" :hide-details="true">
+        <vimu-btn :primary="true" @click="add" :loading="loading" :disabled="loading">Add</vimu-btn>
 
-    </v-autocomplete>
+    </vimu-text-field>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "nuxt-property-decorator";
-import { User } from "~/models/user";
-import { $pb } from "~/store";
+import { Component, Emit, Prop, Vue } from "nuxt-property-decorator";
+import VimuBtn from "../vimu/vimu_button.vue";
+import VimuTextField from "../vimu/vimu_text_field.vue";
 
-@Component({})
+
+@Component({
+    components: {
+        VimuTextField,
+        VimuBtn
+    }
+})
 export default class UserSearch extends Vue {
-    model = null;
-    entries: User[] = [];
 
-    get items(): { text: string, value: User }[] {
-        console.log(this.entries);
+    @Prop() loading!: boolean;
 
-        return this.entries.map((u) => {
-            return {
-                text: u.email,
-                value: u
-            }
-        });
+    query: string = ""
+
+    @Emit()
+    add(): string | null {
+        if (!this.query.length) {
+            return null;
+        }
+        const query_ = this.query;
+        this.query = "";
+        return query_;
     }
 
-    async search(query: string) {
-        if (query === null || query.length == 0) {
-            return
-        }
-        try {
-            this.entries = (await $pb.collection('profile').getList<User>(1, 8, { filter: `name="users${query}"` })).items
-        } catch {
-        }
 
-    }
 }
 </script>
 

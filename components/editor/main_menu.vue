@@ -5,7 +5,6 @@
     <view-menu></view-menu>
     <div class="text-center" style="flex-basis: 100%;">
       <span class="font-weight-bold">{{ title }}</span>
-
     </div>
   </div>
 </template>
@@ -27,7 +26,10 @@ import ViewMenu from "./rete/main_menu/view_menu.vue";
 })
 export default class MainMenu extends Vue {
   get title() {
-    return fileStore.file?.name ?? ""
+    if(!fileStore.file) {
+      return "";
+    }
+    return fileStore.file.name + (fileStore.readonly ? ' (read-only)' : '')
   }
 
   get readonly() {

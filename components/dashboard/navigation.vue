@@ -1,25 +1,32 @@
 <template>
     <v-list dense>
-        <v-list-item class="px-12" v-if="showLogo">
+        <v-list-item class="px-12 py-2" v-if="showLogo">
             <nuxt-link to="/">
                 <Logo :width=128 />
             </nuxt-link>
         </v-list-item>
-
-        <v-list-item to="/dashboard/files/recent">
-            <v-list-item-avatar>
-                <v-icon size="20">mdi-history</v-icon>
-            </v-list-item-avatar>
-            <v-list-item-title class="drawer-title">
-                Recent
-            </v-list-item-title>
-        </v-list-item>
-        <v-list-item to="/dashboard/files/all">
+        <v-list-item to="/dashboard/files/my">
             <v-list-item-avatar>
                 <v-icon size="20">mdi-file</v-icon>
             </v-list-item-avatar>
             <v-list-item-title class="drawer-title">
-                Files
+                My Files
+            </v-list-item-title>
+        </v-list-item>
+        <v-list-item to="/dashboard/files/shared">
+            <v-list-item-avatar>
+                <v-icon size="20">mdi-share-variant</v-icon>
+            </v-list-item-avatar>
+            <v-list-item-title class="drawer-title">
+                Shared Files
+            </v-list-item-title>
+        </v-list-item>
+        <v-list-item to="/dashboard/scores">
+            <v-list-item-avatar>
+                <v-icon size="20">mdi-music</v-icon>
+            </v-list-item-avatar>
+            <v-list-item-title class="drawer-title">
+                Scores
             </v-list-item-title>
         </v-list-item>
         <v-divider></v-divider>
@@ -39,15 +46,6 @@
 
         </div>
         <v-divider></v-divider>
-        <v-list-item to="/dashboard/scores">
-            <v-list-item-avatar>
-                <v-icon size="20">mdi-music</v-icon>
-            </v-list-item-avatar>
-            <v-list-item-title class="drawer-title">
-                Scores
-            </v-list-item-title>
-        </v-list-item>
-        <v-divider></v-divider>
         <div class="my-4">
             <div class="d-flex align-center">
                 <span class="navigation-heading mx-4">Teams</span>
@@ -63,7 +61,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from "nuxt-property-decorator";
-import File from "~/models/file";
+import {File} from "~/models/file";
 import { fileStore } from "~/store";
 import Logo from "../vimu/logo.vue";
 

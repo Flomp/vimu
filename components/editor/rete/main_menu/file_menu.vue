@@ -48,7 +48,7 @@ export default class FileMenu extends Vue {
         },
       ],
     },],
-    { name: "Back", key: "file_back"},
+    { name: "Close", key: "file_close"},
   ];
 
   get file() {
@@ -65,7 +65,7 @@ export default class FileMenu extends Vue {
 
   handleClick(item: MenuItem) {
     switch (item.key) {
-      case "file_back":
+      case "file_close":
         this.$router.back();
         break;
       case "file_rename":

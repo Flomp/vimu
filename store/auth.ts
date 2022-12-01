@@ -1,4 +1,5 @@
 import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators';
+import { generateSeed } from '~/utils/string';
 import { $pb, notificationStore } from '.';
 
 @Module({
@@ -7,7 +8,20 @@ import { $pb, notificationStore } from '.';
     namespaced: true,
 })
 export default class LogStore extends VuexModule {
-    redirectPath: string = "/dashboard/files/all"
+    redirectPath: string = "/dashboard/files/my"
+
+    username : string = '';
+    avatar : string = '';
+
+    @Mutation
+    setUsername(username: string) {
+        this.username = username;
+    }
+
+    @Mutation
+    setAvatar(avatar: string) {
+        this.avatar = avatar;
+    }
 
     @Mutation
     setRedirectPath(redirectPath: string) {
@@ -15,8 +29,10 @@ export default class LogStore extends VuexModule {
     }
 
     @Action({ rawError: true })
-    async signup(data: { email: string, password: string, passwordConfirm: string }) {
+    async signup(data: { email: string, password: string, passwordConfirm: string, avatar?: string }) {
         try {
+            const avatarSeed = generateSeed()
+            data.avatar = avatarSeed;
             const user = await $pb.collection('users').create(data)
             if (user) {
                 await $pb.collection('users').requestVerification(data.email);
@@ -51,4 +67,5 @@ export default class LogStore extends VuexModule {
     get loggedIn() {
         return $pb.authStore.model?.id !== undefined;
     }
+
 }

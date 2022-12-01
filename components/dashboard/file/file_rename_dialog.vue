@@ -9,6 +9,7 @@
       </v-card-text>
       <v-card-actions class="py-4">
         <v-spacer></v-spacer>
+        <v-btn text color="grey" @click="dialog = false">Cancel</v-btn>
         <vimu-btn @click="save">Save</vimu-btn>
       </v-card-actions>
     </v-card>

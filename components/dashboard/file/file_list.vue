@@ -5,7 +5,7 @@
             <v-row>
                 <template>
                     <v-col :cols="cols" :sm="sm" :md="md" :lg="lg" v-for="file in files" :key="file.id">
-                        <file-card :file="file" :read-only="readOnly" @share="share" @remove="remove" @rename="rename"
+                        <file-card :file="file" :shared="shared" @share="share" @remove="remove" @rename="rename"
                             @favorite="favorite" @duplicate="duplicate" @open="open" @open-in-new-tab="openInNewTab">
                         </file-card>
                     </v-col>
@@ -37,7 +37,7 @@
 <script lang="ts">
 import { Vue, Component, Prop, Emit } from "nuxt-property-decorator";
 import BunnyWanted from "~/components/vimu/bunny_wanted.vue";
-import File from "~/models/file";
+import {File} from "~/models/file";
 import SearchEmptyState from "../search_empty_state.vue";
 import FileCard from "./file_card.vue";
 
@@ -54,7 +54,7 @@ export default class FileList extends Vue {
     @Prop() readonly initialLoading!: boolean;
     @Prop() readonly nextPageLoading!: boolean;
     @Prop() readonly loading!: boolean;
-    @Prop() readonly readOnly!: boolean;
+    @Prop() readonly shared!: boolean;
     @Prop() readonly searching!: boolean;
 
     @Prop({ default: 12 }) readonly cols!: number;

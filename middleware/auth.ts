@@ -4,8 +4,8 @@ import PocketBase from "pocketbase";
 const auth = ({$pb, route, redirect, store}: Context & {$pb: PocketBase}) => {
   const protectedRoutes = [
     '/dashboard/account',
-    '/dashboard/files/all',
-    '/dashboard/files/recent',
+    '/dashboard/files/my',
+    '/dashboard/files/shared',
     '/dashboard/scores',
   ]
 

@@ -45,6 +45,7 @@ import { Component, Emit, Prop, VModel, Vue, Watch } from "nuxt-property-decorat
 import { OpenSheetMusicDisplay } from "opensheetmusicdisplay";
 import { VNavigationDrawer } from "vuetify/lib";
 import { Score, ScoreMeta } from "~/models/score";
+import { $pb } from "~/store";
 import VimuBtn from "../../vimu/vimu_button.vue";
 
 @Component({
@@ -73,7 +74,7 @@ export default class ScoreDrawer extends Vue {
   }
 
   get dataPath() {
-    return this.$pb.getFileUrl(this.score as any, this.score.data)
+    return $pb.getFileUrl(this.score as any, this.score.data)
   }
 
   @Watch("score")

@@ -6,23 +6,24 @@
                     style="max-width: 400px;">
                 </vimu-searchbar>
                 <span class="vimu-title">{{ title }}</span>
-                <div class="py-5">
+                <div class="d-flex align-center justify-space-between py-5">
                     <vimu-btn class="mt-3 mt-sm-0" :primary="true" :large="true" @click="createFile()">New file <v-icon>
                             mdi-plus</v-icon>
                     </vimu-btn>
+                    <vimu-select v-model="sort" :items="sortOptions" :hide-details="true" :dense="true" style="max-width: 200px" @change="updateSort"></vimu-select>
                 </div>
             </div>
             <file-list :files="files" :loading="listLoading || nextPageLoading" :initialLoading="listLoading"
                 :nextPageLoading="nextPageLoading" @create="createFile" :searching="query.length > 0"
                 @share="showShareDialog" @remove="showDeleteConfirm" @rename="renameFile" @favorite="favoriteFile"
-                @duplicate="duplicateFile" @open="openFile" @open-in-new-tab="openFileInNewTab" @next="nextPage">
+                @duplicate="duplicateFile" @open="openFile" @open-in-new-tab="openFileInNewTab" @next="nextPage" :shared="$route.params.slug == 'shared'">
             </file-list>
         </v-container>
         <file-rename-dialog v-model="renameDialog" :filename="filename" @save="saveRename"></file-rename-dialog>
         <confirm-dialog v-model="deleteConfirmDialog" title="Are you sure?"
             text="You are about to permanently delete this file" action="Delete" @confirm="removeFile">
         </confirm-dialog>
-        <file-share-dialog v-model="shareDialog" :file="sharingFile"></file-share-dialog>
+        <file-share-dialog v-model="shareDialog" :file="file"></file-share-dialog>
     </v-sheet>
 </template>
   
@@ -36,10 +37,11 @@ import FileRenameDialog from "~/components/dashboard/file/file_rename_dialog.vue
 import FileShareDialog from "~/components/dashboard/file/file_share_dialog.vue";
 import VimuAutocomplete from "~/components/vimu/vimu_autocomplete.vue";
 import VimuBtn from "~/components/vimu/vimu_button.vue";
+import VimuSelect from "~/components/vimu/vimu_select.vue";
 import VimuTextField from "~/components/vimu/vimu_text_field.vue";
 
-import File from "~/models/file";
-import { fileStore } from "~/store";
+import { File } from "~/models/file";
+import { $pb, fileStore } from "~/store";
 
 @Component({
     layout: 'dashboard',
@@ -52,7 +54,8 @@ import { fileStore } from "~/store";
         FileRenameDialog,
         ConfirmDialog,
         FileList,
-        FileShareDialog
+        FileShareDialog,
+        VimuSelect
     },
 })
 export default class FilesPage extends Vue {
@@ -63,10 +66,17 @@ export default class FilesPage extends Vue {
     filename: string = ""
     renamingFile: File | null = null;
     deletingFile: File | null = null;
-    sharingFile: File | null = null;
 
-    filter: string = "";
-    sort: string = "-created";
+    filters = {
+        slug: "",
+        query: ""
+    };
+    sortOptions = [
+        {text: "Alphabetical", value: "name"},
+        {text: "Date created", value: "-created"},
+        {text: "Last modified", value: "-updated"}
+    ]
+    sort = "-updated";
     query: string = "";
 
     listLoading: boolean = false;
@@ -78,31 +88,42 @@ export default class FilesPage extends Vue {
         return fileStore.files;
     }
 
+    get file() {
+        return fileStore.file;
+    }
+
     get title() {
         const slug = this.$route.params.slug;
 
         switch (slug) {
-            case 'recent':
-                return 'Recent'
+            case 'shared':
+                return 'Shared Files'
         }
-        return 'Files'
+        return 'My Files'
 
     }
 
+    get assembledFilter(): string {
+        let filter = this.filters.slug;
+        if (this.filters.query) {
+            filter += '&&' + this.filters.query;
+        }
+        return filter
+    }
+
     validate({ params }: Context) {
-        return ['all', 'recent'].includes(params.slug)
+        return ['my', 'shared'].includes(params.slug)
     }
 
     created() {
         const slug = this.$route.params.slug;
+
         switch (slug) {
-            case 'recent':
-                this.sort = '-updated'
-                this.filter = ''
+            case 'shared':
+                this.filters.slug = `collaborators.user.id~"${$pb.authStore.model?.id}"`
                 break;
             default:
-                this.filter = ''
-                this.sort = '-created'
+                this.filters.slug = `owner="${$pb.authStore.model?.id}"`
         }
     }
 
@@ -117,19 +138,17 @@ export default class FilesPage extends Vue {
 
     }
     async search(value?: string) {
-        console.log(this.query);
-
         if (!value) {
-            this.filter = ""
+            this.filters.query = ""
         } else {
-            this.filter = `name~"${value}"`
+            this.filters.query = `name~"${value}"`
         }
         this.list(true);
     }
 
     async list(showLoading: boolean = true) {
         this.listLoading = showLoading;
-        await fileStore.list({ page: this.currentPage, perPage: 24, filter: this.filter, sort: this.sort });
+        await fileStore.list({ page: this.currentPage, perPage: 24, filter: this.assembledFilter, sort: this.sort });
         this.listLoading = false;
     }
 
@@ -178,7 +197,7 @@ export default class FilesPage extends Vue {
     }
 
     showShareDialog(file: File) {
-        this.sharingFile = JSON.parse(JSON.stringify(file));
+        fileStore.setFile(file)
         this.shareDialog = true;
     }
 
@@ -195,6 +214,10 @@ export default class FilesPage extends Vue {
         let routeData = this.$router.resolve('/editor/' + file.id);
 
         window.open(routeData.href, '_blank');
+    }
+
+    async updateSort(value: string ) {
+        await this.list(true);     
     }
 }
 </script>
