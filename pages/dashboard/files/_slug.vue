@@ -10,13 +10,26 @@
                     <vimu-btn class="mt-3 mt-sm-0" :primary="true" :large="true" @click="createFile()">New file <v-icon>
                             mdi-plus</v-icon>
                     </vimu-btn>
-                    <vimu-select v-model="sort" :items="sortOptions" :hide-details="true" :dense="true" style="max-width: 200px" @change="updateSort"></vimu-select>
+                    <div class="d-flex align-center">
+                        <vimu-select class="mr-3" v-model="sort" :items="sortOptions" :hide-details="true" :dense="true"
+                            style="max-width: 200px" @change="updateSort"></vimu-select>
+                        <v-btn-toggle mandatory @change="changeView">
+                            <v-btn small>
+                                <v-icon>mdi-view-dashboard</v-icon>
+
+                            </v-btn>
+                            <v-btn small>
+                                <v-icon>mdi-format-list-bulleted-square</v-icon>
+                            </v-btn>
+                        </v-btn-toggle>
+                    </div>
                 </div>
             </div>
             <file-list :files="files" :loading="listLoading || nextPageLoading" :initialLoading="listLoading"
                 :nextPageLoading="nextPageLoading" @create="createFile" :searching="query.length > 0"
                 @share="showShareDialog" @remove="showDeleteConfirm" @rename="renameFile" @favorite="favoriteFile"
-                @duplicate="duplicateFile" @open="openFile" @open-in-new-tab="openFileInNewTab" @next="nextPage" :shared="$route.params.slug == 'shared'">
+                @duplicate="duplicateFile" @open="openFile" @open-in-new-tab="openFileInNewTab" @next="nextPage"
+                :shared="$route.params.slug == 'shared'">
             </file-list>
         </v-container>
         <file-rename-dialog v-model="renameDialog" :filename="filename" @save="saveRename"></file-rename-dialog>
@@ -72,9 +85,9 @@ export default class FilesPage extends Vue {
         query: ""
     };
     sortOptions = [
-        {text: "Alphabetical", value: "name"},
-        {text: "Date created", value: "-created"},
-        {text: "Last modified", value: "-updated"}
+        { text: "Alphabetical", value: "name" },
+        { text: "Date created", value: "-created" },
+        { text: "Last modified", value: "-updated" }
     ]
     sort = "-updated";
     query: string = "";
@@ -216,8 +229,14 @@ export default class FilesPage extends Vue {
         window.open(routeData.href, '_blank');
     }
 
-    async updateSort(value: string ) {
-        await this.list(true);     
+    async updateSort(value: string) {
+        await this.list(true);
+    }
+
+    changeView(value: number) {
+        if (value == 1) {
+            //TODO
+        }        
     }
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
     <v-list dense>
-        <v-list-item class="px-12 py-2" v-if="showLogo">
+        <v-list-item class="px-12 pb-2" v-if="showLogo">
             <nuxt-link to="/">
                 <Logo :width=128 />
             </nuxt-link>

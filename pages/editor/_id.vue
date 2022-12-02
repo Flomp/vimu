@@ -1,5 +1,5 @@
 <template>
-  <v-sheet class="main fill-height">
+  <v-sheet class="main fill-height" style="overflow: hidden">
     <div ref="page" id="panel-grid" @mouseup="endDrag" @mousemove="onDrag">
       <div id="editor" class="pa-0">
         <editor-panel></editor-panel>
@@ -386,6 +386,7 @@ export default class Editor extends Vue {
   display: grid;
   grid-template-columns: 50% 2px 1fr 2px 300px;
   grid-template-rows: 1fr 2px 300px;
+  max-height: 100vh;
 }
 
 .vertical-dragbar {
@@ -407,14 +408,17 @@ export default class Editor extends Vue {
 }
 
 #editor {
-  grid-row: 1/4
+  grid-row: 1/4;
+  max-height: 100vh;
 }
 
 #details {
   grid-row: 1/4;
   grid-column: 5/6;
 }
-
+#score {
+  max-height: 100vh;
+}
 #log {
   grid-column: 3/4;
   z-index: 1;
