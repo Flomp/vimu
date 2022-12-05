@@ -9,43 +9,14 @@
                 <v-icon>{{ favoriteIcon }}</v-icon>
             </v-btn>
 
-            <v-menu offset-y content-class="vimu-menu elevation-0">
-                <template v-slot:activator="{ on, attrs }">
-                    <v-btn color="primary" icon v-bind="attrs" v-on="on">
-                        <v-icon>mdi-dots-vertical</v-icon>
-                    </v-btn>
-                </template>
-                <v-list dense>
-                    <v-list-item @click="open">
-                        <v-list-item-title>Open</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item @click="openInNewTab">
-                        <v-list-item-title>Open in new tab</v-list-item-title>
-                    </v-list-item>
-                    <v-divider v-if="!shared"></v-divider>
-                    <v-list-item @click="favoriteMenu" v-if="!shared">
-                        <v-list-item-title>{{ favoriteText }}</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item @click="share" v-if="!shared">
-                        <v-list-item-title>Share</v-list-item-title>
-                    </v-list-item>
-                    <v-divider v-if="!shared"></v-divider>
-                    <v-list-item @click="rename" v-if="!shared">
-                        <v-list-item-title>Rename</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item @click="duplicate" v-if="!shared">
-                        <v-list-item-title>Duplicate</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item @click="remove" v-if="!shared">
-                        <v-list-item-title>Delete</v-list-item-title>
-                    </v-list-item>
-                </v-list>
-            </v-menu>
+            <file-context-menu @share="share" @remove="remove" @rename="rename" @favorite="favoriteMenu"
+                @duplicate="duplicate" @open="open" @open-in-new-tab="openInNewTab" :file="file" :shared="shared">
+            </file-context-menu>
         </div>
         <div class="d-flex justify-space-between align-center pt-3">
             <span class="file-card-timestamp">Edited {{ editTimestamp }}</span>
             <v-menu open-on-hover bottom offset-y content-class="vimu-menu elevation-0"
-                v-if="((file.expand && file.expand.collaborators) || file.public)&& !shared">
+                v-if="((file.expand && file.expand.collaborators) || file.public) && !shared">
                 <template v-slot:activator="{ on, attrs }">
                     <v-icon v-bind="attrs" v-on="on">mdi-share-variant</v-icon>
                 </template>
@@ -71,13 +42,15 @@
 
 <script lang="ts">
 import { Component, Emit, Prop, Vue } from "nuxt-property-decorator";
+import FileContextMenu from "~/components/dashboard/file/file_context_menu.vue";
 import { File, FilePermission } from "~/models/file";
 import getRelativeTime from "~/utils/date";
 import FileShareCard from "./file_share_card.vue";
 
 @Component({
     components: {
-        FileShareCard
+        FileShareCard,
+        FileContextMenu
     }
 })
 export default class FileCard extends Vue {
@@ -92,11 +65,6 @@ export default class FileCard extends Vue {
     get favoriteIcon() {
         return this.file.favorite ? 'mdi-star' : 'mdi-star-outline'
     }
-
-    get favoriteText() {
-        return this.file.favorite ? 'Remove from favorites' : 'Add to favorites'
-    }
-
 
     get permissionIcon() {
         if (this.file.expand.collaborators?.length == 1) {

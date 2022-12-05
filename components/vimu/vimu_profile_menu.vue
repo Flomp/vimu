@@ -8,7 +8,7 @@
         <v-list dense>
             <v-list-item>
                 <v-list-item-title>
-                    <span class="grey--text">User: </span><span>{{username}}</span>
+                    <span class="grey--text">User: </span><span>{{ username }}</span>
                 </v-list-item-title>
             </v-list-item>
             <v-list-item to="/dashboard/account">
@@ -60,12 +60,17 @@ export default class VimuProfileMenu extends Vue {
     @Prop()
     loggedIn!: boolean;
 
-    get avatarSeed() {
-        return authStore.avatar
-    }
+    avatarSeed: string ="";
+    username: string = "";
 
-    get username() {
-        return authStore.username
+    mounted() {
+        this.avatarSeed = $pb.authStore.model?.avatar;
+        this.username = $pb.authStore.model?.username;
+
+        $pb.authStore.onChange(() => {
+            this.avatarSeed = $pb.authStore.model?.avatar;
+            this.username = $pb.authStore.model?.username;
+        })
     }
 
     logout() {

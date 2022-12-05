@@ -97,7 +97,6 @@ export default class AccountPage extends Vue {
         const newSeed = generateSeed();
         await $pb.collection('users').update($pb.authStore.model.id, { avatar: newSeed });
         this.avatarSeed = $pb.authStore.model.avatar
-        authStore.setAvatar(this.avatarSeed);
 
         this.seedLoading = false;
     }
@@ -113,7 +112,6 @@ export default class AccountPage extends Vue {
             }
             if (this.usernameChanged && this.username.length) {
                 await $pb.collection('users').update($pb.authStore.model.id, { username: this.username });
-                authStore.setUsername(this.username);
             }
             notificationStore.sendNotification({ title: "Profile saved", color: 'primary' })
             this.initValues();

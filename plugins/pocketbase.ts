@@ -13,7 +13,7 @@ export default (ctx: Context, inject: Inject) => {
   // send back the default 'pb_auth' cookie to the client with the latest store state
   pb.authStore.onChange(() => {    
     (ctx as any).$cookies.set('pb_auth', pb.authStore.exportToCookie())
-  });  
+  });
  
   inject('pb', pb);
   initialisePocketbase(pb)

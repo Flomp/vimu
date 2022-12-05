@@ -6,30 +6,37 @@
                     style="max-width: 400px;">
                 </vimu-searchbar>
                 <span class="vimu-title">{{ title }}</span>
-                <div class="d-flex align-center justify-space-between py-5">
-                    <vimu-btn class="mt-3 mt-sm-0" :primary="true" :large="true" @click="createFile()">New file <v-icon>
-                            mdi-plus</v-icon>
-                    </vimu-btn>
-                    <div class="d-flex align-center">
-                        <vimu-select class="mr-3" v-model="sort" :items="sortOptions" :hide-details="true" :dense="true"
-                            style="max-width: 200px" @change="updateSort"></vimu-select>
-                        <v-btn-toggle mandatory @change="changeView">
-                            <v-btn small>
-                                <v-icon>mdi-view-dashboard</v-icon>
 
-                            </v-btn>
-                            <v-btn small>
-                                <v-icon>mdi-format-list-bulleted-square</v-icon>
-                            </v-btn>
-                        </v-btn-toggle>
-                    </div>
-                </div>
+                <v-row class="align-center justify-space-between py-5">
+                    <v-col cols="12" md="auto">
+                        <vimu-btn class="mt-3 mt-sm-0" :primary="true" :large="true" @click="createFile()">New file
+                            <v-icon>
+                                mdi-plus</v-icon>
+                        </vimu-btn>
+                    </v-col>
+                    <v-col cols="auto">
+                        <div class="d-flex align-center">
+                            <vimu-select class="mr-3" v-model="sort" :items="sortOptions" :hide-details="true"
+                                :dense="true" style="max-width: 200px" @change="updateSort"></vimu-select>
+                            <v-btn-toggle v-model="viewNumber" mandatory>
+                                <v-btn small>
+                                    <v-icon>mdi-view-dashboard</v-icon>
+
+                                </v-btn>
+                                <v-btn small>
+                                    <v-icon>mdi-format-list-bulleted-square</v-icon>
+                                </v-btn>
+                            </v-btn-toggle>
+                        </div>
+                    </v-col>
+
+                </v-row>
             </div>
             <file-list :files="files" :loading="listLoading || nextPageLoading" :initialLoading="listLoading"
                 :nextPageLoading="nextPageLoading" @create="createFile" :searching="query.length > 0"
                 @share="showShareDialog" @remove="showDeleteConfirm" @rename="renameFile" @favorite="favoriteFile"
                 @duplicate="duplicateFile" @open="openFile" @open-in-new-tab="openFileInNewTab" @next="nextPage"
-                :shared="$route.params.slug == 'shared'">
+                :view-type="viewType" :shared="$route.params.slug == 'shared'">
             </file-list>
         </v-container>
         <file-rename-dialog v-model="renameDialog" :filename="filename" @save="saveRename"></file-rename-dialog>
@@ -54,7 +61,9 @@ import VimuSelect from "~/components/vimu/vimu_select.vue";
 import VimuTextField from "~/components/vimu/vimu_text_field.vue";
 
 import { File } from "~/models/file";
+import { ViewType } from "~/models/view";
 import { $pb, fileStore } from "~/store";
+
 
 @Component({
     layout: 'dashboard',
@@ -96,6 +105,12 @@ export default class FilesPage extends Vue {
     nextPageLoading: boolean = false;
 
     currentPage = 1;
+
+    viewNumber = 0;
+
+    get viewType(): ViewType {
+        return this.viewNumber == 0 ? ViewType.tiles : ViewType.list;
+    }
 
     get files() {
         return fileStore.files;
@@ -233,11 +248,6 @@ export default class FilesPage extends Vue {
         await this.list(true);
     }
 
-    changeView(value: number) {
-        if (value == 1) {
-            //TODO
-        }        
-    }
 }
 </script>
   

@@ -10,19 +10,6 @@ import { $pb, notificationStore } from '.';
 export default class LogStore extends VuexModule {
     redirectPath: string = "/dashboard/files/my"
 
-    username : string = '';
-    avatar : string = '';
-
-    @Mutation
-    setUsername(username: string) {
-        this.username = username;
-    }
-
-    @Mutation
-    setAvatar(avatar: string) {
-        this.avatar = avatar;
-    }
-
     @Mutation
     setRedirectPath(redirectPath: string) {
         this.redirectPath = redirectPath;
