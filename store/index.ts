@@ -6,9 +6,10 @@ const initializer = (store: Store<any>) => initialiseStores(store)
 
 export const actions = {
     nuxtServerInit(store: Store<any>, context:Context) {
-        store.commit('auth/setUsername', (context as any).$pb.authStore.model.username)
-        store.commit('auth/setAvatar', (context as any).$pb.authStore.model.avatar)
-
+        if((context as any).$pb.authStore.model) {
+            store.commit('auth/setUsername', (context as any).$pb.authStore.model?.username)
+            store.commit('auth/setAvatar', (context as any).$pb.authStore.model?.avatar)
+        }
     }
 };
 
