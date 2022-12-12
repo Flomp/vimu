@@ -61,12 +61,12 @@ import EditorPanel from "~/components/editor/panels/editor_panel.vue";
 import LogPanel from "~/components/editor/panels/log_panel.vue";
 import OSMDPanel from "~/components/editor/panels/osmd_panel.vue";
 
-import { authStore, engineStore, fileStore, osmdStore, settingsStore } from "~/store";
+import { $pb, authStore, engineStore, fileStore, osmdStore, settingsStore } from "~/store";
 // @ts-ignore
 import { zoomAt } from "rete-area-plugin/src/zoom-at";
 import SourceScoreComponent from "~/components/editor/rete/components/source/source_score_component";
 import { Context } from "@nuxt/types";
-import { example_files } from "~/models/file";
+import { example_files, File, FileData } from "~/models/file";
 import { Data } from "rete/types/core/data";
 
 @Component({
@@ -132,6 +132,20 @@ export default class Editor extends Vue {
       await this.initEditor()
     }
 
+    if (fileStore.file) {
+      $pb.collection('file_data').subscribe<FileData>(fileStore.file.expand.data.id, async (e) => {
+        if (e.action == "update" && this.editor) {
+          const fileData = e.record;
+          if (JSON.stringify(fileStore.file?.expand.data.json) !== JSON.stringify(fileData.json)) {
+            fileStore.setData(fileData.json);
+            await this.editor.fromJSON(fileData.json);
+            engineStore.process(this.editor.toJSON());
+            console.log("realtime update")
+          }
+        }
+      });
+    }
+
     let page = document.getElementById("panel-grid");
 
     const initialTopHeight = 0.7
@@ -153,6 +167,12 @@ export default class Editor extends Vue {
     if (!this.showLog) {
       this.onShowLogChange(false)
     }
+  }
+
+
+  beforeDestroy() {
+    $pb.collection('files').unsubscribe();
+
   }
 
   async initEditor() {
@@ -241,6 +261,9 @@ export default class Editor extends Vue {
         "connectionremoved",
       ],
       async () => {
+        if (editor.silent) {
+          return
+        }
         engineStore.setLoading(true);
         try {
           console.log(JSON.stringify(editor.toJSON()));
@@ -262,7 +285,7 @@ export default class Editor extends Vue {
         "connectionremoved",
       ],
       async () => {
-        if (fileStore.file != null && !fileStore.readonly && !Object.keys(example_files).includes(fileStore.file.id)) {
+        if (fileStore.file != null && !fileStore.readonly && !Object.keys(example_files).includes(fileStore.file.id) && !this.editor?.silent) {
           fileStore.updateData({ id: fileStore.file.data, json: JSON.stringify(this.editor?.toJSON()) })
         }
       }
@@ -416,9 +439,11 @@ export default class Editor extends Vue {
   grid-row: 1/4;
   grid-column: 5/6;
 }
+
 #score {
   max-height: 100vh;
 }
+
 #log {
   grid-column: 3/4;
   z-index: 1;

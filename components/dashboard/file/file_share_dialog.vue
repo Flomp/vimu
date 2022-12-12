@@ -105,7 +105,7 @@ export default class FileShareDialog extends Vue {
                 notificationStore.sendNotification({ title: 'You own this file', color: 'error' })
                 return;
             }
-            const share = await $pb.collection('file_share').create<FileShare>({ permission: this.selectedShareOption, user: user.id, file: this.file.id })
+            const share = await $pb.collection('file_share').create<FileShare>({ permission: this.selectedShareOption, user: user.id })
             collaborators_.push(share.id);
             await fileStore.update({ id: this.file.id, collaborators: collaborators_ })
         } catch {

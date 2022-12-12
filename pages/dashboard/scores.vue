@@ -3,7 +3,8 @@
         <v-container class="pt-0">
             <div class="header-section pt-4">
                 <div class="d-flex align-center mb-8">
-                    <vimu-searchbar v-model="filters.query" :hide-details="true" @update="search" style="max-width: 400px;">
+                    <vimu-searchbar v-model="filters.query" :hide-details="true" @update="search"
+                        style="max-width: 400px;">
                     </vimu-searchbar>
                     <v-btn class="mx-5" icon>
                         <v-icon color="primary">mdi-tune</v-icon>
@@ -18,14 +19,26 @@
                     </vimu-btn>
 
                     <vimu-tabs class="my-6" v-model="activeTab" :tabs="tabs" @change="onTabChanged"></vimu-tabs>
+                    <v-spacer></v-spacer>
+                    <v-btn-toggle v-model="viewNumber" mandatory>
+                        <v-btn small>
+                            <v-icon>mdi-view-dashboard</v-icon>
 
+                        </v-btn>
+                        <v-btn small>
+                            <v-icon>mdi-format-list-bulleted-square</v-icon>
+                        </v-btn>
+                    </v-btn-toggle>
                 </div>
             </div>
-            <score-list :scores="scores" :loading="listLoading || nextPageLoading" :initialLoading="listLoading"
-                :nextPageLoading="nextPageLoading" @create="createFile" @edit="openEditDialog"
-                :searching="filters.query.length > 0"
-                @remove="showDeleteConfirm" @click="setDrawerScore" @next="nextPage">
-            </score-list>
+            <client-only>
+                <score-list :scores="scores" :loading="listLoading || nextPageLoading" :initialLoading="listLoading"
+                    :nextPageLoading="nextPageLoading" @create="createFile" @edit="openEditDialog"
+                    :searching="filters.query.length > 0" :view-type="viewType" @remove="showDeleteConfirm"
+                    @click="setDrawerScore" @next="nextPage">
+                </score-list>
+            </client-only>
+
         </v-container>
         <score-dialog v-model="dialog" :score="editScore" :edit-mode="dialogEditMode" @save="createScore">
         </score-dialog>
@@ -38,7 +51,7 @@
 
 <script lang="ts">
 import { query } from "express";
-import { Component, Vue } from "nuxt-property-decorator";
+import { Component, Vue, Watch } from "nuxt-property-decorator";
 import { VBtn, VContainer, VIcon, VSheet, VSpacer } from "vuetify/lib";
 import ConfirmDialog from "~/components/dashboard/confirm_dialog.vue";
 import ScoreCard from "~/components/dashboard/score/score_card.vue";
@@ -50,6 +63,7 @@ import VimuSearchbar from "~/components/vimu/vimu_searchbar.vue";
 import VimuTabs from "~/components/vimu/vimu_tabs.vue";
 import VimuTextField from "~/components/vimu/vimu_text_field.vue";
 import { Score } from "~/models/score";
+import { ViewType } from "~/models/view";
 import { $pb, fileStore, scoreStore } from "~/store";
 
 @Component({
@@ -84,13 +98,19 @@ export default class ScoresPage extends Vue {
     deleteConfirmDialog: boolean = false;
 
     filters = {
-        tab: `user_id="${$pb.authStore.model?.id}"`,
+        tab: `owner="${$pb.authStore.model?.id}"`,
         query: ""
     }
 
     sort: string = "name";
 
     currentPage = 1;
+
+    viewNumber = 0;
+
+    get viewType(): ViewType {
+        return this.viewNumber == 0 ? ViewType.tiles : ViewType.list;
+    }
 
     get scores() {
         return scoreStore.scores;
@@ -108,8 +128,17 @@ export default class ScoresPage extends Vue {
         return filter
     }
 
+    @Watch("viewNumber")
+    onViewNumberChange(value: number) {
+        localStorage.setItem('score-view-type', value.toString());
+    }
+
     created() {
         this.drawer = false;
+
+        if (process.client) {
+            this.viewNumber = parseInt(localStorage.getItem('score-view-type') ?? '0');
+        }
     }
 
     setDrawerScore(score: Score) {
@@ -147,7 +176,7 @@ export default class ScoresPage extends Vue {
 
     async onTabChanged(tab: number) {
         if (tab == 0) {
-            this.filters.tab = `user_id="${$pb.authStore.model?.id}"`
+            this.filters.tab = `owner="${$pb.authStore.model?.id}"`
         } else if (tab == 1) {
             this.filters.tab = "public=true";
         }

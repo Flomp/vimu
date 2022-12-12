@@ -12,7 +12,7 @@
                 </div>
 
                 <score-list lg="4" :loading="loading || nextPageLoading" :initialLoading="loading" :nextPageLoading="nextPageLoading" :scores="scores"
-                    :read-only="true" @click="select" @next="nextPage">
+                    :read-only="true" @click="select" @next="nextPage" viewType="list">
                 </score-list>
             </v-card-text>
         </v-card>
@@ -46,7 +46,7 @@ export default class SourceScoreDialog extends Vue {
     nextPageLoading: boolean = false;
 
     filters = {
-        tab: `user_id="${$pb.authStore.model?.id}"`,
+        tab: `owner="${$pb.authStore.model?.id}"`,
         query: ""
     }
 
@@ -94,7 +94,7 @@ export default class SourceScoreDialog extends Vue {
 
     async onTabChanged(tab: number) {
         if (tab == 0) {
-            this.filters.tab = `user_id="${$pb.authStore.model?.id}"`
+            this.filters.tab = `owner="${$pb.authStore.model?.id}"`
         } else if (tab == 1) {
             this.filters.tab = "public=true";
         }

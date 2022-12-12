@@ -14,21 +14,7 @@
                 <span>Public</span>
             </v-tooltip>
             <v-spacer></v-spacer>
-            <v-menu offset-y content-class="vimu-menu elevation-0" v-if="owned && !readOnly">
-                <template v-slot:activator="{ on, attrs }">
-                    <v-btn color="primary" icon v-bind="attrs" v-on="on">
-                        <v-icon>mdi-dots-vertical</v-icon>
-                    </v-btn>
-                </template>
-                <v-list dense>
-                    <v-list-item @click="edit">
-                        <v-list-item-title>Edit</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item @click="remove">
-                        <v-list-item-title>Delete</v-list-item-title>
-                    </v-list-item>
-                </v-list>
-            </v-menu>
+            <score-context-menu @edit="edit" @remove="remove" v-if="owned && !readOnly"></score-context-menu>
         </div>
     </div>
 
@@ -38,9 +24,12 @@
 import { Component, Emit, Prop, Vue } from "nuxt-property-decorator";
 import { Score } from "~/models/score";
 import { $pb } from "~/store";
+import ScoreContextMenu from "./score_context_menu.vue";
 
 @Component({
-    components: {}
+    components: {
+        ScoreContextMenu
+    }
 })
 export default class ScoreCard extends Vue {
     @Prop() readonly score!: Score;
@@ -52,7 +41,7 @@ export default class ScoreCard extends Vue {
     }
 
     get owned() {
-        return this.score.user_id == $pb.authStore.model?.id
+        return this.score.owner == $pb.authStore.model?.id
     }
 
     @Emit()
@@ -83,6 +72,7 @@ export default class ScoreCard extends Vue {
     overflow-x: hidden;
     text-overflow: ellipsis;
 }
+
 .score-card-click-count {
     font-size: 0.75rem;
     color: #5A5A5A

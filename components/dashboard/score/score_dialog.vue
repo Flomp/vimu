@@ -53,9 +53,9 @@
                                 </vimu-text-field>
                                 <vimu-text-field v-model="scoreLocal.expand.meta.times" placeholder="Time Signatures"
                                     prepend-icon="mdi-fraction-one-half">
-                                    <vimu-text-field v-model="scoreLocal.expand.meta.language" placeholder="Language"
-                                        prepend-icon="mdi-translate"></vimu-text-field>
                                 </vimu-text-field>
+                                <vimu-text-field v-model="scoreLocal.expand.meta.language" placeholder="Language"
+                                    prepend-icon="mdi-translate"></vimu-text-field>
                             </v-expansion-panel-content>
                         </v-expansion-panel>
                     </v-expansion-panels>

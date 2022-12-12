@@ -1,3 +1,4 @@
+import { Data } from 'rete/types/core/data';
 import Vue from 'vue';
 import { Action, Module, Mutation, MutationAction, VuexModule } from 'vuex-module-decorators';
 import { File, example_files, FileData, FilePermission } from '~/models/file';
@@ -21,6 +22,13 @@ export default class LogStore extends VuexModule {
         this.file = file;
     }
 
+    @Mutation
+    setData(json: Data) {
+        if(!this.file) {
+            return;
+        }
+        this.file.expand.data.json = json;
+    }
 
     @MutationAction({ mutate: ['files', 'maxPage'] })
     async list(data: { page: number, filter: string, sort: string, perPage?: number }) {
@@ -94,6 +102,7 @@ export default class LogStore extends VuexModule {
     @Action
     async updateData(data: { id: string, json: string }): Promise<FileData | null> {
         try {
+            fileStore.setData(JSON.parse(data.json));
             const updatedFileData: FileData = await $pb.collection('file_data').update(data.id, { json: data.json })
             return updatedFileData;
         } catch (error) {

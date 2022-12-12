@@ -9,7 +9,7 @@ const auth = ({$pb, route, redirect, store}: Context & {$pb: PocketBase}) => {
     '/dashboard/scores',
   ]
 
-  const loggedIn = $pb.authStore.model !== null;
+  const loggedIn = $pb.authStore.isValid;
 
   if(!loggedIn) {
     for(const r of protectedRoutes) {

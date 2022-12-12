@@ -2,7 +2,7 @@
     <div v-infinite-scroll="next" infinite-scroll-disabled="loading" infinite-scroll-immediate-check="false"
         infinite-scroll-distance="10">
         <div v-if="scores.length && !initialLoading">
-            <v-row>
+            <v-row v-if="viewType == 'tiles'">
                 <template>
                     <v-col :cols="cols" :sm="sm" :md="md" :lg="lg" v-for="score in scores" :key="score.id">
                         <score-card :score="score" :read-only="readOnly" @click="click" @create="create" @edit="edit"
@@ -11,6 +11,29 @@
                     </v-col>
                 </template>
             </v-row>
+            <v-simple-table v-else>
+                <thead>
+                    <tr>
+                        <th style="width: 100px"></th>
+                        <th>
+                            Title
+                        </th>
+                        <th v-if="!$vuetify.breakpoint.mobile">
+                            Composer
+                        </th>
+                        <th v-if="!$vuetify.breakpoint.mobile">
+                            Opus
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <score-table-row v-for="score in scores" :key="score.id" :score="score" :read-only="readOnly"
+                        @click="click" @edit="edit" @remove="remove">
+
+                    </score-table-row>
+                </tbody>
+            </v-simple-table>
             <div class="d-flex justify-center mt-8" v-if="nextPageLoading">
                 <v-progress-circular indeterminate></v-progress-circular>
             </div>
@@ -21,8 +44,7 @@
             <span class="vimu-card-title mt-5">There are no scores here</span>
             <span class="vimu-text">But you could upload some...</span>
         </div>
-        <search-empty-state class="mt-12"
-            v-else-if="!scores.length && !initialLoading && searching">
+        <search-empty-state class="mt-12" v-else-if="!scores.length && !initialLoading && searching">
         </search-empty-state>
         <v-row v-else>
             <v-col :cols="cols" :sm="sm" :md="md" :lg="lg" v-for="i in 4" :key="i">
@@ -36,14 +58,17 @@
 import { Vue, Component, Prop, Emit } from "nuxt-property-decorator";
 import BunnyWanted from "~/components/vimu/bunny_wanted.vue";
 import { Score } from "~/models/score";
+import { ViewType } from "~/models/view";
 import SearchEmptyState from "../search_empty_state.vue";
 import ScoreCard from "./score_card.vue";
+import ScoreTableRow from "./score_table_row.vue";
 
 @Component({
     components: {
         ScoreCard,
         BunnyWanted,
-        SearchEmptyState
+        SearchEmptyState,
+        ScoreTableRow
     }
 })
 export default class ScoreList extends Vue {
@@ -54,6 +79,7 @@ export default class ScoreList extends Vue {
     @Prop() readonly loading!: boolean;
     @Prop() readonly readOnly!: boolean;
     @Prop() readonly searching!: boolean;
+    @Prop({ default: ViewType.tiles }) readonly viewType!: ViewType;
 
     @Prop({ default: 12 }) readonly cols!: number;
     @Prop({ default: 6 }) readonly sm!: number;

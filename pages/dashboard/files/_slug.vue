@@ -32,12 +32,15 @@
 
                 </v-row>
             </div>
-            <file-list :files="files" :loading="listLoading || nextPageLoading" :initialLoading="listLoading"
-                :nextPageLoading="nextPageLoading" @create="createFile" :searching="query.length > 0"
-                @share="showShareDialog" @remove="showDeleteConfirm" @rename="renameFile" @favorite="favoriteFile"
-                @duplicate="duplicateFile" @open="openFile" @open-in-new-tab="openFileInNewTab" @next="nextPage"
-                :view-type="viewType" :shared="$route.params.slug == 'shared'">
-            </file-list>
+            <client-only>
+                <file-list :files="files" :loading="listLoading || nextPageLoading" :initialLoading="listLoading"
+                    :nextPageLoading="nextPageLoading" @create="createFile" :searching="query.length > 0"
+                    @share="showShareDialog" @remove="showDeleteConfirm" @rename="renameFile" @favorite="favoriteFile"
+                    @duplicate="duplicateFile" @open="openFile" @open-in-new-tab="openFileInNewTab" @next="nextPage"
+                    :view-type="viewType" :shared="$route.params.slug == 'shared'">
+                </file-list>
+            </client-only>
+
         </v-container>
         <file-rename-dialog v-model="renameDialog" :filename="filename" @save="saveRename"></file-rename-dialog>
         <confirm-dialog v-model="deleteConfirmDialog" title="Are you sure?"
@@ -49,7 +52,7 @@
   
 <script lang="ts">
 import { Context } from "@nuxt/types";
-import { Component, Vue } from "nuxt-property-decorator";
+import { Component, Vue, Watch } from "nuxt-property-decorator";
 import ConfirmDialog from "~/components/dashboard/confirm_dialog.vue";
 import FileCard from "~/components/dashboard/file/file_card.vue";
 import FileList from "~/components/dashboard/file/file_list.vue";
@@ -139,6 +142,11 @@ export default class FilesPage extends Vue {
         return filter
     }
 
+    @Watch("viewNumber")
+    onViewNumberChange(value: number) {
+        localStorage.setItem('file-view-type', value.toString());
+    }
+
     validate({ params }: Context) {
         return ['my', 'shared'].includes(params.slug)
     }
@@ -152,6 +160,10 @@ export default class FilesPage extends Vue {
                 break;
             default:
                 this.filters.slug = `owner="${$pb.authStore.model?.id}"`
+        }
+
+        if (process.client) {
+            this.viewNumber = parseInt(localStorage.getItem('file-view-type') ?? '0');
         }
     }
 

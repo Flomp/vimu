@@ -4,11 +4,12 @@ interface Score {
     thumbnail: string;
     data: string;
     public: boolean;
-    clicks: number;
     expand: {
         meta: ScoreMeta
     }
-    user_id: string;
+    owner: string;
+    updated: string;
+    created: string;
 }
 
 interface ScoreMeta {
@@ -36,12 +37,13 @@ const empty_score: Score = {
     name: "",
     public: false,
     thumbnail: "",
-    clicks: 0,
     data: "",
     expand: {
         meta: empty_score_meta
     },
-    user_id: ""
+    owner: "",
+    updated: "",
+    created: ""
 }
 
 

@@ -2,7 +2,7 @@
     <v-menu offset-y v-if="loggedIn" nudge-bottom="24" content-class="vimu-menu elevation-0">
         <template v-slot:activator="{ on, attrs }">
             <div class="d-inline" v-bind="attrs" v-on="on">
-                <vimu-avatar :seed="avatarSeed" :size="48"></vimu-avatar>
+                <vimu-avatar :loading="logoutLoading" :seed="avatarSeed" :size="48"></vimu-avatar>
             </div>
         </template>
         <v-list dense>
@@ -60,8 +60,9 @@ export default class VimuProfileMenu extends Vue {
     @Prop()
     loggedIn!: boolean;
 
-    avatarSeed: string ="";
+    avatarSeed: string = "";
     username: string = "";
+    logoutLoading: boolean = false;
 
     mounted() {
         this.avatarSeed = $pb.authStore.model?.avatar;
@@ -74,8 +75,11 @@ export default class VimuProfileMenu extends Vue {
     }
 
     logout() {
+        this.logoutLoading = true;
         authStore.logout();
-        this.$router.push('/')
+        setTimeout(() => {
+            this.$router.push('/')
+        }, 500)
     }
 }
 </script>

@@ -52,12 +52,6 @@ export default class ScoreStore extends VuexModule {
         }
     }
 
-    @Mutation
-    async increaseClickCount(score: Score) {
-        score.clicks += 1;
-        scoreStore.update(score)
-    }
-
     @MutationAction({ mutate: ['scores', 'maxPage'] })
     async list(data: { page: number, filter: string, sort: string, perPage?: number }) {
         try {
@@ -85,7 +79,7 @@ export default class ScoreStore extends VuexModule {
             }
         }
 
-        formData.append("user_id", $pb.authStore.model!.id);
+        formData.append("owner", $pb.authStore.model!.id);
         try {
             const resultMeta: ScoreMeta = await $pb.collection('score_meta').create({ ...data.score.expand.meta })
             formData.append("meta", resultMeta.id!)
