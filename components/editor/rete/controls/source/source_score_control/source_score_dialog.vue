@@ -39,7 +39,7 @@ import { $pb, scoreStore } from "~/store";
 export default class SourceScoreDialog extends Vue {
     @VModel() dialog!: boolean;
 
-    tabs: string[] = ["My Scores", "Libary"]
+    tabs: string[] = ["My Scores", "Library"]
     activeTab = 0;
     currentPage = 1;
     loading: boolean = false;

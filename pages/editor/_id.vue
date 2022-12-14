@@ -49,7 +49,7 @@ import SearchLyricsComponent from "~/components/editor/rete/components/search/se
 import SearchPartComponent from "~/components/editor/rete/components/search/search_part_component";
 import SelectMeasuresComponent from "~/components/editor/rete/components/select/select_measures_component";
 import SelectNotesComponent from "~/components/editor/rete/components/select/select_notes_component";
-import SelectPartComponent from "~/components/editor/rete/components/select/select_part_component";
+import SelectPartsComponent from "~/components/editor/rete/components/select/select_parts_component";
 import SourceCorpusComponent from "~/components/editor/rete/components/source/source_corpus_component";
 import SourceTinynotationComponent from "~/components/editor/rete/components/source/source_tinynotation_component";
 import TransformChordifyComponent from "~/components/editor/rete/components/transform/transform_chordify_component";
@@ -222,7 +222,7 @@ export default class Editor extends Vue {
       new SourceScoreComponent(editor),
       new SourceTinynotationComponent(editor),
       new SelectMeasuresComponent(editor),
-      new SelectPartComponent(editor),
+      new SelectPartsComponent(editor),
       new SelectNotesComponent(editor),
       new AnalysisKeyComponent(editor),
       new AnalysisAmbitusComponent(editor),

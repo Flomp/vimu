@@ -1,12 +1,12 @@
 import Rete, { Node, NodeEditor } from "rete";
 import { NodeData, WorkerInputs, WorkerOutputs } from "rete/types/core/data";
-import SelectPartControl from "../../controls/select/part_control/select_part_control";
+import SelectPartsControl from "../../controls/select/parts_control/select_parts_control";
 import { sockets } from "../../sockets/sockets";
 
-export default class SelectPartComponent extends Rete.Component {
+export default class SelectPartsComponent extends Rete.Component {
   editor!: NodeEditor;
   constructor(editor: NodeEditor) {
-    super("select_part");
+    super("select_parts");
     this.editor = editor;
 
   }
@@ -19,7 +19,7 @@ export default class SelectPartComponent extends Rete.Component {
     node
       .addInput(in0)
       .addOutput(out0)
-      .addControl(new SelectPartControl(this.editor, "data", true));
+      .addControl(new SelectPartsControl(this.editor, "data", true));
   }
 
   async worker(nodeData: NodeData, inputs: WorkerInputs, outputs: WorkerOutputs) {

@@ -1,36 +1,34 @@
 <template>
-  <v-text-field
-    label="Part"
-    v-model="part"
-    @input="change"
-    type="number"
-    :rules="[numberRule]"
-    style="max-width:96px"
-  ></v-text-field>
+  <vimu-combobox v-model="parts" :chips="true" :multiple="true"
+    style="max-width: 200px; margin-right: 24px;" placeholder="Instrument or Part #" @change="change"></vimu-combobox>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "nuxt-property-decorator";
 import { NodeEditor } from "rete";
+import VimuCombobox from "~/components/vimu/vimu_combobox.vue"
 
-
-@Component({})
-export default class SelectPartControlComponent extends Vue {
+@Component({
+  components: {
+    VimuCombobox
+  }
+})
+export default class SelectPartsControlComponent extends Vue {
   @Prop() readonly!: boolean;
   @Prop() emitter!: NodeEditor;
   @Prop() ikey!: String;
   @Prop() getData!: Function;
   @Prop() putData!: Function;
 
-  part: number = 0;
+  parts: string[] = [];
 
   mounted() {
-    this.change();
+    this.parts = this.getData(this.ikey)
   }
 
-  change() {
+  change() {    
     if (this.ikey) {
-      this.putData(this.ikey, this.part);      
+      this.putData(this.ikey, this.parts);
       this.emitter.trigger("process");
     }
   }
@@ -43,4 +41,5 @@ export default class SelectPartControlComponent extends Vue {
 </script>
 
 <style>
+
 </style>

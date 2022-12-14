@@ -34,10 +34,13 @@ export default class SelectMeasuresControlComponent extends Vue {
   @Prop() getData!: Function;
   @Prop() putData!: Function;
 
-  measures: number[] = [0, 3];
+  measures: string[] = ["0", "1"];
 
   mounted() {
-    this.change();
+    if(this.getData(this.ikey)) {
+      this.measures = this.getData(this.ikey)
+    }
+    this.putData(this.ikey, this.measures);
   }
 
   change() {
