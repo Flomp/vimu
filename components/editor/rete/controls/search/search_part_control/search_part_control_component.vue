@@ -34,17 +34,25 @@ export default class SearchControlComponent extends Vue {
   rhythm: boolean = true;
 
   mounted() {
+    if (this.getData("color") !== undefined) {
+      this.color = this.getData("color")
+    }
+    if (this.getData("pitch") !== undefined) {
+      this.pitch = this.getData("pitch")
+    }
+    if (this.getData("rhythm") !== undefined) {
+      this.rhythm = this.getData("rhythm")
+    }
     this.putData("color", this.color);
     this.putData("pitch", this.pitch);
     this.putData("rhythm", this.rhythm);
   }
 
   update() {
-    if (this.ikey) {
-      this.putData("color", this.color);
-      this.putData("pitch", this.pitch);
-      this.putData("rhythm", this.rhythm);
-    }
+    this.putData("color", this.color);
+    this.putData("pitch", this.pitch);
+    this.putData("rhythm", this.rhythm);
+
     this.emitter.trigger("process");
   }
 }

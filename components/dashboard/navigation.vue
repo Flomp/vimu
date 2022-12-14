@@ -40,10 +40,10 @@
 
                 </v-list-item>
             </template>
-            <div class="mx-4 my-2" style="line-height: 1rem" v-else>
+            <div class="mx-4 my-2" style="line-height: 1rem" v-else-if="favorites.length == 0 && !$fetchState.pending">
                 <span class="empty-text">Click the star on any file to add it here</span>
             </div>
-
+            <v-skeleton-loader class="mx-4" type="paragraph" v-else></v-skeleton-loader>
         </div>
         <v-divider></v-divider>
         <div class="my-4">
@@ -61,7 +61,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from "nuxt-property-decorator";
-import {File} from "~/models/file";
+import { File } from "~/models/file";
 import { fileStore } from "~/store";
 import Logo from "../vimu/logo.vue";
 
@@ -74,7 +74,11 @@ export default class DashboardNavigation extends Vue {
     @Prop({ default: true }) readonly showLogo!: boolean;
 
     get favorites(): File[] {
-        return fileStore.files.filter(f => f.favorite);
+        return fileStore.favorites;
+    }
+
+    async fetch() {
+        await fileStore.listFavorites();
     }
 }
 </script>

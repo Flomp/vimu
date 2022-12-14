@@ -12,24 +12,29 @@
                     <v-spacer></v-spacer>
                 </div>
                 <span class="vimu-title">Scores</span>
-                <div class="d-flex align-center">
+                <v-row class="align-center pt-5">
+                    <v-col cols="12" sm="auto">
+                        <vimu-btn class="score-upload-btn" :loading="createLoading" :disabled="createLoading"
+                            :primary="true" :large="true" @click="openCreateDialog">Upload
+                        </vimu-btn>
+                    </v-col>
+                    <v-col class="ml-sm-12">
+                        <vimu-tabs v-model="activeTab" :tabs="tabs" @change="onTabChanged"></vimu-tabs>
+                    </v-col>
+                    <v-spacer v-if="$vuetify.breakpoint.smAndUp"></v-spacer>
+                    <v-col cols="auto">
+                        <v-btn-toggle v-model="viewNumber" mandatory>
+                            <v-btn small>
+                                <v-icon>mdi-view-dashboard</v-icon>
 
-                    <vimu-btn class="score-upload-btn" :loading="createLoading" :disabled="createLoading"
-                        :primary="true" :large="true" @click="openCreateDialog">Upload
-                    </vimu-btn>
+                            </v-btn>
+                            <v-btn small>
+                                <v-icon>mdi-format-list-bulleted-square</v-icon>
+                            </v-btn>
+                        </v-btn-toggle>
+                    </v-col>
 
-                    <vimu-tabs class="my-6" v-model="activeTab" :tabs="tabs" @change="onTabChanged"></vimu-tabs>
-                    <v-spacer></v-spacer>
-                    <v-btn-toggle v-model="viewNumber" mandatory>
-                        <v-btn small>
-                            <v-icon>mdi-view-dashboard</v-icon>
-
-                        </v-btn>
-                        <v-btn small>
-                            <v-icon>mdi-format-list-bulleted-square</v-icon>
-                        </v-btn>
-                    </v-btn-toggle>
-                </div>
+                </v-row>
             </div>
             <client-only>
                 <score-list :scores="scores" :loading="listLoading || nextPageLoading" :initialLoading="listLoading"

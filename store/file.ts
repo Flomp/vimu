@@ -13,6 +13,7 @@ import { $pb, fileStore, notificationStore } from '.';
 })
 export default class LogStore extends VuexModule {
     files: File[] = []
+    favorites: File[] = []
     file: File | null = null;
 
     maxPage: number = -1;
@@ -41,6 +42,16 @@ export default class LogStore extends VuexModule {
             }
         } catch {
             return { files: this.files, maxPage: this.maxPage }
+        }
+    }
+
+    @MutationAction({ mutate: ['favorites'] })
+    async listFavorites() {
+        try {
+            const response = await $pb.collection('files').getFullList<File>(undefined, { sort: 'name', filter: 'favorite=true', expand: 'data', '$autoCancel': false })
+                return { favorites: response }
+        } catch {
+            return { favorites: this.favorites }
         }
     }
 
