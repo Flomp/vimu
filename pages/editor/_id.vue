@@ -106,21 +106,27 @@ export default class Editor extends Vue {
   @Watch("showScore")
   onShowScoreChange(value: boolean) {
     let bottomcol = document.getElementById("log");
-    bottomcol!.style.gridRow = value ? "3/4" : "1/4";
+    if (bottomcol) {
+      bottomcol.style.gridRow = value ? "3/4" : "1/4";
+    }
   }
 
   @Watch("showLog")
   onShowLogChange(value: boolean) {
     let bottomcol = document.getElementById("score");
-    bottomcol!.style.gridRow = value ? "1/2" : "1/4";
-    bottomcol!.style.gridColumn = "3/4";
+    if (bottomcol) {
+      bottomcol!.style.gridRow = value ? "1/2" : "1/4";
+      bottomcol!.style.gridColumn = "3/4";
+    }
   }
 
   @Watch("showFirstColumn")
   onShowFirstColumnChange(value: boolean) {
     let editorcol = document.getElementById("editor");
-    editorcol!.style.gridColumn = value ? "1/2" : "1/4";
-    this.editor?.view.resize();
+    if (editorcol) {
+      editorcol!.style.gridColumn = value ? "1/2" : "1/4";
+      this.editor?.view.resize()
+    }
   }
 
   validate({ params }: Context) {
@@ -140,7 +146,6 @@ export default class Editor extends Vue {
             fileStore.setData(fileData.json);
             await this.editor.fromJSON(fileData.json);
             engineStore.process(this.editor.toJSON());
-            console.log("realtime update")
           }
         }
       });
@@ -148,15 +153,16 @@ export default class Editor extends Vue {
 
     let page = document.getElementById("panel-grid");
 
-    const initialTopHeight = 0.7
-    let rows = [
-      page!.clientHeight * initialTopHeight - 2,
-      2,
-      page!.clientHeight * (1 - initialTopHeight),
-    ];
-    let newRowDefn = rows.map(c => c.toString() + "px").join(" ");
-    page!.style.gridTemplateRows = newRowDefn;
-
+    if (page) {
+      const initialTopHeight = 0.7
+      let rows = [
+        page.clientHeight * initialTopHeight - 2,
+        2,
+        page.clientHeight * (1 - initialTopHeight),
+      ];
+      let newRowDefn = rows.map(c => c.toString() + "px").join(" ");
+      page.style.gridTemplateRows = newRowDefn;
+    }
 
     if (!this.showFirstColumn) {
       this.onShowFirstColumnChange(false)
@@ -172,7 +178,6 @@ export default class Editor extends Vue {
 
   beforeDestroy() {
     $pb.collection('files').unsubscribe();
-
   }
 
   async initEditor() {

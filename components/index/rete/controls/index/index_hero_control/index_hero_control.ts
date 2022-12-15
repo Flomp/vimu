@@ -6,7 +6,7 @@ export default class IndexHeroControl extends Rete.Control {
   constructor(emitter: NodeEditor, key: string, readonly: boolean) {
     super(key);
 
-    this.component = require('./index_hero_control_component.vue').default;;
+    this.component = require('./index_hero_control_component.vue').default;
     this.props = { emitter, ikey: key, readonly };
   }
 

@@ -12,7 +12,7 @@ export default class SelectNotesComponent extends Rete.Component {
   }
 
   async builder(node: Node) {
-    var in0 = new Rete.Input("in_0", "Part", sockets.part);
+    var in0 = new Rete.Input("in_0", "Stream", sockets.stream);
     var out0 = new Rete.Output("out_0", "Stream", sockets.stream);
 
 

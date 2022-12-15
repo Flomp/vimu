@@ -1,6 +1,6 @@
 <template>
   <div>
-    <timer-text-field v-model="value" @update="update"></timer-text-field>
+    <vimu-text-field class="mr-6" v-model="value" :timer="true" @update="update" placeholder="Text" style="max-width: 240px;"></vimu-text-field>
     <div class="d-flex align-center mt-2">
       <span>Color:</span>
       <menu-color-picker v-model="color" @update="update"></menu-color-picker>
@@ -12,12 +12,12 @@
 import { Component, Prop, Vue } from "nuxt-property-decorator";
 import { NodeEditor } from "rete";
 import MenuColorPicker from "~/components/editor/rete/menu_color_picker.vue";
-import TimerTextField from "~/components/editor/timer_text_field.vue";
+import VimuTextField from "~/components/vimu/vimu_text_field.vue";
 
 @Component({
   components: {
-    TimerTextField,
-    MenuColorPicker
+    MenuColorPicker,
+    VimuTextField
   },
 })
 export default class SearchLyricsControlComponent extends Vue {
@@ -32,6 +32,10 @@ export default class SearchLyricsControlComponent extends Vue {
 
   mounted() {
     this.value = this.getData(this.ikey)
+    if (this.getData("color") !== undefined) {
+      this.color = this.getData("color")
+    }
+   
     this.putData("color", this.color);
   }
 

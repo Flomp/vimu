@@ -12,13 +12,11 @@ export default class AnalysisRomanNumeralComponent extends Rete.Component {
   }
 
   async builder(node: Node) {
-    var in0 = new Rete.Input("in_0", "Key", sockets.key);
     var in1 = new Rete.Input("in_1", "Stream", sockets.stream);
     var out0 = new Rete.Output("out_0", "Stream", sockets.stream);
 
     node
       .addControl(new AnalysisRomanNumeralControl(this.editor, "data", true))
-      .addInput(in0)
       .addInput(in1)
       .addOutput(out0)
   }

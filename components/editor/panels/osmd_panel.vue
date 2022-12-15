@@ -135,6 +135,10 @@ export default class OSMDPanel extends Vue {
     });
   }
 
+  beforeDestroy() {
+    this.audioPlayer?.stop();
+  }
+
   @Watch("needsUpdate")
   onNeedsUpdateChange(needsUpdate: boolean) {
     osmdStore.setNeedsUpdate(false);
@@ -161,6 +165,7 @@ export default class OSMDPanel extends Vue {
   async loadScore(data: string) {
     console.log("Loading Score...")
     try {
+      this.loading = true;
       this.downloadDisabled = true;
       this.playDisabled = true;
       await this.osmd.load(data);

@@ -1,24 +1,16 @@
 <template>
-  <v-row style="width:100px">
-    <v-col cols="auto">
-      <v-text-field
-        label="Start"
-        v-model="measures[0]"
-        @input="change"
-        type="number"
-        :rules="[numberRule]"
-      ></v-text-field>
-    </v-col>
-    <v-col cols="auto">
-      <v-text-field
-        label="End"
-        v-model="measures[1]"
-        @input="change"
-        type="number"
-        :rules="[numberRule]"
-      ></v-text-field>
-    </v-col>
-  </v-row>
+  <v-form>
+    <v-row style="width:100px">
+      <v-col cols="auto">
+        <v-text-field label="Start" v-model="measures[0]" @input="change" type="number"
+          :rules="[numberRule]"></v-text-field>
+      </v-col>
+      <v-col cols="auto">
+        <v-text-field label="End" v-model="measures[1]" @input="change" type="number"
+          :rules="[numberRule]"></v-text-field>
+      </v-col>
+    </v-row>
+  </v-form>
 </template>
 
 <script lang="ts">
@@ -37,7 +29,7 @@ export default class SelectMeasuresControlComponent extends Vue {
   measures: string[] = ["0", "1"];
 
   mounted() {
-    if(this.getData(this.ikey)) {
+    if (this.getData(this.ikey)) {
       this.measures = this.getData(this.ikey)
     }
     this.putData(this.ikey, this.measures);
@@ -45,7 +37,7 @@ export default class SelectMeasuresControlComponent extends Vue {
 
   change() {
     if (this.ikey) this.putData(this.ikey, this.measures);
-    
+
     this.emitter.trigger("process");
   }
 
@@ -57,4 +49,5 @@ export default class SelectMeasuresControlComponent extends Vue {
 </script>
 
 <style>
+
 </style>
