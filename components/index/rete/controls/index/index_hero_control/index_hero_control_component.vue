@@ -1,13 +1,17 @@
 <template>
     <div class="px-6">
         <p class="pb-4" style="max-width: 400px; font-size:1.1rem">
-            <b>vimu</b> is the modern way to analyse your music. 
+            <b>vimu</b> is the modern way to analyse your music.
             It provides a rich toolbox for researchers, students and enthusiasts.
         </p>
-        <div class="d-flex pb-4 align-center">
-            <vimu-btn class="mx-2" :large="true">Documentation</vimu-btn>
-            <vimu-btn class="mx-2" :primary="true" :large="true" @click="action('primary')">Get started</vimu-btn>
-        </div>
+        <v-row class="pb-4 align-center">
+            <v-col cols="auto">
+                <vimu-btn :large="true">Documentation</vimu-btn>
+            </v-col>
+            <v-col>
+                <vimu-btn :primary="true" :large="true" @click="action('primary')">Get started</vimu-btn>
+            </v-col>
+        </v-row>
     </div>
 </template>
   
@@ -48,5 +52,11 @@ export default class IndexHeroControlComponent extends Vue {
     font-family: Inter !important;
     padding-top: 24px !important;
     max-width: 600px;
+}
+
+@media only screen and (max-width: 400px) {
+    .the-visual-musicology-editor .title {
+        font-size: 3.2rem !important;
+    }
 }
 </style>

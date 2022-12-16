@@ -7,8 +7,8 @@
         </nuxt-link>
       </div>
       <div class="d-flex align-center justify-space-between" v-if="!$vuetify.breakpoint.mobile">
-        <div style="margin-right: 64px">
-          <span class="font-weight-bold px-5">Documentation</span>
+        <div class="d-flex align-center" style="margin-right: 64px">
+          <v-list-item class="font-weight-bold px-5 vimu-appbar-menu-item" to="/docs">Documentation</v-list-item>
           <span class="font-weight-bold px-5">Pricing</span>
         </div>
 
@@ -84,4 +84,13 @@ export default class VimuAppBar extends Vue {
   background-color: white;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
 }
+
+.vimu-appbar-menu-item {
+  border-radius: 8px;
+}
+
+.vimu-appbar-menu-item::before {
+  border-radius: 8px;
+}
+
 </style>

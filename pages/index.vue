@@ -1,10 +1,10 @@
 <template>
     <v-sheet class="main">
-        <div id="index-rete" class="pa-0">
+        <div id="index-rete" class="pa-0 pixel-grid">
         </div>
         <v-container>
             <section>
-                <v-row>
+                <v-row class="content-row">
                     <v-col>
                         <vimu-article title="Fully visual, fully intuitive" callToAction="Try it now">
                             <b>vimu</b> works with a node based, graphical editor. You can create complex functionality
@@ -14,12 +14,12 @@
                         </vimu-article>
                     </v-col>
 
-                    <v-col v-if="!$vuetify.breakpoint.mobile">
+                    <v-col class="illustration">
                         <bunny-dead-carrot :width="400"></bunny-dead-carrot>
                     </v-col>
                 </v-row>
-                <v-row class="align-center">
-                    <v-col v-if="!$vuetify.breakpoint.mobile">
+                <v-row class="content-row">
+                    <v-col class="illustration">
                         <speed-carrot :width="400"></speed-carrot>
                     </v-col>
                     <v-col>
@@ -32,7 +32,7 @@
                     </v-col>
 
                 </v-row>
-                <v-row>
+                <v-row class="content-row">
                     <v-col>
                         <vimu-article title="100% Open Source" callToAction="How to install">
                             We believe that software should be free for everyone. Thus <b>vimu</b> is fully open source.
@@ -41,13 +41,13 @@
                             running on your server.
                         </vimu-article>
                     </v-col>
-                    <v-col v-if="!$vuetify.breakpoint.mobile">
+                    <v-col class="illustration">
                         <matrix-bunny></matrix-bunny>
                     </v-col>
                 </v-row>
             </section>
             <section>
-                <div style="padding-top: 64px;">
+                <div style="padding-top: 48px;">
                     <h1 class="vimu-title">What can you do with vimu?</h1>
                     <p class="vimu-subtitle py-3">There are many <nuxt-link to="/examples">templates and
                             examples</nuxt-link> to get you started!</p>
@@ -163,19 +163,29 @@ export default class IndexPage extends Vue {
         engine.register(hero);
         engine.register(easteregg)
 
-        const paddingLeft = 128
+        const heroNodeWidth = 646;
+        const heroNodeHeight = 387;
+
+        const eastereggNodeWidth = 242;
+        const eastereggNodeHeight = 349;
+
+        const gap = 0.1 * w;
+        let paddingX = 0;
+        if (w >= 1000) {
+            paddingX = (w / 2) - (heroNodeWidth + eastereggNodeWidth + gap) / 2;
+        } else if (w <= 1000 && w >= heroNodeWidth) {
+            paddingX = (w / 2) - (heroNodeWidth / 2)
+        }
 
         const heroNode = await hero.createNode();
-        heroNode.position = [paddingLeft, 64];
+        heroNode.position = [paddingX, w <= heroNodeWidth ? 0 : h / 2 - heroNodeHeight / 2];
         editor.addNode(heroNode);
+        if (w >= 1000) {
+            const eastereggNode = await easteregg.createNode();
+            eastereggNode.position = [w - paddingX - eastereggNodeWidth, h / 2 - eastereggNodeHeight / 2];
+            editor.addNode(eastereggNode);
+        }
 
-        const heroNodeEl = editor.view.nodes.get(heroNode)!.el;
-        const heroNodeWidth = heroNodeEl.clientWidth;
-
-        const eastereggNode = await easteregg.createNode();
-        eastereggNode.position = [3 * paddingLeft + heroNodeWidth, 64];
-
-        editor.addNode(eastereggNode);
 
         editor.selectNode(heroNode)
 
@@ -202,5 +212,20 @@ export default class IndexPage extends Vue {
 <style>
 #index-rete {
     height: 600px !important;
+}
+
+.content-row {
+    padding-top: 48px;
+    padding-bottom: 48px;
+}
+
+.illustration {
+    display: block;
+}
+
+@media only screen and (max-width: 686px) {
+    .illustration {
+        display: none;
+    }
 }
 </style>

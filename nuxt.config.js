@@ -54,9 +54,6 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
-    // https://go.nuxtjs.dev/pwa
-    '@nuxtjs/pwa',
-
     '@nuxtjs/vuetify',
 
     'cookie-universal-nuxt',
@@ -77,6 +74,7 @@ export default {
   vuetify: {
     treeShake: true,
     customVariables: ['~/assets/variables.scss'],
+    defaultAssets: {font: false, icons: 'mdi'},
     theme: {
       light: true,
       themes: {
