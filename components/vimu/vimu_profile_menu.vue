@@ -21,10 +21,18 @@
             </v-list-item>
             <v-list-item to="/dashboard/files/my">
                 <v-list-item-avatar>
-                    <v-icon>mdi-file</v-icon>
+                    <v-icon>mdi-view-dashboard</v-icon>
                 </v-list-item-avatar>
                 <v-list-item-title>
-                    <span>Files</span>
+                    <span>Dashboard</span>
+                </v-list-item-title>
+            </v-list-item>
+            <v-list-item to="/docs">
+                <v-list-item-avatar>
+                    <v-icon>mdi-help-circle-outline</v-icon>
+                </v-list-item-avatar>
+                <v-list-item-title>
+                    <span>Documentation</span>
                 </v-list-item-title>
             </v-list-item>
             <v-divider></v-divider>

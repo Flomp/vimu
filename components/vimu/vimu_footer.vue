@@ -1,5 +1,5 @@
 <template>
-    <div class="vimu-footer">
+    <footer class="vimu-footer">
         <v-container class="fill-height">
             <v-row class="fill-height justify-sm-space-around ma-0" style="width: 100%">
                 <v-col cols="12" lg="3" style="margin: auto 0">
@@ -29,7 +29,7 @@
             </v-row>
         </v-container>
 
-    </div>
+    </footer>
 </template>
 
 <script lang="ts">
@@ -50,6 +50,7 @@ export default class VimuFooter extends Vue {
 
     background-color: #161414;
     border-radius: 20px 20px 0 0;
+    z-index: 10;
 }
 
 .vimu-footer-title {

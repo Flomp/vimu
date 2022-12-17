@@ -1,5 +1,5 @@
 <template>
-  <v-sheet class="main fill-height" style="overflow: hidden">
+  <v-sheet class="page fill-height" style="overflow: hidden">
     <div ref="page" id="panel-grid" @mouseup="endDrag" @mousemove="onDrag">
       <div id="editor" class="pa-0">
         <editor-panel></editor-panel>

@@ -34,6 +34,7 @@ import LoginForm from "~/components/forms/login_form.vue";
 import SignupForm from "~/components/forms/signup_form.vue";
 import { authStore } from "~/store";
 import VimuFlipper from "~/components/vimu/vimu_flipper.vue";
+import { Context } from "@nuxt/types";
 
 @Component({
     layout: "default_no_footer",
@@ -55,6 +56,14 @@ export default class LoginPage extends Vue {
 
     signupLoading: boolean = false;
     loginLoading: boolean = false;
+
+    created() {        
+        this.showSignup = this.$route.params.login != "login"
+    }
+
+    validate({params}: Context) {
+        return params.login === "login" || params.login === "signup";
+    }
 
     async signupSubmit(data: { email: string, password: string, passwordConfirm: string }) {
         this.signupLoading = true;

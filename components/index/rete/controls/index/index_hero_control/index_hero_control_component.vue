@@ -6,7 +6,7 @@
         </p>
         <v-row class="pb-4 align-center">
             <v-col cols="auto">
-                <vimu-btn :large="true">Documentation</vimu-btn>
+                <vimu-btn :large="true" @click="action('secondary')">Documentation</vimu-btn>
             </v-col>
             <v-col>
                 <vimu-btn :primary="true" :large="true" @click="action('primary')">Get started</vimu-btn>

@@ -1,5 +1,5 @@
 <template>
-    <v-sheet class="main">
+    <v-sheet class="page">
         <div id="index-rete" class="pa-0 pixel-grid">
         </div>
         <v-container>
@@ -178,7 +178,7 @@ export default class IndexPage extends Vue {
         }
 
         const heroNode = await hero.createNode();
-        heroNode.position = [paddingX, w <= heroNodeWidth ? 0 : h / 2 - heroNodeHeight / 2];
+        heroNode.position = [paddingX, w <= heroNodeWidth ? 24 : h / 2 - heroNodeHeight / 2];
         editor.addNode(heroNode);
         if (w >= 1000) {
             const eastereggNode = await easteregg.createNode();
@@ -201,6 +201,9 @@ export default class IndexPage extends Vue {
             const trigger = (params as any).trigger
             if (trigger === "primary") {
                 this.$router.push('/dashboard/files/my')
+            }else if(trigger ===  "secondary") {
+                this.$router.push('/docs')
+
             }
 
         });

@@ -27,7 +27,8 @@ export default {
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
-    '~/assets/rete.scss'
+    '~/assets/rete.scss',
+    '~/assets/content.scss'
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
@@ -55,7 +56,7 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     '@nuxtjs/vuetify',
-
+    '@nuxt/content',
     'cookie-universal-nuxt',
   ],
 
@@ -64,17 +65,10 @@ export default {
     baseURL: process.env.API_URL
   },
 
-  // PWA module configuration: https://go.nuxtjs.dev/pwa
-  pwa: {
-    manifest: {
-      lang: 'en'
-    }
-  },
-
   vuetify: {
     treeShake: true,
     customVariables: ['~/assets/variables.scss'],
-    defaultAssets: {font: false, icons: 'mdi'},
+    defaultAssets: { font: false, icons: 'mdi' },
     theme: {
       light: true,
       themes: {
@@ -87,6 +81,15 @@ export default {
           error: colors.red.accent3,
           success: colors.green.accent4,
         }
+      }
+    }
+  },
+
+  content: {
+    markdown: {
+      remarkAutolinkHeadings: {
+        behavior: 'wrap',
+        linkProperties: { ariaHidden: 'true', tabIndex: -1, class: 'content-heading-link'},
       }
     }
   },

@@ -1,5 +1,5 @@
 <template>
-    <v-sheet class="main">
+    <v-sheet class="page">
         <v-container class="pt-0">
             <div class="header-section pt-4">
                 <vimu-searchbar class="mb-8" v-model="query" :hide-details="true" @update="search"

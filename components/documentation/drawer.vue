@@ -1,5 +1,5 @@
 <template>
-    <v-navigation-drawer permanent app floating style="margin-top: 75px">
+    <v-navigation-drawer permanent app floating style="margin-top: 75px; padding-left: 72px; padding-top: 24px">
         <documentation-navigation></documentation-navigation>
     </v-navigation-drawer>
 </template>
