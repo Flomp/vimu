@@ -14,11 +14,13 @@ import { IContentDocument } from "@nuxt/content/types/content";
 import { Context } from "@nuxt/types";
 import { Vue, Component } from "nuxt-property-decorator";
 import DocsTableOfContents from "~/components/documentation/documentation_table_of_contents.vue";
+import QuickstartHero from "~/components/global/quickstart_hero.vue";
 
 @Component({
     layout: "documentation",
     components: {
-        DocsTableOfContents
+        DocsTableOfContents,
+        QuickstartHero
     }
 })
 export default class DocumentationPage extends Vue {
@@ -32,5 +34,8 @@ export default class DocumentationPage extends Vue {
 </script>
 
 <style>
-
+.nuxt-content-container {
+    max-width: 840px;
+    margin: 0 auto;
+}
 </style>

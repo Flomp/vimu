@@ -1,5 +1,6 @@
 <template>
-    <v-navigation-drawer class="grey lighten-5" right permanent app style="margin-top: 75px;">
+    <v-navigation-drawer class="grey lighten-5" right permanent app style="margin-top: 75px;"
+        v-scroll="onScroll">
         <v-list dense>
             <v-list-item class="toc-header"><v-list-item-icon>
                     <v-icon>mdi-table-of-contents</v-icon>
@@ -8,11 +9,14 @@
             </v-list-item>
             <v-list-item style="padding-left:6px" v-for="t in toc" :key="t.id">
                 <a class="doc-nav-link" :class="{ 'doc-nav-link--active': currentlyActiveToc == t.id }"
-                    :href="`#${t.id}`" :style="`margin-left: ${24 * (t.depth - 2)}px`"
-                    >{{ t.text
+                    :href="`#${t.id}`" :style="`margin-left: ${24 * (t.depth - 2)}px`" @click="jumpTo(t.id)">{{ t.text
                     }}</a>
             </v-list-item>
         </v-list>
+        <v-divider class="mx-4" height="1"></v-divider>
+        <a class="doc-nav-link d-flex align-center ml-1" @click="scrollIt"
+            v-if="showBackToTop"><v-icon>mdi-arrow-up-circle-outline</v-icon>
+            <span class="ml-2">Back to top</span></a>
     </v-navigation-drawer>
 </template>
 
@@ -31,11 +35,8 @@ export default class DocsTableOfContents extends Vue {
     observer: IntersectionObserver | null = null;
     previous: Record<string, number> = {}
 
-    created() {
-        if(this.toc.length > 0) {
-            this.currentlyActiveToc = this.toc[0].id;
-        }
-    }
+    tocDisabled: boolean = true;
+    showBackToTop: boolean = false;
 
     mounted() {
         const observerOptions = <IntersectionObserverInit>{
@@ -46,6 +47,7 @@ export default class DocsTableOfContents extends Vue {
         this.observer = new IntersectionObserver(entries => {
             entries.forEach(entry => {
                 const id = entry.target.getAttribute("id");
+
                 if (id == null) {
                     return;
                 }
@@ -56,14 +58,12 @@ export default class DocsTableOfContents extends Vue {
                 }
 
                 if (entry.isIntersecting) {
-                    if (currentY > this.previous[id]) {
+                    if (currentY > this.previous[id] && !this.tocDisabled) {
                         const prevTocIndex = (this.toc.findIndex(t => t.id == id) || 1) - 1;
                         this.currentlyActiveToc = this.toc[prevTocIndex]?.id;
-                        console.log(id);
-
                     }
                 } else {
-                    if (currentY < this.previous[id]) {                        
+                    if (currentY < this.previous[id] && !this.tocDisabled) {
                         this.currentlyActiveToc = id;
                     }
                 }
@@ -77,9 +77,33 @@ export default class DocsTableOfContents extends Vue {
             .forEach(section => {
                 this.observer?.observe(section);
             });
+
+        if (this.toc.length > 0) {
+            this.currentlyActiveToc = this.toc[0].id;
+        }
+
+        setTimeout(() => {
+            this.tocDisabled = false;
+        }, 100);
     }
     beforeDestroy() {
         this.observer?.disconnect();
+    }
+
+    onScroll() {
+        this.showBackToTop = window.scrollY > 0;
+    }
+
+    jumpTo(section: string) {
+        this.currentlyActiveToc = section;
+        this.tocDisabled = true;
+        setTimeout(() => {
+            this.tocDisabled = false;
+        }, 100);
+    }
+
+    scrollIt() {
+        window.scrollTo(0, 0);
     }
 
 }

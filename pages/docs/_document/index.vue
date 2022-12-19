@@ -1,6 +1,6 @@
 <template>
     <div class="fill-height">
-        <div class="grey lighten-5"> <v-container>
+        <div class="grey lighten-5 fill-height"> <v-container>
                 <nuxt-content :document="page" />
             </v-container></div>
         <client-only> <docs-table-of-contents :toc="page.toc"

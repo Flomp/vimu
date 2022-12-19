@@ -43,7 +43,7 @@
             v-else-if="!files.length && !initialLoading && !searching">
             <bunny-wanted :width="150" />
             <span class="vimu-card-title mt-5">There are no files here</span>
-            <span class="vimu-text">But you could upload some...</span>
+            <span class="vimu-text">But you could create a new one...</span>
         </div>
         <search-empty-state class="mt-12" v-else-if="!files.length && !initialLoading && searching">
         </search-empty-state>

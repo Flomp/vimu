@@ -24,8 +24,10 @@ import DocsTableOfContents from "~/components/documentation/documentation_table_
 export default class DocumentationPage extends Vue {
     page!: IContentDocument;
 
-    async asyncData({ $content, route }: Context) {
-        const page = await $content("route.path").fetch<IContentDocument>();
+    async asyncData({ $content, route }: Context) {        
+        const page = await $content(route.path).fetch<IContentDocument>();
+        console.log(page);
+        
         return { page }
     }
 }

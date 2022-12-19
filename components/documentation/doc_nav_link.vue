@@ -1,10 +1,14 @@
 <template>
     <div>
         <div class="d-flex">
-            <v-icon v-if="open && main">mdi-chevron-down</v-icon>
-            <v-icon v-else-if="!open && main">mdi-chevron-right</v-icon>
-            <nuxt-link class="doc-nav-link" :class="{'doc-nav-link--active': active, 'doc-nav-link--bordered': !main}" :to="to">
-                <span><slot></slot></span>
+            <nuxt-link class="doc-nav-link" :class="{ 'doc-nav-link--active': active, 'doc-nav-link--bordered': !main }"
+                :to="to">
+
+                <v-icon v-if="open && main && $slots['sub-items']">mdi-chevron-down</v-icon>
+                <v-icon v-else-if="(!open && main) || (!$slots['sub-items'] && main)">mdi-chevron-right</v-icon>
+                <span>
+                    <slot></slot>
+                </span>
             </nuxt-link>
         </div>
         <div v-if="open">
@@ -22,7 +26,6 @@ import { Vue, Component, Prop } from "nuxt-property-decorator";
 export default class DocNavLink extends Vue {
     @Prop() to!: string;
     @Prop({ default: false }) main!: boolean;
-    @Prop() subItems!: DocNavLink[];
 
     get open() {
         return this.$route.path.includes(this.to);
@@ -40,6 +43,11 @@ export default class DocNavLink extends Vue {
     font-size: 14px;
     padding: 10px;
     color: gray !important
+}
+
+.doc-nav-link:hover {
+    transition: 200ms;
+    color: currentColor !important
 }
 
 .doc-nav-link--bordered {
