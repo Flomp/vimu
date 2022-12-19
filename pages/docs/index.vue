@@ -34,7 +34,7 @@ export default class DocumentationPage extends Vue {
 </script>
 
 <style>
-.nuxt-content-container {
+.nuxt-content{
     max-width: 840px;
     margin: 0 auto;
 }
