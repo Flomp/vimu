@@ -1,7 +1,7 @@
 <template>
-    <v-navigation-drawer class="grey lighten-5" right permanent app style="margin-top: 75px;"
+    <aside class="toc grey lighten-5" right permanent
         v-scroll="onScroll">
-        <v-list dense>
+        <v-list class="grey lighten-5" dense>
             <v-list-item class="toc-header"><v-list-item-icon>
                     <v-icon>mdi-table-of-contents</v-icon>
                 </v-list-item-icon>
@@ -17,7 +17,7 @@
         <a class="doc-nav-link d-flex align-center ml-1" @click="scrollIt"
             v-if="showBackToTop"><v-icon>mdi-arrow-up-circle-outline</v-icon>
             <span class="ml-2">Back to top</span></a>
-    </v-navigation-drawer>
+    </aside>
 </template>
 
 <script lang="ts">
@@ -44,7 +44,7 @@ export default class DocsTableOfContents extends Vue {
             rootMargin: "-75px",
             threshold: 1
         }
-        this.observer = new IntersectionObserver(entries => {
+        this.observer = new IntersectionObserver(entries => {            
             entries.forEach(entry => {
                 const id = entry.target.getAttribute("id");
 
@@ -110,6 +110,16 @@ export default class DocsTableOfContents extends Vue {
 </script>
 
 <style>
+.toc {
+	z-index: 1;
+	position: sticky;
+	position: -webkit-sticky;
+    top: 75px;
+	flex-shrink: 0;
+    align-self: flex-start;
+	width: 300px;
+    padding: 20px
+}
 .toc-header {
     font-size: 14px;
     font-weight: 600;

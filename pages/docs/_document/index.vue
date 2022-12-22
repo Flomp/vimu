@@ -1,8 +1,8 @@
 <template>
-    <div class="fill-height">
-        <div class="grey lighten-5 fill-height"> <v-container>
-                <nuxt-content :document="page" />
-            </v-container></div>
+    <div class="d-flex grey lighten-5 fill-height">
+        <v-container>
+            <nuxt-content :document="page" />
+        </v-container>
         <client-only> <docs-table-of-contents :toc="page.toc"
                 v-if="$vuetify.breakpoint.mdAndUp"></docs-table-of-contents>
         </client-only>
@@ -25,7 +25,7 @@ export default class DocumentationPage extends Vue {
     page!: IContentDocument;
 
     async asyncData({ $content, route }: Context) {
-        const page = await $content(route.path+ "/index").fetch<IContentDocument>();
+        const page = await $content(route.path + "/index").fetch<IContentDocument>();
         return { page }
     }
 }

@@ -1,8 +1,8 @@
 <template>
-    <div class="fill-height">
-        <div class="grey lighten-5 fill-height"> <v-container>
-                <nuxt-content :document="page" />
-            </v-container></div>
+    <div class="d-flex grey lighten-5 fill-height">
+        <v-container>
+            <nuxt-content :document="page" />
+        </v-container>
         <client-only> <docs-table-of-contents :toc="page.toc"
                 v-if="$vuetify.breakpoint.mdAndUp"></docs-table-of-contents>
         </client-only>
@@ -34,7 +34,7 @@ export default class DocumentationPage extends Vue {
 </script>
 
 <style>
-.nuxt-content{
+.nuxt-content {
     max-width: 840px;
     margin: 0 auto;
 }
