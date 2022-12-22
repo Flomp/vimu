@@ -140,7 +140,6 @@ export default class Editor extends Vue {
             fileStore.setData(fileData.json);
             await this.editor.fromJSON(fileData.json);
             engineStore.process(this.editor.toJSON());
-            console.log("realtime update")
           }
         }
       });

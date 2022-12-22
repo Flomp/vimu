@@ -7,7 +7,7 @@
             <v-card-text class="black--text pb-0">
                 <div class="file-share-link d-flex align-center justify-space-around pa-3" v-if="file">
                     <span>https://vimu.app/editor/{{ file.id }}</span>
-                    <v-btn color="primary" icon>
+                    <v-btn color="primary" icon @click="copy">
                         <v-icon>mdi-content-copy</v-icon>
                     </v-btn>
                 </div>
@@ -26,7 +26,7 @@
                     </v-col>
                 </v-row>
                 <v-list v-if="file && file.expand && file.expand.collaborators">
-                    <file-share-card :fileShare="s" :loading="removeLoading" v-for="s in file.expand.collaborators"
+                    <file-share-card :fileShare="s" :loading="removeLoading(s.id)" v-for="s in file.expand.collaborators"
                         :key="s.id" @remove="removeShare">
 
                     </file-share-card>
@@ -67,7 +67,7 @@ export default class FileShareDialog extends Vue {
     @Prop() file!: File;
 
     addLoading: boolean = false;
-    removeLoading: boolean = false;
+    removing: string = "";
 
     get publicFile() {
         return this.file?.public ?? false;
@@ -84,6 +84,10 @@ export default class FileShareDialog extends Vue {
 
     selectedShareOption = this.shareOptions[0].value;
 
+    
+    removeLoading(shareId : string) {
+        return shareId == this.removing;
+    }
 
     async addShare(query?: string) {
         try {
@@ -117,7 +121,7 @@ export default class FileShareDialog extends Vue {
 
     async removeShare(fileShare: FileShare) {
         try {
-            this.removeLoading = true;
+            this.removing = fileShare.id;
             const success = await $pb.collection('file_share').delete(fileShare.id)
             if (success) {
                 await fileStore.get(this.file.id);
@@ -125,8 +129,14 @@ export default class FileShareDialog extends Vue {
         } catch {
 
         } finally {
-            this.removeLoading = false;
+            this.removing = "";
         }
+    }
+
+    copy() {
+        const shareLink = `https://vimu.app/editor/${ this.file.id }`
+        navigator.clipboard.writeText(shareLink);
+        notificationStore.sendNotification({title: "Link copied to clipboard", color: "primary"})
     }
 }
 </script>
