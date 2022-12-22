@@ -1,5 +1,5 @@
 <template>
-    <div class="mobile-menu">
+    <div class="mobile-menu" :class="{'elevation-3': showNavigation}">
         <div class="d-flex justify-space-between align-center px-8 pt-2">
             <nuxt-link to="/">
                 <Logo :width=128 />
@@ -47,6 +47,6 @@ export default class MobileMenu extends Vue {
     position: sticky;
     top: 0;
     background: white;
-    z-index: 2;
+    z-index: 10;
 }
 </style>

@@ -11,11 +11,9 @@
 import { Component, Prop, Vue } from "nuxt-property-decorator";
 import { NodeEditor } from "rete";
 import MenuColorPicker from "~/components/editor/rete/menu_color_picker.vue";
-import TimerTextField from "~/components/editor/timer_text_field.vue";
 
 @Component({
   components: {
-    TimerTextField,
     MenuColorPicker
   },
 })

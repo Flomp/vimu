@@ -1,5 +1,5 @@
 <template>
-    <v-sheet class="main">
+    <v-sheet class="page">
         <v-container>
             <span class="vimu-title">Account</span>
             <v-form ref="account-form">

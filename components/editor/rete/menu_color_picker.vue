@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import { Vue, Component, Emit, VModel } from "nuxt-property-decorator";
-import { isSameColor, rgbToHex } from "~/utils/color_util";
+import { isSameColor, rgbToHex, hexToRgb } from "~/utils/color_util";
 
 @Component({})
 export default class MenuColorPicker extends Vue {
@@ -20,8 +20,9 @@ export default class MenuColorPicker extends Vue {
 
     @VModel() color! : string;
 
-    onClose(open: boolean) {       
+    onClose(open: boolean) {               
         if (open) {
+            this.currentColor = hexToRgb(this.color)!;
             this.previousColor = this.currentColor;
         } else {
             if (!isSameColor(this.currentColor, this.previousColor)) {

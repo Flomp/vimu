@@ -1,17 +1,17 @@
 <template>
   <div>
-    <timer-text-field v-model="value" @update="update"></timer-text-field>
+    <vimu-text-field class="mr-6" v-model="value" :timer="true" @update="update" style="max-width: 200px"></vimu-text-field>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "nuxt-property-decorator";
 import { NodeEditor } from "rete";
-import TimerTextField from "~/components/editor/timer_text_field.vue";
+import VimuTextField from "~/components/vimu/vimu_text_field.vue";
 
 @Component({
   components: {
-    TimerTextField,
+    VimuTextField
   },
 })
 export default class SourceTinynotationControlComponent extends Vue {

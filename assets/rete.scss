@@ -11,6 +11,10 @@ $node-primary-color: #ffffff;
 $node-primary-text-color: #000000;
 $node-primary-color-border: #7e9ffb;
 
+$node-error-color: #FFEBEE;
+$node-error-color-border: #ff1744;
+$node-error-color-selected: #ffdee4;
+
 $node-primary-color-selected: #ffffff;
 $node-primary-color-selected-border: #2962FF;
 $node-primary-color-hover: #f7f7f7;
@@ -40,6 +44,21 @@ $minimap-viewport-border-color: #696969;
   &.selected {
     background: $node-color-selected !important;
     border-color: $node-color-selected-border !important;
+  }
+}
+
+.node.engine-error {
+  background: $node-error-color !important;
+  color: $node-primary-text-color !important;
+  border: 3px solid $node-error-color-border !important;
+
+  &:hover {
+    background: $node-error-color-selected !important;
+  }
+
+  &.selected {
+    background: $node-error-color-selected !important;
+    border-color: $node-error-color-border !important;
   }
 }
 

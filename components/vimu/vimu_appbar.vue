@@ -1,14 +1,14 @@
 <template>
-  <div class="vimu-appbar py-2">
+  <div class="vimu-appbar pt-2 pb-md-2">
     <div class="d-flex align-center justify-space-between px-8 px-md-12">
       <div>
         <nuxt-link to="/">
           <Logo :width=128 />
         </nuxt-link>
       </div>
-      <div class="d-flex align-center justify-space-between" v-if="!$vuetify.breakpoint.mobile">
-        <div style="margin-right: 64px">
-          <span class="font-weight-bold px-5">Documentation</span>
+      <div class="d-flex align-center justify-space-between" v-if="$vuetify.breakpoint.mdAndUp">
+        <div class="d-flex align-center" style="margin-right: 64px">
+          <v-list-item class="font-weight-bold px-5 vimu-appbar-menu-item" to="/docs">Documentation</v-list-item>
           <span class="font-weight-bold px-5">Pricing</span>
         </div>
 
@@ -17,22 +17,29 @@
           <vimu-profile-menu :logged-in="loggedIn"></vimu-profile-menu>
         </div>
       </div>
-      <v-btn color="black" icon @click="showMenu = !showMenu" v-else-if="!loggedIn">
-        <v-icon>{{ menuIcon }}</v-icon>
-      </v-btn>
+
       <div v-else>
         <vimu-profile-menu :logged-in="loggedIn"></vimu-profile-menu>
       </div>
 
 
     </div>
-    <div v-if="showMenu">
-      <div class="d-flex flex-column vimu-appbar-menu">
-        <span class="font-weight-bold px-5 py-4">Documentation</span>
-        <span class="font-weight-bold px-5 pt-4 pb-3">Pricing</span>
-        <vimu-btn class="ma-5" to="/login">Login</vimu-btn>
+    <div v-if="$vuetify.breakpoint.smAndDown">
+      <div class="d-flex justify-center">
+        <v-btn color="black" icon @click="showMenu = !showMenu">
+          <v-icon>{{ menuIcon }}</v-icon>
+        </v-btn>
+      </div>
+
+      <div v-if="showMenu">
+        <div class="d-flex flex-column vimu-appbar-menu">
+          <v-list-item class="font-weight-bold px-5 vimu-appbar-menu-item" to="/docs">Documentation</v-list-item>
+          <documentation-navigation class="ml-10" v-if="showDocNav"></documentation-navigation>
+          <span class="font-weight-bold px-5 pt-4 pb-3">Pricing</span>
+        </div>
       </div>
     </div>
+
 
   </div>
 </template>
@@ -43,18 +50,24 @@ import VimuBtn from "./vimu_button.vue";
 import Logo from "./logo.vue";
 import VimuProfileMenu from "./vimu_profile_menu.vue";
 import { $pb } from "~/store";
+import DocumentationNavigation from "../documentation/documentation_navigation.vue";
 
 @Component({
   components: {
     Logo,
     VimuBtn,
-    VimuProfileMenu
+    VimuProfileMenu,
+    DocumentationNavigation
   }
 })
 export default class VimuAppBar extends Vue {
   showMenu: boolean = false;
 
   loggedIn: boolean = $pb.authStore.model !== null;
+
+  get showDocNav() {
+    return this.$route.path.startsWith('/docs');
+  }
 
   mounted() {
     $pb.authStore.onChange((token, model) => {
@@ -71,17 +84,23 @@ export default class VimuAppBar extends Vue {
 
 <style>
 .vimu-appbar {
-  position: sticky;
-  top: 0;
+  position: fixed;
+  width: 100%;
   background-color: white;
-  z-index: 2;
-  height: 75px;
+  z-index: 10;
 }
 
 .vimu-appbar-menu {
-  position: absolute;
   width: 100%;
   background-color: white;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+}
+
+.vimu-appbar-menu-item {
+  border-radius: 8px;
+}
+
+.vimu-appbar-menu-item::before {
+  border-radius: 8px;
 }
 </style>

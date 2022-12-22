@@ -4,13 +4,16 @@
         <v-progress-linear absolute indeterminate color="black" height="2" v-if="apiLoading"></v-progress-linear>
         <div id="rete" @contextmenu="showContextMenu"></div>
         <sub-menu v-model="showMenu" :absolute="true" :positionX="x" :positionY="y" :items="menuItems"
-            @menu-click="createNode" v-if="!readonly"/>
+            @menu-click="createNode" v-if="!readonly" />
     </div>
 </template>
 
 <script lang="ts">
 import { Component, InjectReactive, Vue, Watch } from "nuxt-property-decorator";
 import { Component as rComponent, NodeEditor } from "rete";
+import { VBtn } from "vuetify/lib";
+import ErrorBadge from "~/components/vimu/error_badge.vue";
+import VimuTextField from "~/components/vimu/vimu_text_field.vue";
 import { LogLevel } from "~/models/log";
 import { engineStore, fileStore, logStore } from "~/store";
 import MainMenu from "../main_menu.vue";
@@ -34,6 +37,8 @@ export default class EditorPanel extends Vue {
     editorX = 0;
     editorY = 0;
 
+    errorNode: HTMLElement | undefined;
+
     get readonly() {
         return fileStore.readonly
     }
@@ -54,6 +59,10 @@ export default class EditorPanel extends Vue {
         return fileStore.file?.name ?? "";
     }
 
+    get engineError() {
+        return engineStore.error;
+    }
+
     mounted() {
         this.bindKeys()
     }
@@ -65,6 +74,31 @@ export default class EditorPanel extends Vue {
             this.editorX = x;
             this.editorY = y;
         });
+        if (this.engineError != null) {
+            this.onEngineErrorChange();
+        }
+    }
+
+    @Watch("engineError")
+    onEngineErrorChange() {
+        if (this.engineError !== null) {
+            const affectedNode = this.editor?.nodes.find(n => n.id == this.engineError?.node.id);
+            if (affectedNode) {
+                const affectedEl = this.editor?.view.nodes.get(affectedNode)?.el
+                if(affectedEl === this.errorNode) {
+                    this.errorNode?.lastChild?.remove()
+                }
+                affectedEl?.children[0].classList.add('engine-error')
+
+                var vueComponent = new ErrorBadge({ propsData: { "error": this.engineError.message } }).$mount();
+                affectedEl?.appendChild(vueComponent.$el)
+                this.errorNode = affectedEl;
+            }
+        } else {
+            this.errorNode?.children[0].classList.remove("engine-error");
+            this.errorNode?.lastChild?.remove()
+            this.errorNode = undefined
+        }
     }
 
     bindKeys() {
@@ -80,7 +114,7 @@ export default class EditorPanel extends Vue {
                     this.showMenu = true;
                 });
             } else if (e.code === "Enter" && this.selectedNode) {
-
+                this.outputNode?.setMeta({ "Gallo": "WElt" })
                 for (const connection of this.outputNode!.getConnections()) {
                     this.editor.removeConnection(connection)
                 }
@@ -115,21 +149,6 @@ export default class EditorPanel extends Vue {
             level: LogLevel.info,
             text: `Added new node ${item.key}`,
         });
-    }
-
-    downloadJSON() {
-        const jsonData = JSON.stringify(this.editor?.toJSON());
-        var jsonBlob = new Blob([jsonData], {
-            type: "text/xml;charset=utf-8",
-        });
-        var url = URL.createObjectURL(jsonBlob);
-        var downloadLink = document.createElement("a");
-        downloadLink.href = url;
-        const timestamp = new Date().getTime();
-        downloadLink.download = `vimu_export_${timestamp}.json`;
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
     }
 }
 </script>

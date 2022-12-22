@@ -1,0 +1,43 @@
+.nuxt-content {
+    h1 {
+        margin-bottom: 36px;
+        margin-top: 36px;
+    }
+
+    h2 {
+        margin-bottom: 24px;
+        margin-top: 24px;
+    }
+
+    h1 a,
+    h2 a,
+    h3 a,
+    h4 a,
+    h5 a {
+        text-decoration: none;
+    }
+
+    .content-heading-link {
+        position: relative;
+    }
+
+    :target:before {
+        content: '';
+        display: block;
+        height:      75px;
+        width: 0;
+        margin-top: -75px;
+    }
+
+    .content-heading-link:hover::after {
+        margin-left: 12px;
+        font: normal normal normal 24px/1 "Material Design Icons";
+        text-rendering: auto;
+        line-height: 0;
+        content: "\F0339";
+    }
+
+    ul {
+        margin-bottom: 16px;
+    }
+}

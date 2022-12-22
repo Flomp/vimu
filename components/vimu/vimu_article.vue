@@ -24,8 +24,5 @@ export default class VimuArticle extends Vue {
 </script>
 
 <style>
-.vimu-article {
-    padding-top: 64px;
-    padding-bottom: 64px;
-}
+
 </style>

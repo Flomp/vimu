@@ -1,5 +1,5 @@
 <template>
-  <v-sheet class="main fill-height" style="overflow: hidden">
+  <v-sheet class="page fill-height" style="overflow: hidden">
     <div ref="page" id="panel-grid" @mouseup="endDrag" @mousemove="onDrag">
       <div id="editor" class="pa-0">
         <editor-panel></editor-panel>
@@ -49,7 +49,7 @@ import SearchLyricsComponent from "~/components/editor/rete/components/search/se
 import SearchPartComponent from "~/components/editor/rete/components/search/search_part_component";
 import SelectMeasuresComponent from "~/components/editor/rete/components/select/select_measures_component";
 import SelectNotesComponent from "~/components/editor/rete/components/select/select_notes_component";
-import SelectPartComponent from "~/components/editor/rete/components/select/select_part_component";
+import SelectPartsComponent from "~/components/editor/rete/components/select/select_parts_component";
 import SourceCorpusComponent from "~/components/editor/rete/components/source/source_corpus_component";
 import SourceTinynotationComponent from "~/components/editor/rete/components/source/source_tinynotation_component";
 import TransformChordifyComponent from "~/components/editor/rete/components/transform/transform_chordify_component";
@@ -106,21 +106,27 @@ export default class Editor extends Vue {
   @Watch("showScore")
   onShowScoreChange(value: boolean) {
     let bottomcol = document.getElementById("log");
-    bottomcol!.style.gridRow = value ? "3/4" : "1/4";
+    if (bottomcol) {
+      bottomcol.style.gridRow = value ? "3/4" : "1/4";
+    }
   }
 
   @Watch("showLog")
   onShowLogChange(value: boolean) {
     let bottomcol = document.getElementById("score");
-    bottomcol!.style.gridRow = value ? "1/2" : "1/4";
-    bottomcol!.style.gridColumn = "3/4";
+    if (bottomcol) {
+      bottomcol!.style.gridRow = value ? "1/2" : "1/4";
+      bottomcol!.style.gridColumn = "3/4";
+    }
   }
 
   @Watch("showFirstColumn")
   onShowFirstColumnChange(value: boolean) {
     let editorcol = document.getElementById("editor");
-    editorcol!.style.gridColumn = value ? "1/2" : "1/4";
-    this.editor?.view.resize();
+    if (editorcol) {
+      editorcol!.style.gridColumn = value ? "1/2" : "1/4";
+      this.editor?.view.resize()
+    }
   }
 
   validate({ params }: Context) {
@@ -147,15 +153,16 @@ export default class Editor extends Vue {
 
     let page = document.getElementById("panel-grid");
 
-    const initialTopHeight = 0.7
-    let rows = [
-      page!.clientHeight * initialTopHeight - 2,
-      2,
-      page!.clientHeight * (1 - initialTopHeight),
-    ];
-    let newRowDefn = rows.map(c => c.toString() + "px").join(" ");
-    page!.style.gridTemplateRows = newRowDefn;
-
+    if (page) {
+      const initialTopHeight = 0.7
+      let rows = [
+        page.clientHeight * initialTopHeight - 2,
+        2,
+        page.clientHeight * (1 - initialTopHeight),
+      ];
+      let newRowDefn = rows.map(c => c.toString() + "px").join(" ");
+      page.style.gridTemplateRows = newRowDefn;
+    }
 
     if (!this.showFirstColumn) {
       this.onShowFirstColumnChange(false)
@@ -171,7 +178,6 @@ export default class Editor extends Vue {
 
   beforeDestroy() {
     $pb.collection('files').unsubscribe();
-
   }
 
   async initEditor() {
@@ -221,7 +227,7 @@ export default class Editor extends Vue {
       new SourceScoreComponent(editor),
       new SourceTinynotationComponent(editor),
       new SelectMeasuresComponent(editor),
-      new SelectPartComponent(editor),
+      new SelectPartsComponent(editor),
       new SelectNotesComponent(editor),
       new AnalysisKeyComponent(editor),
       new AnalysisAmbitusComponent(editor),

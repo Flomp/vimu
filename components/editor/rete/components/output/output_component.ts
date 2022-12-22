@@ -12,7 +12,7 @@ export default class OutputComponent extends Rete.Component {
   }
 
   async builder(node: Node) {
-    var in0 = new Rete.Input("in_0", "Stream", sockets.stream);
+    var in0 = new Rete.Input("in_0", "Output", sockets.object);
 
 
     node

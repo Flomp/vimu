@@ -32,7 +32,7 @@ const editorMenuItems: MenuItem[] = [
         children:
             [
                 { name: "Measures", key: "select_measures" },
-                { name: "Part", key: "select_part" },
+                { name: "Parts", key: "select_parts" },
                 { name: "Notes", key: "select_notes" },
             ]
     },

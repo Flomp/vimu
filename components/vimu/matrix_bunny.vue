@@ -1,8 +1,8 @@
 <template>
-    <div class="fill-height matrix-bunny" style="position: relative;">
+    <div class="matrix-bunny" style="position: relative;">
         <div id="canvas-wrapper"> <canvas id="canv"></canvas>
         </div>
-        <div style="position: absolute; bottom: 0; left: 0">
+        <div style="position: absolute; bottom: -100px; left: 0">
             <svg width="200" viewBox="0 0 1085 1424" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                     d="M531.112 497.247C599.552 497.247 675.18 505.872 744.822 525.625C814.541 545.4 877.708 576.169 921.821 620.064C1011.73 709.528 1076.61 855.875 1076.61 992.747C1076.61 1062.19 1074.16 1118.6 1060.6 1168.84C1047.12 1218.79 1022.56 1262.91 977.821 1307.43C934.128 1350.91 858.891 1378.32 776.159 1394.73C693.755 1411.07 605.321 1416.25 536.612 1416.25H533.924C462.763 1416.25 386.437 1416.25 316.542 1404.6C245.766 1392.81 182.657 1369.23 138.561 1322.59C96.5575 1278.17 72.6892 1241.34 59.1378 1199.52C45.5198 1157.5 42.1121 1109.85 42.1121 1043.25C42.1121 977.837 61.6627 898.545 91.9484 824.24C122.235 749.935 162.923 681.434 204.561 637.4C249.754 589.607 296.068 554.657 348.573 531.61C401.073 508.565 460.156 497.247 531.112 497.247Z"
@@ -97,9 +97,9 @@ export default class MatrixBunny extends Vue {
 
 <style scoped>
 #canvas-wrapper {
-    height: 70%;
-    width: 400px;
+    aspect-ratio: 16 / 9;
     margin-left: 156px;
+    margin-bottom: 100px;
     border-radius: 15px;
     overflow: hidden;
 }

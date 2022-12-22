@@ -1,5 +1,5 @@
 <template>
-  <v-tabs v-model="model" align-with-title @change="change">
+  <v-tabs v-model="model" align-with-title :show-arrows="false" @change="change">
     <v-tabs-slider class="vimu-tab-slider"></v-tabs-slider>
 
     <v-tab v-for="item in tabs" :key="item" class="vimu-tab font-weight-bold" :ripple="false">
@@ -30,6 +30,9 @@ export default class VimuTabs extends Vue {
 </style>
 
 <style>
+.vimu-tab {
+  margin-left: 0 !important;
+}
 .vimu-tab::before {
   border-radius: 8px;
 }

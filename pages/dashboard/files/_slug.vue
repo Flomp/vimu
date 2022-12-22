@@ -1,5 +1,5 @@
 <template>
-    <v-sheet class="main">
+    <v-sheet class="page">
         <v-container class="pt-0">
             <div class="header-section pt-4">
                 <vimu-searchbar class="mb-8" v-model="query" :hide-details="true" @update="search"
@@ -58,7 +58,6 @@ import FileCard from "~/components/dashboard/file/file_card.vue";
 import FileList from "~/components/dashboard/file/file_list.vue";
 import FileRenameDialog from "~/components/dashboard/file/file_rename_dialog.vue";
 import FileShareDialog from "~/components/dashboard/file/file_share_dialog.vue";
-import VimuAutocomplete from "~/components/vimu/vimu_autocomplete.vue";
 import VimuBtn from "~/components/vimu/vimu_button.vue";
 import VimuSelect from "~/components/vimu/vimu_select.vue";
 import VimuTextField from "~/components/vimu/vimu_text_field.vue";
@@ -73,7 +72,6 @@ import { $pb, fileStore } from "~/store";
     fetchOnServer: false,
     components: {
         VimuTextField,
-        VimuAutocomplete,
         VimuBtn,
         FileCard,
         FileRenameDialog,

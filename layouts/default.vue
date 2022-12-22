@@ -2,7 +2,7 @@
   <v-app>
     <notification-center />
     <vimu-appbar />
-    <v-main>
+    <v-main class="main">
       <nuxt />
     </v-main>
     <vimu-footer />
@@ -26,4 +26,7 @@ export default class DefaultLayout extends Vue { }
 </script>
 
 <style>
+.main {
+  padding-top: 75px !important
+}
 </style>
