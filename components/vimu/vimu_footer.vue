@@ -8,13 +8,13 @@
                 </v-col>
                 <v-col cols="6" sm="3" class="d-flex flex-column mt-4">
                     <span class="vimu-footer-title pb-3">Product</span>
-                    <span class="vimu-footer-text py-1">Editor</span>
+                    <nuxt-link to="/dashboard/files/my" class="vimu-footer-text py-1">Editor</nuxt-link>
                     <span class="vimu-footer-text py-1">Installation</span>
                     <span class="vimu-footer-text py-1">Pricing</span>
                 </v-col>
                 <v-col cols="6" sm="3" class="d-flex flex-column mt-4">
                     <span class="vimu-footer-title pb-3">Resources</span>
-                    <span class="vimu-footer-text py-1">Documentation</span>
+                    <nuxt-link to="/docs" class="vimu-footer-text py-1">Documentation</nuxt-link>
                     <span class="vimu-footer-text py-1">Examples</span>
                     <span class="vimu-footer-text py-1">Contact us</span>
                     <span class="vimu-footer-text py-1">Terms of service</span>
@@ -22,9 +22,9 @@
                 </v-col>
                 <v-col cols="6" sm="3" class="d-flex flex-column mt-4">
                     <span class="vimu-footer-title pb-3">Developers</span>
-                    <span class="vimu-footer-text py-1">GitHub</span>
-                    <span class="vimu-footer-text py-1">Contribute</span>
-                    <span class="vimu-footer-text py-1">Changelog</span>
+                    <a href="https://github.com/flomp/vimu" class="vimu-footer-text py-1">GitHub</a>
+                    <a href="https://github.com/flomp" class="vimu-footer-text py-1">Contribute</a>
+                    <a href="https://github.com/flomp/vimu/CHANGELOG.md" class="vimu-footer-text py-1">Changelog</a>
                 </v-col>
             </v-row>
         </v-container>
@@ -60,7 +60,8 @@ export default class VimuFooter extends Vue {
 }
 
 .vimu-footer-text {
-    color: #d4d4d4;
+    color: #d4d4d4 !important;
     font-size: 1rem !important;
+    text-decoration: none;
 }
 </style>

@@ -78,8 +78,8 @@
             </section>
             <section>
                 <div class="text-center" style="padding-top: 128px; padding-bottom: 64px;">
-                    <h1 class="vimu-title">
-                        Drag, connect, analyse
+                    <h1 ref="slogan" class="vimu-title">
+                        Drag, Connect, Analyse
                     </h1>
                     <vimu-button class="my-10" :primary="true" :x-large="true" to="/dashboard/files/my">Get started
                     </vimu-button>
@@ -92,7 +92,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "nuxt-property-decorator";
+import { Component, Ref, Vue } from "nuxt-property-decorator";
 import Rete from "rete";
 import ConnectionPlugin from "rete-connection-plugin";
 import Vuetify from "vuetify";
@@ -104,6 +104,9 @@ import Terminal from "~/components/index/terminal.vue"
 import SpeedCarrot from "~/components/vimu/speed_carrot.vue";
 import MatrixBunny from "~/components/vimu/matrix_bunny.vue";
 import BunnyDeadCarrot from "~/components/vimu/bunny_dead_carrot.vue";
+//@ts-ignore
+import Typewriter from 'typewriter-effect/dist/core';
+
 @Component({
     components: {
         VimuArticle,
@@ -115,6 +118,8 @@ import BunnyDeadCarrot from "~/components/vimu/bunny_dead_carrot.vue";
     },
 })
 export default class IndexPage extends Vue {
+
+    @Ref() slogan!: HTMLElement;
 
     async mounted() {
         const container = document.querySelector<HTMLElement>("#index-rete");
@@ -201,13 +206,28 @@ export default class IndexPage extends Vue {
             const trigger = (params as any).trigger
             if (trigger === "primary") {
                 this.$router.push('/dashboard/files/my')
-            }else if(trigger ===  "secondary") {
+            } else if (trigger === "secondary") {
                 this.$router.push('/docs')
 
             }
 
         });
 
+
+        // var typewriter = new Typewriter(this.slogan, {
+        //     loop: true,
+        //     delay: 75,
+        //     cursor: ""
+        // });
+
+        // typewriter
+        // .typeString("Drag")
+        // .pauseFor(1000)
+        // .typeString("->Connect")
+        // .pauseFor(1000)
+        // .typeString("->Analyse")
+        // .pauseFor(3000)
+        // .start()
     }
 }
 </script>

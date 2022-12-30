@@ -25,7 +25,11 @@ export default class TransformTransposeControlComponent extends Vue {
   steps: number = 3;
 
   mounted() {
-    this.change();
+    
+    if(this.getData(this.ikey)) {
+      this.steps = this.getData(this.ikey)
+    }
+    this.putData(this.ikey, this.steps);
   }
 
   change() {

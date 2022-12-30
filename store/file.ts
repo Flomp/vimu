@@ -25,7 +25,7 @@ export default class LogStore extends VuexModule {
 
     @Mutation
     setData(json: Data) {
-        if(!this.file) {
+        if (!this.file) {
             return;
         }
         this.file.expand.data.json = json;
@@ -49,7 +49,7 @@ export default class LogStore extends VuexModule {
     async listFavorites() {
         try {
             const response = await $pb.collection('files').getFullList<File>(undefined, { sort: 'name', filter: 'favorite=true', expand: 'data', '$autoCancel': false })
-                return { favorites: response }
+            return { favorites: response }
         } catch {
             return { favorites: this.favorites }
         }
@@ -131,9 +131,7 @@ export default class LogStore extends VuexModule {
                 this.file = data.updatedFile;
             }
             if (fileIndex !== -1) {
-                if (data.updatedFile !== undefined) {
-                    Vue.set(this.files, fileIndex, data.updatedFile)
-                }
+                Vue.set(this.files, fileIndex, data.updatedFile)
             }
         } else {
             if (isCurrentFile) {

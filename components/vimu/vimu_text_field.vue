@@ -54,6 +54,6 @@ export default class VimuTextField extends Vue {
 }
 
 .vimu-text-field .v-input__append-inner {
-  margin-top: 10px !important
+  /* margin-top: 10px !important */
 }
 </style>

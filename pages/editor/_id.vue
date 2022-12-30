@@ -68,6 +68,7 @@ import SourceScoreComponent from "~/components/editor/rete/components/source/sou
 import { Context } from "@nuxt/types";
 import { example_files, File, FileData } from "~/models/file";
 import { Data } from "rete/types/core/data";
+import { RecordSubscription } from "pocketbase";
 
 @Component({
   layout: "editor",
@@ -139,7 +140,9 @@ export default class Editor extends Vue {
     }
 
     if (fileStore.file) {
-      $pb.collection('file_data').subscribe<FileData>(fileStore.file.expand.data.id, async (e) => {
+      console.log("Subscribing...");
+      
+      $pb.collection('file_data').subscribe<FileData>(fileStore.file.expand.data.id, async (e: RecordSubscription<FileData>) => {
         if (e.action == "update" && this.editor) {
           const fileData = e.record;
           if (JSON.stringify(fileStore.file?.expand.data.json) !== JSON.stringify(fileData.json)) {
@@ -177,7 +180,9 @@ export default class Editor extends Vue {
 
 
   beforeDestroy() {
-    $pb.collection('files').unsubscribe();
+    console.log("Unsubscribing...");
+
+    $pb.collection('file_data').unsubscribe();
   }
 
   async initEditor() {

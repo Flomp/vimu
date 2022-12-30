@@ -212,6 +212,7 @@ export default class FilesPage extends Vue {
             return;
         }
         await fileStore.delete(this.deletingFile);
+        await fileStore.listFavorites()
     }
 
     renameFile(file: File) {
@@ -241,6 +242,7 @@ export default class FilesPage extends Vue {
 
     async favoriteFile(file: File) {
         await fileStore.update({ id: file.id, favorite: !file.favorite })
+        await fileStore.listFavorites()
     }
 
     openFile(file: File) {

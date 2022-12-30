@@ -33,23 +33,25 @@ export default class FileMenu extends Vue {
   shareDialog: boolean = false;
   renameDialog: boolean = false;
 
-  items: MenuItem[] = [
-    ...this.readonly ? [] : [{ name: "Open...", divider: true },
-    { name: "Share", key: "file_share" },
-    { name: "Rename", divider: true, key: "file_rename" },
-    { name: "Import" },
-    {
-      name: "Export",
-      divider: true,
-      children: [
-        {
-          name: "JSON",
-          key: "file_export_json",
-        },
-      ],
-    },],
-    { name: "Close", key: "file_close" },
-  ];
+  get items(): MenuItem[] {
+    return [
+      ...this.readonly ? [] : [{ name: "Open...", divider: true },
+      { name: "Share", key: "file_share" },
+      { name: "Rename", divider: true, key: "file_rename" },
+      { name: "Import" },
+      {
+        name: "Export",
+        divider: true,
+        children: [
+          {
+            name: "JSON",
+            key: "file_export_json",
+          },
+        ],
+      },],
+      { name: "Close", key: "file_close" },
+    ];
+  }
 
   get file() {
     return fileStore.file

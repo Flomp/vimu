@@ -29,4 +29,10 @@ export default class DefaultLayout extends Vue { }
 .main {
   padding-top: 75px !important
 }
+
+@media only screen and (max-width: 959px) {
+    .main {
+      padding-top: 103px !important
+    }
+}
 </style>

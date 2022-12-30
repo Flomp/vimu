@@ -18,7 +18,23 @@
                             <vimu-text-field v-model="username" :rules="usernameRules">
                             </vimu-text-field>
                             <span class="font-weight-bold">Email</span>
-                            <vimu-text-field v-model="email"></vimu-text-field>
+                            <vimu-text-field v-model="email">
+                                <v-tooltip bottom v-if="verified">
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-icon color="success" v-bind="attrs" v-on="on">
+                                            mdi-check-circle-outline
+                                        </v-icon>
+                                    </template>
+                                    <span>Verified</span>
+                                </v-tooltip>
+                                <v-tooltip bottom v-else>
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-icon color="error" v-bind="attrs" v-on="on">
+                                            mdi-close-circle-outline
+                                        </v-icon>
+                                    </template>
+                                    <span>Not verified</span>
+                                </v-tooltip></vimu-text-field>
                         </div>
                         <vimu-btn :disabled="(!usernameChanged && !emailChanged) || !username.length || !email.length"
                             :loading="saveLoading" @click="save">
@@ -74,7 +90,12 @@ export default class AccountPage extends Vue {
         return this.username !== this.currentUsername;
     }
 
-
+    get verified() {
+        if (this.emailChanged) {
+            return false;
+        }
+        return $pb.authStore.model?.verified ?? false
+    }
 
     mounted() {
         this.initValues();
@@ -113,7 +134,12 @@ export default class AccountPage extends Vue {
             if (this.usernameChanged && this.username.length) {
                 await $pb.collection('users').update($pb.authStore.model.id, { username: this.username });
             }
-            notificationStore.sendNotification({ title: "Profile saved", color: 'primary' })
+
+            if (this.emailChanged) {
+                notificationStore.sendNotification({ title: "Email changed", subtitle: "A confirmation email has been sent to the new email address", color: 'primary', duration: 7500 })
+            } else {
+                notificationStore.sendNotification({ title: "Profile saved", color: 'primary' })
+            }
             this.initValues();
         } catch (error) {
             if (error instanceof ClientResponseError && error.data.data?.username?.message == "The username is invalid or already in use.") {

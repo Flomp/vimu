@@ -11,9 +11,7 @@
 <script lang="ts">
 import { Component, InjectReactive, Vue, Watch } from "nuxt-property-decorator";
 import { Component as rComponent, NodeEditor } from "rete";
-import { VBtn } from "vuetify/lib";
 import ErrorBadge from "~/components/vimu/error_badge.vue";
-import VimuTextField from "~/components/vimu/vimu_text_field.vue";
 import { LogLevel } from "~/models/log";
 import { engineStore, fileStore, logStore } from "~/store";
 import MainMenu from "../main_menu.vue";
