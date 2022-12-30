@@ -1,13 +1,16 @@
 FROM node:16-alpine
 
+ARG API_URL
+ARG POCKETBASE_URL
+
 RUN mkdir -p /usr/src/vimu
 WORKDIR /usr/src/vimu
 
 RUN apk update && apk upgrade
 RUN apk add git
 
-ENV API_URL=https://api.vimu.app
-ENV POCKETBASE_URL=https://pb.vimu.app
+ENV API_URL=${API_URL}
+ENV POCKETBASE_URL=${POCKETBASE_URL}
 
 ENV NUXT_HOST=0.0.0.0
 ENV NUXT_PORT=3000
