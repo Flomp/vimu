@@ -1,9 +1,10 @@
 <template>
     <v-sheet class="page">
         <v-container>
-            <span class="vimu-title">Account</span>
+            <h1 class="vimu-title">Account</h1>
+            <h2 class="vimu-subtitle mt-10">Profile information</h2>
             <v-form ref="account-form">
-                <v-row class="pt-10 align-center">
+                <v-row class="mt-4 align-center">
                     <v-col cols="12" sm="auto" class="pr-sm-12 d-flex justify-center" style="position: relative">
                         <vimu-avatar :seed="avatarSeed" :size="172"></vimu-avatar>
                         <v-btn color="primary" :loading="seedLoading" :disabled="seedLoading" absolute icon bottom right
@@ -44,8 +45,15 @@
                     </v-col>
                 </v-row>
             </v-form>
+            <h2 class="vimu-subtitle mt-10">Danger zone</h2>
+            <div class="py-8">
+                <vimu-btn :danger="true" @click="deleteConfirmDialog = true">Delete account</vimu-btn>
 
+            </div>
         </v-container>
+        <account-delete-dialog v-model="deleteConfirmDialog" title="Are you sure?"
+            text="You are about to permanently delete this score" action="Delete" @confirm="deleteAccount">
+        </account-delete-dialog>
     </v-sheet>
 </template>
   
@@ -56,11 +64,15 @@ import VimuBtn from "~/components/vimu/vimu_button.vue";
 import { $pb, authStore, notificationStore } from "~/store";
 import { ClientResponseError } from "pocketbase";
 import { generateSeed } from "~/utils/string";
+import AccountDeleteDialog from "~/components/dashboard/account_delete_dialog.vue";
+
+
 @Component({
     layout: 'dashboard',
     components: {
         VimuTextField,
-        VimuBtn
+        VimuBtn,
+        AccountDeleteDialog
     },
 })
 export default class AccountPage extends Vue {
@@ -79,6 +91,8 @@ export default class AccountPage extends Vue {
     avatarSeed = $pb.authStore.model?.avatar ?? '';
 
     oauthProvider: string = "";
+
+    deleteConfirmDialog: boolean = false;
 
     async fetch() {
         const result = await $pb.collection('users').listExternalAuths($pb.authStore.model?.id ?? "", { '$autoCancel': false });
@@ -159,8 +173,19 @@ export default class AccountPage extends Vue {
         } finally {
             this.saveLoading = false;
         }
+    }
 
+    async deleteAccount() {
+        if(!$pb.authStore.model) {
+            return;
+        }
+        try {
+            await $pb.collection('users').delete($pb.authStore.model.id);
+            authStore.logout();
+            window.location.href = '/';
+        } catch {
 
+        }
     }
 }
 </script>

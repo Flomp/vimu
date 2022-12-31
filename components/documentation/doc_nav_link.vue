@@ -51,7 +51,7 @@ export default class DocNavLink extends Vue {
 }
 
 .doc-nav-link--bordered {
-    margin-left: 12px;
+    margin-left: 21.5px;
     border-left: 1px solid lightgray
 }
 

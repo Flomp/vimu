@@ -1,6 +1,6 @@
 <template>
   <div style="max-width: 200px">
-    <p class="vimu-card-title">{{ data.name }}</p>
+    <p class="score-title">{{ data.name }}</p>
     <vimu-btn :primary="true" @click="dialog = true" v-if="!readonly">Browse</vimu-btn>
     <source-score-dialog v-model="dialog" @select="selectScore" v-if="!readonly"></source-score-dialog>
   </div>
@@ -61,5 +61,8 @@ export default class SourceScoreControlComponent extends Vue {
 
 
 <style scoped>
-
+.score-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+}
 </style>

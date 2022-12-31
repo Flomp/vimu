@@ -1,11 +1,14 @@
 <template>
     <v-app>
         <vimu-appbar />
-        <docs-drawer v-if="$vuetify.breakpoint.mdAndUp"></docs-drawer>
+        <div class="d-flex">
+            <docs-drawer v-if="$vuetify.breakpoint.mdAndUp"></docs-drawer>
 
-        <v-main class="main">
-            <nuxt />
-        </v-main>
+            <v-main class="main" style="flex: 1 1 auto; min-height:100vh">
+                <nuxt />
+            </v-main>
+        </div>
+
         <vimu-footer />
     </v-app>
 </template>

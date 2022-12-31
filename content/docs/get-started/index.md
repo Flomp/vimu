@@ -6,7 +6,7 @@ In this quickstart guide, you will
 4. Save your results
 
 ## Signup
-First things first: to start using **vimu** you will need to sign up and create an account. Go to <nuxt-link to="/signup">https://vimu.app/signup</nuxt-link>. You can choose to authenticate either with your Google account or by using an email address.
+First things first: to start using **vimu** you will need to sign up and create an account. Go to <nuxt-link to="/signup">https://vimu.app/signup</nuxt-link>. You can choose to authenticate either with your Google account or by using an email address. In the latter case, you will receive an email asking you to verify your email address.
 
 ## Create a file
 Once you have successfully <nuxt-link to="/signup">signed up for **vimu**</nuxt-link> you can start by creating a new file in the dashboard. There are <nuxt-link to="/docs/">multiple ways</nuxt-link> to do this. In this guide, we will simply create a blank file for a start. To do so click the "New File +" button in the <nuxt-link to="/dashboard/files/my">dashboard</nuxt-link>. You are now automatically redirected to the editor to work on the file you just created.

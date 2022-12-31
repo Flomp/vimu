@@ -26,7 +26,6 @@ export default class DocumentationPage extends Vue {
 
     async asyncData({ $content, route }: Context) {        
         const page = await $content(route.path).fetch<IContentDocument>();
-        console.log(page);
         
         return { page }
     }

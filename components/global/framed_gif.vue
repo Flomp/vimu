@@ -1,5 +1,5 @@
 <template>
-  <v-img class="framed-gif" :src="path" />
+  <img class="framed-gif" :src="path" />
 </template>
 
 <script lang="ts">
