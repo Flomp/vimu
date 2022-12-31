@@ -58,6 +58,7 @@ export default class AuthStore extends VuexModule {
                 data.provider.codeVerifier,
                 data.redirectUrl,
                 {
+                    avatar: generateSeed(),
                     emailVisibility: false,
                 }
             )
