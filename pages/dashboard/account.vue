@@ -15,22 +15,23 @@
                     <v-col cols="12" sm="6">
                         <div class="py-5" style="max-width: 400px">
                             <span class="font-weight-bold">Username</span>
-                            <vimu-text-field v-model="username" :rules="usernameRules">
+                            <vimu-text-field v-model="username">
                             </vimu-text-field>
                             <span class="font-weight-bold">Email</span>
-                            <vimu-text-field v-model="email">
+                            <vimu-text-field v-model="email" :disabled="oauthProvider !== ''">
                                 <v-tooltip bottom v-if="verified">
                                     <template v-slot:activator="{ on, attrs }">
                                         <v-icon color="success" v-bind="attrs" v-on="on">
-                                            mdi-check-circle-outline
+                                            mdi-email-check-outline
                                         </v-icon>
                                     </template>
-                                    <span>Verified</span>
+                                    <span v-if="oauthProvider === ''">Verified</span>
+                                    <span v-else>Managed by {{ oauthProvider }}</span>
                                 </v-tooltip>
                                 <v-tooltip bottom v-else>
                                     <template v-slot:activator="{ on, attrs }">
                                         <v-icon color="error" v-bind="attrs" v-on="on">
-                                            mdi-close-circle-outline
+                                            mdi-email-remove-outline
                                         </v-icon>
                                     </template>
                                     <span>Not verified</span>
@@ -54,7 +55,6 @@ import VimuTextField from "~/components/vimu/vimu_text_field.vue";
 import VimuBtn from "~/components/vimu/vimu_button.vue";
 import { $pb, authStore, notificationStore } from "~/store";
 import { ClientResponseError } from "pocketbase";
-import { required } from "~/utils/verification_rules";
 import { generateSeed } from "~/utils/string";
 @Component({
     layout: 'dashboard',
@@ -78,9 +78,14 @@ export default class AccountPage extends Vue {
 
     avatarSeed = $pb.authStore.model?.avatar ?? '';
 
-    usernameRules = [
-        required,
-    ]
+    oauthProvider: string = "";
+
+    async fetch() {
+        const result = await $pb.collection('users').listExternalAuths($pb.authStore.model?.id ?? "", { '$autoCancel': false });
+        if (result.length) {
+            this.oauthProvider = result[0].provider;
+        }
+    }
 
     get emailChanged(): boolean {
         return this.email !== this.currentEmail;
@@ -141,11 +146,13 @@ export default class AccountPage extends Vue {
                 notificationStore.sendNotification({ title: "Profile saved", color: 'primary' })
             }
             this.initValues();
-        } catch (error) {
+        } catch (error: any) {
             if (error instanceof ClientResponseError && error.data.data?.username?.message == "The username is invalid or already in use.") {
                 notificationStore.sendNotification({ title: "Username already in use", color: 'error' })
+            } else if (error instanceof ClientResponseError && error.data.data?.newEmail?.message == "User email already exists.") {
+                notificationStore.sendNotification({ title: "Email already in use", color: 'error' })
             } else {
-                notificationStore.sendNotification({ title: "An error occurred while saveing the profile", color: 'error' })
+                notificationStore.sendNotification({ title: "An error occurred while saving the profile", color: 'error' })
             }
 
             return;
