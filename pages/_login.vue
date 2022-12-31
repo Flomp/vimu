@@ -10,10 +10,10 @@
         <v-col class="fill-height">
             <vimu-flipper :flipped="showSignup">
                 <template v-slot:front>
-                    <login-form @toggle="showSignup = true" :loading="loginLoading" @submit="loginSubmit"></login-form>
+                    <login-form @toggle="showSignup = true" :loading="loginLoading" @submit="loginSubmit" @oauth="oauth"></login-form>
                 </template>
                 <template v-slot:back>
-                    <signup-form @toggle="showSignup = false" :loading="signupLoading" @submit="signupSubmit">
+                    <signup-form @toggle="showSignup = false" :loading="signupLoading" @submit="signupSubmit" @oauth="oauth">
                     </signup-form>
                 </template>
             </vimu-flipper>
@@ -32,9 +32,10 @@ import VimuBtn from "~/components/vimu/vimu_button.vue";
 import VimuTextField from "~/components/vimu/vimu_text_field.vue";
 import LoginForm from "~/components/forms/login_form.vue";
 import SignupForm from "~/components/forms/signup_form.vue";
-import { authStore } from "~/store";
+import { $pb, authStore } from "~/store";
 import VimuFlipper from "~/components/vimu/vimu_flipper.vue";
 import { Context } from "@nuxt/types";
+import { AuthProviderInfo } from "pocketbase";
 
 @Component({
     layout: "default_no_footer",
@@ -56,6 +57,8 @@ export default class LoginPage extends Vue {
 
     signupLoading: boolean = false;
     loginLoading: boolean = false;
+
+    redirectUrl = "https://vimu.app/oauth"
 
     created() {        
         this.showSignup = this.$route.params.login != "login"
@@ -83,6 +86,13 @@ export default class LoginPage extends Vue {
             this.$router.push(authStore.redirectPath)
         }
         this.loginLoading = false;
+    }
+
+    async oauth() {       
+        const methods = await $pb.collection('users').listAuthMethods()
+        const provider = methods.authProviders[0];
+        localStorage.setItem('provider', JSON.stringify(provider));
+        window.location.href = provider.authUrl+this.redirectUrl;
     }
 }
 </script>

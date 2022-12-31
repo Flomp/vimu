@@ -1,3 +1,4 @@
+import { AuthProviderInfo } from 'pocketbase';
 import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators';
 import { generateSeed } from '~/utils/string';
 import { $pb, notificationStore } from '.';
@@ -7,7 +8,7 @@ import { $pb, notificationStore } from '.';
     stateFactory: true,
     namespaced: true,
 })
-export default class LogStore extends VuexModule {
+export default class AuthStore extends VuexModule {
     redirectPath: string = "/dashboard/files/my"
 
     @Mutation
@@ -24,23 +25,44 @@ export default class LogStore extends VuexModule {
             if (user) {
                 await $pb.collection('users').requestVerification(data.email);
                 const userData = await $pb?.collection('users').authWithPassword(data.email, data.password);
-            }else {
+            } else {
                 return false;
             }
-        }catch(error: any) {
+        } catch (error: any) {
             return false;
         }
         return true;
     }
 
     @Action({ rawError: true })
-    async login(data: { email: string, password: string }) : Promise<boolean> {
+    async login(data: { email: string, password: string }): Promise<boolean> {
         try {
             const userData = await $pb?.collection('users').authWithPassword(data.email, data.password);
-        } catch(error: any) {           
-            if(error.status == 400 && error.data?.message == 'Failed to authenticate.') {                
-                notificationStore.sendNotification({title: 'Wrong email or password', color: 'error'})
+        } catch (error: any) {
+            if (error.status == 400 && error.data?.message == 'Failed to authenticate.') {
+                notificationStore.sendNotification({ title: 'Wrong email or password', color: 'error' })
+            } else {
+                notificationStore.sendNotification({ title: 'Error during login', color: 'error' })
             }
+            return false;
+        }
+        return true;
+    }
+
+    @Action({ rawError: true })
+    async oauth(data: { provider: AuthProviderInfo, code: string, redirectUrl: string }) {
+        try {
+            await $pb.collection('users').authWithOAuth2(
+                data.provider.name,
+                data.code,
+                data.provider.codeVerifier,
+                data.redirectUrl,
+                {
+                    emailVisibility: false,
+                }
+            )
+        } catch (error: any) {
+            notificationStore.sendNotification({ title: 'Something went wrong during authentication', color: 'error' })
             return false;
         }
         return true;

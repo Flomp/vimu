@@ -1,6 +1,6 @@
 <template>
     <v-btn class="vimuBtn" :class="{ 'vimuBtn--secondary': !primary }" :outlined="!primary"
-        :color="color" :dark="primary && !disabled" elevation="0" :x-large="xLarge" :large="large" :to="to"
+        :color="color" :dark="primary && !disabled" elevation="0" :x-large="xLarge" :large="large" :to="to" :href="href"
         :loading="loading" :disabled="disabled" :text="text" @click="click">
         <span class="font-weight-bold">
             <slot></slot>
@@ -18,6 +18,7 @@ export default class VimuBtn extends Vue {
     @Prop() readonly large!: boolean;
     @Prop() readonly xLarge!: boolean;
     @Prop() readonly to!: string;
+    @Prop() readonly href!: string;
     @Prop() readonly loading!: boolean;
     @Prop() readonly disabled!: boolean;
     @Prop() readonly text!: boolean;

@@ -16,21 +16,24 @@
             <span class="px-4 vimu-text">or</span>
             <v-divider></v-divider>
         </div>
-        <vimu-btn class="fill-width mt-6">Sign in with Google</vimu-btn>
+        <google-btn class="fill-width mt-6" @click="oauth">Sign in with
+            Google</google-btn>
     </v-form>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Emit, Prop, Ref } from "nuxt-property-decorator";
+import { Component, Emit, Prop, Ref, Vue } from "nuxt-property-decorator";
 import { email } from "~/utils/verification_rules";
 import VimuBtn from "../vimu/vimu_button.vue";
 import VimuTextField from "../vimu/vimu_text_field.vue";
+import GoogleBtn from "./google_btn.vue";
 
 @Component({
     components: {
         VimuBtn,
-        VimuTextField
-    }
+        VimuTextField,
+        GoogleBtn
+    },
 })
 export default class LoginForm extends Vue {
     @Prop() readonly loading!: boolean;
@@ -46,7 +49,7 @@ export default class LoginForm extends Vue {
 
     validateAndSubmit() {
         if (this.form?.validate()) {
-            
+
             this.submit();
         }
     }
@@ -59,6 +62,11 @@ export default class LoginForm extends Vue {
     @Emit()
     submit() {
         return { email: this.email, password: this.password }
+    }
+
+    @Emit()
+    oauth() {              
+        return;
     }
 }
 </script>
