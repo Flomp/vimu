@@ -1,5 +1,5 @@
 <template>
-    <error404 v-if="error.statusCode == 404"></error404>
+    <error404 v-if="error.statusCode != 404"></error404>
     <error500 v-else></error500>
 
 </template>
