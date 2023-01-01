@@ -124,10 +124,15 @@ export default class Editor extends Vue {
   @Watch("showFirstColumn")
   onShowFirstColumnChange(value: boolean) {
     let editorcol = document.getElementById("editor");
-    if (editorcol) {
-      editorcol!.style.gridColumn = value ? "1/2" : "1/4";
-      this.editor?.view.resize()
+    let page = document.getElementById("panel-grid");
+
+    if (value) {
+      editorcol!.style.gridColumn = "1/2";
+      page!.style.gridTemplateColumns = "50% 2px 1fr 2px 300px";
+    } else {
+      editorcol!.style.gridColumn = "1/4";
     }
+    this.editor?.view.resize()
   }
 
   validate({ params }: Context) {
@@ -141,7 +146,7 @@ export default class Editor extends Vue {
 
     if (fileStore.file) {
       console.log("Subscribing...");
-      
+
       $pb.collection('file_data').subscribe<FileData>(fileStore.file.expand.data.id, async (e: RecordSubscription<FileData>) => {
         if (e.action == "update" && this.editor) {
           const fileData = e.record;
@@ -353,10 +358,7 @@ export default class Editor extends Vue {
       osmdStore.setNeedsUpdate(true);
       this.setCursor("auto");
       this.editor!.view.resize();
-    } else
-      if (this.isUpperDragging) {
-
-      }
+    }
     this.isLeftDragging = false;
     this.isRightDragging = false;
     this.isUpperDragging = false;
@@ -370,22 +372,31 @@ export default class Editor extends Vue {
       let leftcol = document.getElementById("editor");
       let rightcol = document.getElementById("details");
 
-      let leftColWidth = this.isLeftDragging ? event.clientX : leftcol!.clientWidth;
-      let rightColWidth = this.isRightDragging ? page!.clientWidth - event.clientX : rightcol!.clientWidth;
-
       const dragbarWidth = 2;
+      const pageWidth = page!.clientWidth;
+
+      let leftColWidth = this.isLeftDragging ? event.clientX : leftcol!.clientWidth;
+      let rightColWidth = rightcol!.clientWidth;
+
+      if (this.isRightDragging) {
+        rightColWidth = page!.clientWidth - event.clientX;
+      } else if (!this.showFirstColumn) {
+        rightColWidth = pageWidth - dragbarWidth - leftColWidth;
+      }
+
+      let centerColWidth = this.showFirstColumn ? pageWidth - (2 * dragbarWidth) - leftColWidth - rightColWidth : 0;
 
       let cols = [
-        leftColWidth,
-        dragbarWidth,
-        page!.clientWidth - (2 * dragbarWidth) - leftColWidth - rightColWidth,
-        dragbarWidth,
-        rightColWidth
+        (leftColWidth / pageWidth) * 100 + "%",
+        dragbarWidth + "px",
+        (centerColWidth / pageWidth) * 100 + "%",
+        dragbarWidth + "px",
+        (rightColWidth / pageWidth) * 100 + "%",
       ];
 
-      let newColDefn = cols.map(c => c.toString() + "px").join(" ");
+      let newColDefn = cols.join(" ");
 
-      if (cols[0] > 200 && cols[2] > 200 && cols[4] > 128) {
+      if (leftColWidth > 200 && (!this.showFirstColumn || centerColWidth > 200) && rightColWidth > 128) {
         page!.style.gridTemplateColumns = newColDefn;
       }
 
@@ -448,6 +459,8 @@ export default class Editor extends Vue {
 #details {
   grid-row: 1/4;
   grid-column: 5/6;
+  background-color: white;
+  z-index: 1;
 }
 
 #score {
