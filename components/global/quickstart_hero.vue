@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { Vue, Component } from "nuxt-property-decorator";
-import BunnyTeacher from "../vimu/bunny_teacher.vue";
+import BunnyTeacher from "../vimu/illustrations/bunny_teacher.vue";
 import VimuBtn from "../vimu/vimu_button.vue";
 
 @Component({

@@ -101,9 +101,9 @@ import IndexHeroComponent from "~/components/index/rete/components/index/index_h
 import VimuArticle from "~/components/vimu/vimu_article.vue";
 import VimuCard from "~/components/vimu/vimu_card.vue"
 import Terminal from "~/components/index/terminal.vue"
-import SpeedCarrot from "~/components/vimu/speed_carrot.vue";
-import MatrixBunny from "~/components/vimu/matrix_bunny.vue";
-import BunnyDeadCarrot from "~/components/vimu/bunny_dead_carrot.vue";
+import SpeedCarrot from "~/components/vimu/illustrations/speed_carrot.vue";
+import MatrixBunny from "~/components/vimu/illustrations/matrix_bunny.vue";
+import BunnyDeadCarrot from "~/components/vimu/illustrations/bunny_dead_carrot.vue";
 //@ts-ignore
 import Typewriter from 'typewriter-effect/dist/core';
 

@@ -47,7 +47,7 @@
 <script lang="ts">
 import { Vue, Component, ProvideReactive } from "nuxt-property-decorator";
 import VimuBtn from "./vimu_button.vue";
-import Logo from "./logo.vue";
+import Logo from "./illustrations/logo.vue";
 import VimuProfileMenu from "./vimu_profile_menu.vue";
 import { $pb } from "~/store";
 import DocumentationNavigation from "../documentation/documentation_navigation.vue";

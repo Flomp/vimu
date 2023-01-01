@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import { Vue, Component } from "nuxt-property-decorator";
-import BunnySherlock from "../vimu/bunny_sherlock.vue";
+import BunnySherlock from "../vimu/illustrations/bunny_sherlock.vue";
 
 @Component({
     components: {

@@ -9,8 +9,8 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "nuxt-property-decorator";
 import { NodeEditor } from "rete";
-import Bunny from "~/components/vimu/bunny.vue";
-import HappyBunny from "~/components/vimu/happy_bunny.vue";
+import Bunny from "~/components/vimu/illustrations/bunny.vue";
+import HappyBunny from "~/components/vimu/illustrations/happy_bunny.vue";
 
 @Component({
     components: {

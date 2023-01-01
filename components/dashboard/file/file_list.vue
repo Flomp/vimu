@@ -60,7 +60,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, Emit } from "nuxt-property-decorator";
-import BunnyWanted from "~/components/vimu/bunny_wanted.vue";
+import BunnyWanted from "~/components/vimu/illustrations/bunny_wanted.vue";
 import { File } from "~/models/file";
 import { ViewType } from "~/models/view";
 import SearchEmptyState from "../search_empty_state.vue";

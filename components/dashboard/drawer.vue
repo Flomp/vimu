@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { Vue, Component } from "nuxt-property-decorator";
-import Logo from "../vimu/logo.vue";
+import Logo from "../vimu/illustrations/logo.vue";
 import DashboardNavigation from "./navigation.vue";
 
 @Component({

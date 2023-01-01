@@ -34,7 +34,7 @@
 
 <script lang="ts">
 import { Vue, Component } from "nuxt-property-decorator";
-import Logo from "./logo.vue";
+import Logo from "./illustrations/logo.vue";
 @Component({
     components: {
         Logo

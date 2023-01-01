@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "nuxt-property-decorator";
-import Bunny from "~/components/vimu/bunny.vue";
+import Bunny from "~/components/vimu/illustrations/bunny.vue";
 import { authStore } from "~/store";
 
 @Component({

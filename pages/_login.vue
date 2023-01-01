@@ -23,11 +23,11 @@
 
 <script lang="ts">
 import { Component, Vue } from "nuxt-property-decorator";
-import BunnyBalloon from "~/components/vimu/bunny_balloon.vue";
-import CarrotBalloon from "~/components/vimu/carrot_balloon.vue";
-import Cloud1 from "~/components/vimu/cloud1.vue";
-import Cloud2 from "~/components/vimu/cloud2.vue";
-import Cloud3 from "~/components/vimu/cloud3.vue";
+import BunnyBalloon from "~/components/vimu/illustrations/bunny_balloon.vue";
+import CarrotBalloon from "~/components/vimu/illustrations/carrot_balloon.vue";
+import Cloud1 from "~/components/vimu/illustrations/cloud1.vue";
+import Cloud2 from "~/components/vimu/illustrations/cloud2.vue";
+import Cloud3 from "~/components/vimu/illustrations/cloud3.vue";
 import VimuBtn from "~/components/vimu/vimu_button.vue";
 import VimuTextField from "~/components/vimu/vimu_text_field.vue";
 import LoginForm from "~/components/forms/login_form.vue";

@@ -63,7 +63,7 @@
 import { Vue, Component, Prop } from "nuxt-property-decorator";
 import { File } from "~/models/file";
 import { fileStore } from "~/store";
-import Logo from "../vimu/logo.vue";
+import Logo from "../vimu/illustrations/logo.vue";
 
 @Component({
     components: {
