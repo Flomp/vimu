@@ -10,9 +10,19 @@
                 <v-row class="align-center justify-space-between py-5">
                     <v-col cols="12" md="auto">
                         <vimu-btn class="mt-3 mt-sm-0" :primary="true" :large="true" @click="createFile()">New file
-                            <v-icon>
-                                mdi-plus</v-icon>
                         </vimu-btn>
+                        <v-menu content-class="vimu-menu elevation-0" nudge-bottom="6" offset-y>
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn color="primary" dark v-bind="attrs" v-on="on" icon>
+                                    <v-icon>mdi-chevron-down</v-icon>
+                                </v-btn>
+                            </template>
+                            <v-list dense>
+                                <v-list-item @click="importFile">
+                                    Import File
+                                </v-list-item>
+                            </v-list>
+                        </v-menu>
                     </v-col>
                     <v-col cols="auto">
                         <div class="d-flex align-center">
@@ -64,7 +74,7 @@ import VimuTextField from "~/components/vimu/vimu_text_field.vue";
 
 import { File } from "~/models/file";
 import { ViewType } from "~/models/view";
-import { $pb, fileStore } from "~/store";
+import { $pb, fileStore, notificationStore } from "~/store";
 
 
 @Component({
@@ -190,8 +200,8 @@ export default class FilesPage extends Vue {
         this.listLoading = false;
     }
 
-    async createFile(file?: File, navigate: boolean = true) {
-        const newFile = await fileStore.create(file);
+    async createFile(file?: File, name?: string, navigate: boolean = true) {
+        const newFile = await fileStore.create({template: file, name: name});
         if (newFile === null) {
             return;
         }
@@ -202,8 +212,51 @@ export default class FilesPage extends Vue {
         }
     }
 
+    async importFile() {
+        var input = document.createElement('input');
+        input.type = 'file';
+
+        input.onchange = e => {
+            const file = (e.target as HTMLInputElement)?.files![0];
+
+            const reader = new FileReader();
+            reader.readAsText(file);
+
+            reader.onload = readerEvent => {
+                var content = readerEvent.target?.result;
+                if (!content || content instanceof ArrayBuffer) {
+                    notificationStore.sendNotification({ title: 'Unable to import file', color: 'error' })
+                    return;
+                }
+                try {
+                    const data = JSON.parse(content);
+                    if (data.id !== "vimu@0.1.0" ||
+                        !(data.nodes instanceof Object) || data.nodes instanceof Array) {
+                        throw new Error()
+                    }
+                    const importedFile = {
+                        expand: {
+                            data: {
+                                json: content
+                            }
+                        }
+                    }
+
+                    this.createFile(importedFile as any, file.name.replace(/\.[^/.]+$/, ""), false);
+                } catch (e) {
+                    notificationStore.sendNotification({ title: 'Not a valid vimu file', color: 'error' })
+                    return;
+                }
+
+            }
+
+        }
+
+        input.click();
+    }
+
     async duplicateFile(file: File) {
-        await this.createFile(file, false);
+        await this.createFile(file, undefined, false);
     }
 
 

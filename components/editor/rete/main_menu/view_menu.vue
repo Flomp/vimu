@@ -59,7 +59,7 @@ export default class ViewMenu extends Vue {
         divider: true,
       },
       {
-        name: "Score",
+        name: "Output",
         key: "view_score",
         selected: settingsStore.settings.view.score,
       },

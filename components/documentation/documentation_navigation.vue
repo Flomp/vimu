@@ -15,6 +15,15 @@
         <doc-nav-link to="/docs/dashboard/account">Account</doc-nav-link>
       </template>
     </doc-nav-link>
+    <doc-nav-link to="/docs/editor" :main="true">
+      <template v-slot:default> Editor</template>
+      <template v-slot:sub-items>
+        <doc-nav-link to="/docs/editor/node-panel">Node Panel</doc-nav-link>
+        <doc-nav-link to="/docs/editor/output-panel">Output Panel</doc-nav-link>
+        <doc-nav-link to="/docs/editor/details-panel">Details Panel</doc-nav-link>
+        <doc-nav-link to="/docs/editor/menu">Menu</doc-nav-link>
+      </template>
+    </doc-nav-link>
   </div>
 
 </template>

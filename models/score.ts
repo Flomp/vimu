@@ -23,6 +23,16 @@ interface ScoreMeta {
     times?: string;
 }
 
+interface ScoreFilter {
+    composer?: string[];
+    date?: string[];
+    instruments?: string[];
+    keys?: string[];
+    language?: string[];
+    opus?: string[];
+    times?: string[];
+}
+
 const empty_score_meta: ScoreMeta = {
     composer: "",
     date: "",
@@ -48,4 +58,4 @@ const empty_score: Score = {
 
 
 
-export { Score, ScoreMeta, empty_score, empty_score_meta }
+export { Score, ScoreMeta, ScoreFilter, empty_score, empty_score_meta }

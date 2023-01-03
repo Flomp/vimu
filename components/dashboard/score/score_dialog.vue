@@ -21,7 +21,7 @@
                         </v-file-input>
                         <v-switch label="Public" v-model="scoreLocal.public" inset>
                         </v-switch>
-                        <v-menu class="white" open-on-hover bottom offset-y content-class="vimu-menu">
+                        <v-menu class="white" open-on-hover bottom offset-y content-class="vimu-menu elevation-0">
                             <template v-slot:activator="{ on, attrs }">
                                 <v-btn style="margin-top: 14px" v-bind="attrs" v-on="on" icon>
                                     <v-icon>mdi-help-circle-outline</v-icon>

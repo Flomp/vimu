@@ -11,6 +11,7 @@
     :placeholder="placeholder"
     :small-chips="chips"
     :multiple="multiple"
+    :prepend-icon="prependIcon"
     appendIcon=""
     validate-on-blur
     outlined
@@ -32,6 +33,7 @@ export default class VimuCombobox extends Vue {
     @Prop() readonly placeholder!: string;
     @Prop() readonly chips!: boolean;
     @Prop() readonly multiple!: boolean;
+    @Prop() readonly prependIcon!: string;
 
     @Emit()
     change(value: any) {

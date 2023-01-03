@@ -3,12 +3,10 @@
         <v-container class="pt-0">
             <div class="header-section pt-4">
                 <div class="d-flex align-center mb-8">
-                    <vimu-searchbar v-model="filters.query" :hide-details="true" @update="search"
+                    <vimu-searchbar id="score-searchbar" v-model="filters.query" :hide-details="true" @update="search"
                         style="max-width: 400px;">
                     </vimu-searchbar>
-                    <v-btn class="mx-5" icon>
-                        <v-icon color="primary">mdi-tune</v-icon>
-                    </v-btn>
+                    <score-filter-menu v-model="filters.scoreFilter" @change="list"></score-filter-menu>
                     <v-spacer></v-spacer>
                 </div>
                 <span class="vimu-title">Scores</span>
@@ -39,7 +37,7 @@
             <client-only>
                 <score-list :scores="scores" :loading="listLoading || nextPageLoading" :initialLoading="listLoading"
                     :nextPageLoading="nextPageLoading" @create="createFile" @edit="openEditDialog"
-                    :searching="filters.query.length > 0" :view-type="viewType" @remove="showDeleteConfirm"
+                    :searching="searching" :view-type="viewType" @remove="showDeleteConfirm"
                     @click="setDrawerScore" @next="nextPage">
                 </score-list>
             </client-only>
@@ -62,12 +60,13 @@ import ConfirmDialog from "~/components/dashboard/confirm_dialog.vue";
 import ScoreCard from "~/components/dashboard/score/score_card.vue";
 import ScoreDialog from "~/components/dashboard/score/score_dialog.vue";
 import ScoreDrawer from "~/components/dashboard/score/score_drawer.vue";
+import ScoreFilterMenu from "~/components/dashboard/score/score_filter_menu.vue";
 import ScoreList from "~/components/dashboard/score/score_list.vue";
 import VimuBtn from "~/components/vimu/vimu_button.vue";
 import VimuSearchbar from "~/components/vimu/vimu_searchbar.vue";
 import VimuTabs from "~/components/vimu/vimu_tabs.vue";
 import VimuTextField from "~/components/vimu/vimu_text_field.vue";
-import { Score } from "~/models/score";
+import { Score, ScoreFilter } from "~/models/score";
 import { ViewType } from "~/models/view";
 import { $pb, fileStore, scoreStore } from "~/store";
 
@@ -83,7 +82,8 @@ import { $pb, fileStore, scoreStore } from "~/store";
         ScoreDrawer,
         VimuSearchbar,
         ConfirmDialog,
-        ScoreList
+        ScoreList,
+        ScoreFilterMenu
     }
 })
 export default class ScoresPage extends Vue {
@@ -104,7 +104,16 @@ export default class ScoresPage extends Vue {
 
     filters = {
         tab: `owner="${$pb.authStore.model?.id}"`,
-        query: ""
+        query: "",
+        scoreFilter: <ScoreFilter>{
+            composer: [],
+            opus: [],
+            date: [],
+            instruments: [],
+            keys: [],
+            times: [],
+            language: [],
+        }
     }
 
     sort: string = "name";
@@ -130,7 +139,25 @@ export default class ScoresPage extends Vue {
         if (this.filters.query) {
             filter += '&&' + this.filters.query;
         }
+        for (const key of Object.keys(this.filters.scoreFilter)) {
+            const filterWords = this.filters.scoreFilter[key as keyof ScoreFilter];
+            if (!filterWords?.length) {
+                continue;
+            }
+            filter += "&&("
+            for (const filterWord of filterWords!) {
+                filter += `meta.${key}~"${filterWord}"||`
+            }
+            filter = filter.slice(0, -2)
+            filter += ")"
+        }
         return filter
+    }
+
+    get searching(): boolean {
+        return this.filters.query.length > 0 ||
+            Object.keys(this.filters.scoreFilter).some(k => this.filters.scoreFilter[k as keyof ScoreFilter]!.length > 0)
+
     }
 
     @Watch("viewNumber")
@@ -193,7 +220,7 @@ export default class ScoresPage extends Vue {
         if (!value) {
             this.filters.query = ""
         } else {
-            this.filters.query = `(name~"${value}"||meta.composer~"${value}")`
+            this.filters.query = `(name~"${value}")`
         }
         this.currentPage = 1;
         this.list(true);

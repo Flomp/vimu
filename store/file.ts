@@ -70,10 +70,10 @@ export default class LogStore extends VuexModule {
     }
 
     @Action
-    async create(template?: File): Promise<File | null> {
+    async create(data: {template?: File, name?: string}): Promise<File | null> {
         try {
-            const name = generateName();
-            const json = template !== undefined ? template!.expand.data.json : '{"id":"vimu@0.1.0","nodes":{"1":{"id":1,"data":{},"inputs":{"in_0":{"connections":[{"node":24,"output":"out_0","data":{}}]}},"outputs":{},"position":[156,-1],"name":"output"},"24":{"id":24,"data":{},"inputs":{},"outputs":{"out_0":{"connections":[{"node":1,"input":"in_0","data":{}}]}},"position":[-119.5,-41],"name":"source_score"}}}'
+            const name = data.name ?? generateName();
+            const json = data.template !== undefined ? data.template!.expand.data.json : '{"id":"vimu@0.1.0","nodes":{"1":{"id":1,"data":{},"inputs":{"in_0":{"connections":[{"node":24,"output":"out_0","data":{}}]}},"outputs":{},"position":[156,-1],"name":"output"},"24":{"id":24,"data":{},"inputs":{},"outputs":{"out_0":{"connections":[{"node":1,"input":"in_0","data":{}}]}},"position":[-119.5,-41],"name":"source_score"}}}'
             const fileData: FileData = await $pb.collection('file_data').create<FileData>({ json: json })
             const file: File = await $pb.collection('files').create<File>({ name: name, owner: $pb.authStore.model!.id, data: fileData.id }, { expand: 'data,collaborators.user' })
 

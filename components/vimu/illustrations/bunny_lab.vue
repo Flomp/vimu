@@ -132,7 +132,7 @@ export default class BunnyLab extends Vue {
 }
 </script>
 
-<style scoped>
+<style>
 @keyframes plume {
 
     0% {
@@ -158,6 +158,10 @@ export default class BunnyLab extends Vue {
 
 .plume-big {
     animation: plume 5s linear 0s infinite;
+}
+
+.plume-medium {
+    animation: plume 4s linear 1s infinite;
 }
 
 .plume-small {
