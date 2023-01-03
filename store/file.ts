@@ -4,14 +4,14 @@ import { Action, Module, Mutation, MutationAction, VuexModule } from 'vuex-modul
 import { File, example_files, FileData, FilePermission } from '~/models/file';
 import { Score } from '~/models/score';
 import { generateName } from '~/utils/string';
-import { $pb, fileStore, notificationStore } from '.';
+import { $pb, fileStore, historyStore, notificationStore } from '.';
 
 @Module({
     name: 'file',
     stateFactory: true,
     namespaced: true,
 })
-export default class LogStore extends VuexModule {
+export default class FileStore extends VuexModule {
     files: File[] = []
     favorites: File[] = []
     file: File | null = null;
@@ -63,6 +63,7 @@ export default class LogStore extends VuexModule {
             }
             const response = await $pb.collection('files').getOne<File>(id, { expand: 'data,collaborators.user' })
             fileStore.updateClient({ id: id, updatedFile: response })
+            historyStore.add(response.expand.data.json)
             return { file: response }
         } catch (error) {
             return { file: null }
@@ -70,7 +71,7 @@ export default class LogStore extends VuexModule {
     }
 
     @Action
-    async create(data: {template?: File, name?: string}): Promise<File | null> {
+    async create(data: { template?: File, name?: string }): Promise<File | null> {
         try {
             const name = data.name ?? generateName();
             const json = data.template !== undefined ? data.template!.expand.data.json : '{"id":"vimu@0.1.0","nodes":{"1":{"id":1,"data":{},"inputs":{"in_0":{"connections":[{"node":24,"output":"out_0","data":{}}]}},"outputs":{},"position":[156,-1],"name":"output"},"24":{"id":24,"data":{},"inputs":{},"outputs":{"out_0":{"connections":[{"node":1,"input":"in_0","data":{}}]}},"position":[-119.5,-41],"name":"source_score"}}}'
@@ -113,13 +114,37 @@ export default class LogStore extends VuexModule {
     @Action
     async updateData(data: { id: string, json: string }): Promise<FileData | null> {
         try {
-            fileStore.setData(JSON.parse(data.json));
+            const parsedData = JSON.parse(data.json);
+            historyStore.add(parsedData)
+            fileStore.setData(parsedData);
             const updatedFileData: FileData = await $pb.collection('file_data').update(data.id, { json: data.json })
             return updatedFileData;
         } catch (error) {
-            notificationStore.sendNotification({ title: 'Error updating file', color: 'error' })
+            notificationStore.sendNotification({ title: 'Error updating file data', color: 'error' })
             return null;
         }
+    }
+
+    @Action
+    async undo() {
+        const newData = await historyStore.undo();
+        if (!newData) {
+            return;
+        }
+        fileStore.setData(newData);
+
+        return newData;
+    }
+
+    @Action
+    async redo() {
+        const newData = await historyStore.redo();
+        if (!newData) {
+            return;
+        }
+        fileStore.setData(newData);
+
+        return newData;
     }
 
     @Mutation

@@ -32,8 +32,6 @@ import ConnectionPlugin from "rete-connection-plugin";
 // @ts-ignore
 import MinimapPlugin from "rete-minimap-plugin";
 // @ts-ignore
-import HistoryPlugin from "rete-history-plugin";
-// @ts-ignore
 import AutoArrangePlugin from 'rete-auto-arrange-plugin';
 
 import Vuetify from "vuetify";
@@ -218,7 +216,7 @@ export default class Editor extends Vue {
       },
     });
     editor.use(MinimapPlugin);
-    editor.use(HistoryPlugin, { keyboard: false });
+    //editor.use(HistoryPlugin, { keyboard: false });
     const [w, h] = [
       editor.view.container.clientWidth,
       editor.view.container.clientHeight,
@@ -310,6 +308,20 @@ export default class Editor extends Vue {
       return source !== "dblclick";
     });
 
+    editor.bind('undo');
+    editor.bind('redo');
+    editor.on("undo" as any, async () => {
+      await fileStore.undo();
+      await editor.fromJSON(JSON.parse(JSON.stringify(fileStore.file!.expand.data.json)))
+      engineStore.process(editor.toJSON());
+    });
+
+    editor.on("redo" as any, async () => {
+      await fileStore.redo();
+      await editor.fromJSON(JSON.parse(JSON.stringify(fileStore.file!.expand.data.json)))
+      engineStore.process(editor.toJSON());
+    });
+
     this.editor = editor;
     osmdStore.setNeedsUpdate(true);
   }
@@ -324,10 +336,7 @@ export default class Editor extends Vue {
       return null
     }
 
-    let deepCopy: Data;
-    deepCopy = JSON.parse(JSON.stringify(fileStore.file!.expand.data.json))
-
-    return deepCopy;
+    return JSON.parse(JSON.stringify(fileStore.file!.expand.data.json));
   }
 
   setCursor(cursor: CSSStyleDeclaration["cursor"]) {
