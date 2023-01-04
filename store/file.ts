@@ -1,10 +1,10 @@
 import { Data } from 'rete/types/core/data';
 import Vue from 'vue';
 import { Action, Module, Mutation, MutationAction, VuexModule } from 'vuex-module-decorators';
-import { File, example_files, FileData, FilePermission } from '~/models/file';
+import { example_files, File, FileData, FilePermission } from '~/models/file';
 import { Score } from '~/models/score';
 import { generateName } from '~/utils/string';
-import { $pb, fileStore, historyStore, notificationStore } from '.';
+import { $pb, fileStore, notificationStore } from '.';
 
 @Module({
     name: 'file',
@@ -63,7 +63,6 @@ export default class FileStore extends VuexModule {
             }
             const response = await $pb.collection('files').getOne<File>(id, { expand: 'data,collaborators.user' })
             fileStore.updateClient({ id: id, updatedFile: response })
-            historyStore.add(response.expand.data.json)
             return { file: response }
         } catch (error) {
             return { file: null }
@@ -114,37 +113,13 @@ export default class FileStore extends VuexModule {
     @Action
     async updateData(data: { id: string, json: string }): Promise<FileData | null> {
         try {
-            const parsedData = JSON.parse(data.json);
-            historyStore.add(parsedData)
-            fileStore.setData(parsedData);
+            fileStore.setData(JSON.parse(data.json));
             const updatedFileData: FileData = await $pb.collection('file_data').update(data.id, { json: data.json })
             return updatedFileData;
         } catch (error) {
             notificationStore.sendNotification({ title: 'Error updating file data', color: 'error' })
             return null;
         }
-    }
-
-    @Action
-    async undo() {
-        const newData = await historyStore.undo();
-        if (!newData) {
-            return;
-        }
-        fileStore.setData(newData);
-
-        return newData;
-    }
-
-    @Action
-    async redo() {
-        const newData = await historyStore.redo();
-        if (!newData) {
-            return;
-        }
-        fileStore.setData(newData);
-
-        return newData;
     }
 
     @Mutation

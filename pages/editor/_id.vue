@@ -33,6 +33,7 @@ import ConnectionPlugin from "rete-connection-plugin";
 import MinimapPlugin from "rete-minimap-plugin";
 // @ts-ignore
 import AutoArrangePlugin from 'rete-auto-arrange-plugin';
+import HistoryPlugin from "~/plugins/rete/history"
 
 import Vuetify from "vuetify";
 import AnalysisAmbitusComponent from "~/components/editor/rete/components/analysis/analysis_ambitus_component";
@@ -149,9 +150,7 @@ export default class Editor extends Vue {
         if (e.action == "update" && this.editor) {
           const fileData = e.record;
           if (JSON.stringify(fileStore.file?.expand.data.json) !== JSON.stringify(fileData.json)) {
-            fileStore.setData(fileData.json);
-            await this.editor.fromJSON(fileData.json);
-            engineStore.process(this.editor.toJSON());
+            this.editor.trigger('setdata' as any, { data: fileData.json, updateBackend: false });
           }
         }
       });
@@ -186,6 +185,7 @@ export default class Editor extends Vue {
     console.log("Unsubscribing...");
 
     $pb.collection('file_data').unsubscribe();
+    this.editor?.trigger('clearhistory' as any);
   }
 
   async initEditor() {
@@ -216,7 +216,8 @@ export default class Editor extends Vue {
       },
     });
     editor.use(MinimapPlugin);
-    //editor.use(HistoryPlugin, { keyboard: false });
+    editor.use(HistoryPlugin);
+
     const [w, h] = [
       editor.view.container.clientWidth,
       editor.view.container.clientHeight,
@@ -258,8 +259,10 @@ export default class Editor extends Vue {
     }
 
     const data = await this.loadData();
+
     if (data) {
-      await editor!.fromJSON(data)
+      editor.trigger('addhistory' as any, data);
+      await editor.fromJSON(data)
       zoomAt(editor)
       await engineStore.process(editor.toJSON());
     }
@@ -297,9 +300,10 @@ export default class Editor extends Vue {
         "connectioncreated",
         "connectionremoved",
       ],
-      async () => {
+      async (source) => {
         if (fileStore.file != null && !fileStore.readonly && !Object.keys(example_files).includes(fileStore.file.id) && !this.editor?.silent) {
-          fileStore.updateData({ id: fileStore.file.data, json: JSON.stringify(this.editor?.toJSON()) })
+          editor.trigger('addhistory' as any, editor.toJSON());
+          fileStore.updateData({ id: fileStore.file.data, json: JSON.stringify(editor.toJSON()) })
         }
       }
     );
@@ -308,18 +312,17 @@ export default class Editor extends Vue {
       return source !== "dblclick";
     });
 
-    editor.bind('undo');
-    editor.bind('redo');
-    editor.on("undo" as any, async () => {
-      await fileStore.undo();
-      await editor.fromJSON(JSON.parse(JSON.stringify(fileStore.file!.expand.data.json)))
-      engineStore.process(editor.toJSON());
-    });
-
-    editor.on("redo" as any, async () => {
-      await fileStore.redo();
-      await editor.fromJSON(JSON.parse(JSON.stringify(fileStore.file!.expand.data.json)))
-      engineStore.process(editor.toJSON());
+    editor.bind('setdata');
+    editor.on('setdata' as any, async ({ data, updateBackend }: { data: Data, updateBackend: boolean }) => {
+      if(!data) {
+        return;
+      }
+      fileStore.setData(data);
+      await editor.fromJSON(JSON.parse(JSON.stringify(data)));
+      await engineStore.process(editor.toJSON());
+      if (updateBackend && fileStore.file != null) {
+        fileStore.updateData({ id: fileStore.file.data, json: JSON.stringify(editor.toJSON()) })
+      }
     });
 
     this.editor = editor;
