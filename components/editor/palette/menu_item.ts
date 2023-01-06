@@ -61,6 +61,18 @@ const editorMenuItems: MenuItem[] = [
                 { name: "Transpose", key: "transform_transpose" },
             ],
     },
+    {
+        name: "Plot",
+        children:
+            [
+                { name: "Bar Plot", key: "plot_bar" },
+                { name: "Weighted Bar Plot", key: "plot_bar_weighted" },
+                { name: "Histogram", key: "plot_histogram" },
+                { name: "Scatter Plot", key: "plot_scatter" },
+                { name: "Weighted Scatter Plot", key: "plot_scatter_weighted" },
+
+            ],
+    },
 
 ];
 

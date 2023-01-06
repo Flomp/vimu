@@ -1,7 +1,7 @@
 import { Node } from 'rete';
 import { Data } from 'rete/types/core/data';
 import { Module, Mutation, MutationAction, VuexModule } from 'vuex-module-decorators';
-import { $axios } from '.';
+import { $axios, engineStore, settingsStore } from '.';
 
 @Module({
     name: 'engine',
@@ -11,6 +11,7 @@ import { $axios } from '.';
 export default class EngineStore extends VuexModule {
     loading: boolean = false;
     data: string = "";
+    plots: string[] = [];
     error: { message: string, node: Node } | null = null
 
     @Mutation
@@ -18,14 +19,21 @@ export default class EngineStore extends VuexModule {
         this.loading = loading
     }
 
-    @MutationAction({ mutate: ['data', 'error'] })
+    @MutationAction({ mutate: ['data', 'plots', 'error'] })
     async process(data: Data) {
         try {
             const result = await $axios.post('/engine', data);
-            return result.data;
-        } catch {
+            
             return {
-                data: ""
+                data: result.data.data?.output ?? engineStore.data,
+                plots: result.data.data?.plots ?? engineStore.plots,
+                error: result.data.error
+            };
+        } catch (e) {
+            return {
+                data: "",
+                plots: [],
+                error: null
             }
         }
     }

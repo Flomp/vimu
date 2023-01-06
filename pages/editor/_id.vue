@@ -10,12 +10,12 @@
           <OSMD-panel></OSMD-panel>
         </client-only>
       </div>
-      <div id="logDragbar" class="horizontal-dragbar" v-show="showScore && showLog" @mousedown="startUpperDrag"></div>
+      <div id="plotDragbar" class="horizontal-dragbar" v-show="showScore && showPlot" @mousedown="startUpperDrag"></div>
 
       <div class="vertical-dragbar" v-if="showFirstColumn" @mousedown="startRightDrag"></div>
 
-      <div id="log" v-show="showLog">
-        <log-panel></log-panel>
+      <div id="plot" v-show="showPlot">
+        <plot-panel></plot-panel>
       </div>
       <div id="details" class="pa-0">
         <details-panel />
@@ -54,10 +54,10 @@ import SourceTinynotationComponent from "~/components/editor/rete/components/sou
 import TransformChordifyComponent from "~/components/editor/rete/components/transform/transform_chordify_component";
 import TransformFlattenComponent from "~/components/editor/rete/components/transform/transform_flatten_component";
 import TransformTransposeComponent from "~/components/editor/rete/components/transform/transform_transpose_component";
+import PlotBarComponent from "~/components/editor/rete/components/plot/plot_bar_component";
 
 import DetailsPanel from "~/components/editor/panels/details_panel.vue";
 import EditorPanel from "~/components/editor/panels/editor_panel.vue";
-import LogPanel from "~/components/editor/panels/log_panel.vue";
 import OSMDPanel from "~/components/editor/panels/osmd_panel.vue";
 
 import { $pb, authStore, engineStore, fileStore, osmdStore, settingsStore } from "~/store";
@@ -68,6 +68,11 @@ import { Context } from "@nuxt/types";
 import { example_files, File, FileData } from "~/models/file";
 import { Data } from "rete/types/core/data";
 import { RecordSubscription } from "pocketbase";
+import PlotHistogramComponent from "~/components/editor/rete/components/plot/plot_histogram_component";
+import PlotPanel from "~/components/editor/panels/plot_panel.vue";
+import PlotScatterComponent from "~/components/editor/rete/components/plot/plot_scatter_component";
+import PlotScatterWeightedComponent from "~/components/editor/rete/components/plot/plot_scatter_weighted_component";
+import PlotBarWeightedComponent from "~/components/editor/rete/components/plot/plot_bar_weighted";
 
 @Component({
   layout: "editor",
@@ -76,7 +81,7 @@ import { RecordSubscription } from "pocketbase";
     EditorPanel,
     DetailsPanel,
     OSMDPanel,
-    LogPanel
+    PlotPanel
   },
 })
 export default class Editor extends Vue {
@@ -92,27 +97,27 @@ export default class Editor extends Vue {
   }
 
   get showFirstColumn() {
-    return settingsStore.settings.view.score || settingsStore.settings.view.log;
+    return settingsStore.settings.view.score || settingsStore.settings.view.plot;
   }
 
   get showScore() {
     return settingsStore.settings.view.score;
   }
 
-  get showLog() {
-    return settingsStore.settings.view.log;
+  get showPlot() {
+    return settingsStore.settings.view.plot;
   }
 
   @Watch("showScore")
   onShowScoreChange(value: boolean) {
-    let bottomcol = document.getElementById("log");
+    let bottomcol = document.getElementById("plot");
     if (bottomcol) {
       bottomcol.style.gridRow = value ? "3/4" : "1/4";
     }
   }
 
-  @Watch("showLog")
-  onShowLogChange(value: boolean) {
+  @Watch("showPlot")
+  onShowPlotChange(value: boolean) {
     let bottomcol = document.getElementById("score");
     if (bottomcol) {
       bottomcol!.style.gridRow = value ? "1/2" : "1/4";
@@ -127,7 +132,7 @@ export default class Editor extends Vue {
 
     if (value) {
       editorcol!.style.gridColumn = "1/2";
-      page!.style.gridTemplateColumns = "50% 2px 1fr 2px 300px";
+      page!.style.gridTemplateColumns = "50% 2px calc(50% - 304px) 2px 300px";
     } else {
       editorcol!.style.gridColumn = "1/4";
     }
@@ -175,8 +180,8 @@ export default class Editor extends Vue {
     if (!this.showScore) {
       this.onShowScoreChange(false)
     }
-    if (!this.showLog) {
-      this.onShowLogChange(false)
+    if (!this.showPlot) {
+      this.onShowPlotChange(false)
     }
   }
 
@@ -249,6 +254,11 @@ export default class Editor extends Vue {
       new DetectModulationComponent(editor),
       new DetectParallelsComponent(editor),
       new DetectVoiceCrossingsComponent(editor),
+      new PlotBarComponent(editor),
+      new PlotHistogramComponent(editor),
+      new PlotScatterComponent(editor),
+      new PlotScatterWeightedComponent(editor),
+      new PlotBarWeightedComponent(editor),
       out
 
     ];
@@ -440,7 +450,7 @@ export default class Editor extends Vue {
   height: 100%;
   margin: 0;
   display: grid;
-  grid-template-columns: 50% 2px 1fr 2px 300px;
+  grid-template-columns: 50% 2px calc(50% - 304px) 2px 300px;
   grid-template-rows: 1fr 2px 300px;
   max-height: 100vh;
 }
@@ -458,7 +468,7 @@ export default class Editor extends Vue {
   z-index: 1
 }
 
-#logDragbar {
+#plotDragbar {
   grid-row: 2 / 3;
   grid-column: 3 / 4;
 }
@@ -479,7 +489,7 @@ export default class Editor extends Vue {
   max-height: 100vh;
 }
 
-#log {
+#plot {
   grid-column: 3/4;
   z-index: 1;
 }

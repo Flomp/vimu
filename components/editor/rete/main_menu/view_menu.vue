@@ -64,8 +64,8 @@ export default class ViewMenu extends Vue {
         selected: settingsStore.settings.view.score,
       },
       {
-        name: "Log",
-        key: "view_log",
+        name: "Plots",
+        key: "view_plot",
         selected: settingsStore.settings.view.log,
       },
     ];
@@ -112,8 +112,8 @@ export default class ViewMenu extends Vue {
       case "view_score":
         this.toggleView("score");
         break;
-      case "view_log":
-        this.toggleView("log");
+      case "view_plot":
+        this.toggleView("plot");
         break;
     }
   }
@@ -177,7 +177,7 @@ export default class ViewMenu extends Vue {
     settingsStore.changeSettings(settings);
   }
 
-  toggleView(key: "score" | "log") {
+  toggleView(key: "score" | "plot") {
     const settings: Settings = JSON.parse(
       JSON.stringify(settingsStore.settings)
     );
