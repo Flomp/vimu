@@ -6,7 +6,7 @@ import PlotControl from "../../controls/plot/plot_control/plot_control";
 export default class PlotBarWeightedComponent extends Rete.Component {
   editor!: NodeEditor;
   constructor(editor: NodeEditor) {
-    super("plot_bar_weighted");
+    super("plot_dynamics");
     this.editor = editor;
 
   }
@@ -16,7 +16,6 @@ export default class PlotBarWeightedComponent extends Rete.Component {
 
 
     node
-      .addControl(new PlotControl(this.editor, "data", true))
       .addInput(in0);
 
   }

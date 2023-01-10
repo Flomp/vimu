@@ -65,8 +65,8 @@ const editorMenuItems: MenuItem[] = [
         name: "Plot",
         children:
             [
-                { name: "Bar Plot", key: "plot_bar" },
-                { name: "Weighted Bar Plot", key: "plot_bar_weighted" },
+                { name: "Piano roll", key: "plot_piano_roll" },
+                { name: "Dynamics Plot", key: "plot_dynamics" },
                 { name: "Histogram", key: "plot_histogram" },
                 { name: "Scatter Plot", key: "plot_scatter" },
                 { name: "Weighted Scatter Plot", key: "plot_scatter_weighted" },

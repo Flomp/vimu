@@ -1,7 +1,7 @@
 import Rete, { Node, NodeEditor } from "rete";
 import { NodeData, WorkerInputs, WorkerOutputs } from "rete/types/core/data";
+import HistogramControl from "../../controls/plot/histogram_control/historgram_control";
 import { sockets } from "../../sockets/sockets";
-import PlotControl from "../../controls/plot/plot_control/plot_control";
 
 export default class PlotHistogramComponent extends Rete.Component {
   editor!: NodeEditor;
@@ -16,7 +16,7 @@ export default class PlotHistogramComponent extends Rete.Component {
 
 
     node
-      .addControl(new PlotControl(this.editor, "data", true))
+      .addControl(new HistogramControl(this.editor, "data", true))
       .addInput(in0);
 
   }
