@@ -68,9 +68,10 @@
                             </vimu-card>
                         </v-col>
                         <v-col>
-                            <vimu-card title="Plot a pitch distribution" callToAction="Open Example">
-                                In this example you will learn how to plot a pitch distribution bar chart. <b>vimu</b>
-                                comes with the ability to graphically represent a wide range of score properties.
+                            <vimu-card title="Plot a pitch histogram" callToAction="Open Example"
+                                to="/editor/example-histogram">
+                                <b>vimu</b> comes with the ability to graphically represent a wide range of score
+                                properties. In this example you will learn how to plot a pitch histogram.
                             </vimu-card>
                         </v-col>
                     </v-row>
