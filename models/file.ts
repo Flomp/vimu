@@ -70,16 +70,16 @@ const example_files: Record<string, File> = {
         updated: "",
         created: ""
     },
-    "example-histogram": {
-        id: "example-histogram",
-        name: "Example Histgoram",
+    "example-plots": {
+        id: "example-plots",
+        name: "Example Plots",
         favorite: false,
         public: true,
         data: "",
         expand: {
             data: {
                 id: "0",
-                json: { "id": "vimu@0.1.0", "nodes": { "1": { "id": 1, "data": {}, "inputs": { "in_0": { "connections": [{ "node": 24, "output": "out_0", "data": {} }] } }, "outputs": {}, "position": [287.5040036216246, -73.64425032619941], "name": "output" }, "24": { "id": 24, "data": { "data": { "id": "uec73y8ndj50nvj", "name": "Den Vater dort oben", "data": "data_N6uuvr78dx.xml" } }, "inputs": {}, "outputs": { "out_0": { "connections": [{ "node": 1, "input": "in_0", "data": {} }, { "node": 49, "input": "in_0", "data": {} }] } }, "position": [-249.11169575631004, -138.61175410781897], "name": "source_score" }, "49": { "id": 49, "data": { "xAxis": "pitchSpace" }, "inputs": { "in_0": { "connections": [{ "node": 24, "output": "out_0", "data": {} }] } }, "outputs": {}, "position": [113.33357216318934, -386.0244741165651], "name": "plot_histogram" } } },
+                json: { "id": "vimu@0.1.0", "nodes": { "1": { "id": 1, "data": {}, "inputs": { "in_0": { "connections": [{ "node": 24, "output": "out_0", "data": {} }] } }, "outputs": {}, "position": [287.5040036216246, -73.64425032619941], "name": "output" }, "24": { "id": 24, "data": { "data": { "id": "uec73y8ndj50nvj", "name": "Den Vater dort oben", "data": "data_N6uuvr78dx.xml" } }, "inputs": {}, "outputs": { "out_0": { "connections": [{ "node": 49, "input": "in_0", "data": {} }, { "node": 126, "input": "in_0", "data": {} }, { "node": 1, "input": "in_0", "data": {} }] } }, "position": [-249.11169575631004, -138.61175410781897], "name": "source_score" }, "49": { "id": 49, "data": { "xAxis": "pitchSpace" }, "inputs": { "in_0": { "connections": [{ "node": 24, "output": "out_0", "data": {} }] } }, "outputs": {}, "position": [113.33357216318934, -386.0244741165651], "name": "plot_histogram" }, "126": { "id": 126, "data": { "xAxis": "quarterLength", "yAxis": "pitchClass" }, "inputs": { "in_0": { "connections": [{ "node": 24, "output": "out_0", "data": {} }] } }, "outputs": {}, "position": [106.74352060511704, 121.26784149770914], "name": "plot_scatter_weighted" } } },
             }
         },
         owner: "",

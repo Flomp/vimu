@@ -47,8 +47,9 @@
         </div>
         <v-divider></v-divider>
         <div class="my-4">
-            <div class="d-flex align-center">
-                <span class="navigation-heading mx-4">Teams</span>
+            <div class="d-flex align-center mx-4">
+                <span class="navigation-heading">Teams</span>
+                <v-spacer></v-spacer>
                 <v-btn color="primary" icon><v-icon size="20">mdi-plus</v-icon></v-btn>
             </div>
             <div class="mx-4 my-2" style="line-height: 1rem">

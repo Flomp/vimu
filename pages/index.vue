@@ -68,10 +68,10 @@
                             </vimu-card>
                         </v-col>
                         <v-col>
-                            <vimu-card title="Plot a pitch histogram" callToAction="Open Example"
-                                to="/editor/example-histogram">
+                            <vimu-card title="Plot with vimu" callToAction="Open Example"
+                                to="/editor/example-plots">
                                 <b>vimu</b> comes with the ability to graphically represent a wide range of score
-                                properties. In this example you will learn how to plot a pitch histogram.
+                                properties. In this example you will learn how easy it is to plot with <b>vimu</b>.
                             </vimu-card>
                         </v-col>
                     </v-row>

@@ -10,10 +10,20 @@
         </v-btn>
       </div>
       <v-spacer></v-spacer>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn v-bind="attrs" v-on="on" light icon v-if="plots.length" @click="download">
+            <v-icon>mdi-download</v-icon>
+            </v-btn>
+        </template>
+        <span>Download</span>
+      </v-tooltip>
+
       <v-btn icon @click="minimize()"><v-icon>mdi-minus</v-icon></v-btn>
     </div>
     <div style="height: calc(100% - 36px);max-width: 100%;overflow-y: scroll;background-color: white;"> <img
-        :src="'data:image/svg+xml;base64,' + plots[activePlot]" width="100%" v-if="plots.length" />
+        class="vimu-plot" :src="'data:image/svg+xml;base64,' + plots[activePlot]" width="100%" v-if="plots.length"
+        @click="zoom" />
     </div>
   </div>
 </template>
@@ -41,9 +51,37 @@ export default class PlotPanel extends Vue {
     settings.view.plot = false;
     settingsStore.changeSettings(settings);
   }
+
+  zoom(e: MouseEvent) {
+    const tgt = e.target as HTMLElement;
+    tgt?.classList.toggle('zoomed')
+  }
+
+  download() {
+    const element = document.createElement('a');
+    element.setAttribute('href', 'data:image/svg+xml;base64,' + this.plots[this.activePlot]);
+    const timestamp = new Date().getTime();
+    element.setAttribute('download', `vimu_plot_${timestamp}.svg`);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+
+  }
 }
 </script>
 
 <style>
+.vimu-plot {
+  cursor: zoom-in;
+  transform-origin: top left;
+}
 
+.vimu-plot.zoomed {
+  scale: 2;
+  cursor: zoom-out;
+}
 </style>

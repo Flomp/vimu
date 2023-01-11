@@ -66,7 +66,7 @@ export default class ViewMenu extends Vue {
       {
         name: "Plots",
         key: "view_plot",
-        selected: settingsStore.settings.view.log,
+        selected: settingsStore.settings.view.plot,
       },
     ];
   }
