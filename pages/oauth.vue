@@ -12,6 +12,9 @@ import Bunny from "~/components/vimu/illustrations/bunny.vue";
 import { authStore } from "~/store";
 
 @Component({
+    head: {
+        title: "OAuth"
+    },
     components: { Bunny },
 
     fetchOnServer: false

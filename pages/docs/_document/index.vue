@@ -16,6 +16,9 @@ import { Vue, Component } from "nuxt-property-decorator";
 import DocsTableOfContents from "~/components/documentation/documentation_table_of_contents.vue";
 
 @Component({
+    head: {
+        title: "Docs"
+    },
     layout: "documentation",
     components: {
         DocsTableOfContents

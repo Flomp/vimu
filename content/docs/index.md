@@ -11,4 +11,4 @@ At its core **vimu** is a tool that allows you to transform and analyse music sc
 * Search for melody/rhythm - **vimu** is capable of finding any melodic or rhythmic patterns in a score across all voices. You can even search for complex chords.
 * Detect modulation - **vimu** employs a statistical model to detect key changes in a music score. Given the sequence of notes in the score, it predicts the most likely key to produce the observed sequence.
 
-Of course, these examples only scratch the surface of what you can do with **vimu**. To get a complete overview you can visit the <a href="/docs/editor">Editor</a> section.
+Of course, these examples only scratch the surface of what you can do with **vimu**. To get a complete overview you can visit the <a href="/docs/nodes">Nodes</a> section.

@@ -8,8 +8,8 @@
       </div>
       <div class="d-flex align-center justify-space-between" v-if="$vuetify.breakpoint.mdAndUp">
         <div class="d-flex align-center" style="margin-right: 64px">
-          <v-list-item class="font-weight-bold px-5 vimu-appbar-menu-item" to="/docs">Documentation</v-list-item>
-          <span class="font-weight-bold px-5">Pricing</span>
+          <v-list-item class="font-weight-bold mx-5 vimu-appbar-menu-item" to="/docs">Documentation</v-list-item>
+          <v-list-item class="font-weight-bold vimu-appbar-menu-item" to="/pricing">Pricing</v-list-item>
         </div>
 
         <div>

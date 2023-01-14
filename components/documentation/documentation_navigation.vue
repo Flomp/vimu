@@ -20,6 +20,7 @@
       <template v-slot:sub-items>
         <doc-nav-link to="/docs/editor/node-panel">Node Panel</doc-nav-link>
         <doc-nav-link to="/docs/editor/output-panel">Output Panel</doc-nav-link>
+        <doc-nav-link to="/docs/editor/plot-panel">Plot Panel</doc-nav-link>
         <doc-nav-link to="/docs/editor/details-panel">Details Panel</doc-nav-link>
         <doc-nav-link to="/docs/editor/menu">Menu</doc-nav-link>
       </template>

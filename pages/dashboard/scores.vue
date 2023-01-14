@@ -71,6 +71,9 @@ import { ViewType } from "~/models/view";
 import { $pb, fileStore, scoreStore } from "~/store";
 
 @Component({
+    head: {
+        title: "Scores"
+    },
     layout: 'dashboard',
     fetchOnServer: false,
     components: {

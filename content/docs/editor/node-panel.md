@@ -28,4 +28,4 @@ Click and hold onto the node and then move your mouse.
 First, click the output socket of one node, then click the input socket of another. To disconnect, simply click the socket of either one and click anywhere on the grid area.
 
 ### Delete
-Select the node first then press the <kbd class="keyboard-key nowrap">← Backspace</kbd> key on your keyboard or click on the <i class="v-icon mdi mdi-delete theme--light"></i> icon in the <nuxt-link to="/docs/editor/details-panel">Details Panel</nuxt-link>. Note that the output node cannot be deleted.
+Select the node first then press the <kbd class="keyboard-key nowrap">← Backspace</kbd> key on your keyboard or select "Edit" -> "Delete" from the <nuxt-link to="/docs/editor/menu#delete">context menu</nuxt-link>. Note that the output node cannot be deleted.

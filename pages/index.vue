@@ -55,25 +55,30 @@
                         <v-col>
                             <vimu-card title="Detect Modulation" callToAction="Open Example"
                                 to="/editor/example-modulation">
-                                Learn how to employ <b>vimu's</b> sophisticated statistical model to accurately detect
-                                possible
-                                modulation sites in one of Bach chorales.
+                                In this example you will learn how to employ <b>vimu's</b> sophisticated statistical
+                                model to accurately detect
+                                possible modulation sites in one of Bach chorales.
                             </vimu-card>
                         </v-col>
                         <v-col>
                             <vimu-card title="Search for a melody" callToAction="Open Example"
                                 to="/editor/example-search">
-                                Search for melody or rythm fragments in a score. The search comes with many
+                                Search for melody or rhythm fragments in a score. The search comes with many
                                 configurable options allowing you to find the exact matches you need.
                             </vimu-card>
                         </v-col>
                         <v-col>
-                            <vimu-card title="Plot with vimu" callToAction="Open Example"
-                                to="/editor/example-plots">
+                            <vimu-card title="Plot with vimu" callToAction="Open Example" to="/editor/example-plots">
                                 <b>vimu</b> comes with the ability to graphically represent a wide range of score
                                 properties. In this example you will learn how easy it is to plot with <b>vimu</b>.
                             </vimu-card>
                         </v-col>
+                        <!-- <v-col>
+                            <vimu-card title="Combine" callToAction="Open Example" to="/editor/example-plots">
+                                One of the big strength of <b>vimu</b> is its modularity. By combining multiple nodes you can
+                                easily create complex logic. See how it's done in this example.
+                            </vimu-card>
+                        </v-col> -->
                     </v-row>
                 </div>
             </section>
@@ -109,6 +114,9 @@ import BunnyDeadCarrot from "~/components/vimu/illustrations/bunny_dead_carrot.v
 import Typewriter from 'typewriter-effect/dist/core';
 
 @Component({
+    head: {
+        title: "vimu"
+    },
     components: {
         VimuArticle,
         VimuCard,

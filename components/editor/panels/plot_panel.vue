@@ -14,7 +14,7 @@
         <template v-slot:activator="{ on, attrs }">
           <v-btn v-bind="attrs" v-on="on" light icon v-if="plots.length" @click="download">
             <v-icon>mdi-download</v-icon>
-            </v-btn>
+          </v-btn>
         </template>
         <span>Download</span>
       </v-tooltip>
@@ -24,7 +24,19 @@
     <div style="height: calc(100% - 36px);max-width: 100%;overflow-y: scroll;background-color: white;"> <img
         class="vimu-plot" :src="'data:image/svg+xml;base64,' + plots[activePlot]" width="100%" v-if="plots.length"
         @click="zoom" />
+      <div v-else class="
+          grey--text
+          fill-height
+          d-flex
+          flex-column
+          justify-center
+          align-center
+          text-overline
+        ">
+        <span>No Data</span>
+      </div>
     </div>
+
   </div>
 </template>
 

@@ -78,6 +78,9 @@ import { $pb, fileStore, notificationStore } from "~/store";
 
 
 @Component({
+    head: {
+        title: "Files"
+    },
     layout: 'dashboard',
     fetchOnServer: false,
     components: {
@@ -201,7 +204,7 @@ export default class FilesPage extends Vue {
     }
 
     async createFile(file?: File, name?: string, navigate: boolean = true) {
-        const newFile = await fileStore.create({template: file, name: name});
+        const newFile = await fileStore.create({ template: file, name: name });
         if (newFile === null) {
             return;
         }

@@ -22,22 +22,24 @@
 </template>
 
 <script lang="ts">
+import { Context } from "@nuxt/types";
 import { Component, Vue } from "nuxt-property-decorator";
+import LoginForm from "~/components/forms/login_form.vue";
+import SignupForm from "~/components/forms/signup_form.vue";
 import BunnyBalloon from "~/components/vimu/illustrations/bunny_balloon.vue";
 import CarrotBalloon from "~/components/vimu/illustrations/carrot_balloon.vue";
 import Cloud1 from "~/components/vimu/illustrations/cloud1.vue";
 import Cloud2 from "~/components/vimu/illustrations/cloud2.vue";
 import Cloud3 from "~/components/vimu/illustrations/cloud3.vue";
 import VimuBtn from "~/components/vimu/vimu_button.vue";
-import VimuTextField from "~/components/vimu/vimu_text_field.vue";
-import LoginForm from "~/components/forms/login_form.vue";
-import SignupForm from "~/components/forms/signup_form.vue";
-import { $pb, authStore } from "~/store";
 import VimuFlipper from "~/components/vimu/vimu_flipper.vue";
-import { Context } from "@nuxt/types";
-import { AuthProviderInfo } from "pocketbase";
+import VimuTextField from "~/components/vimu/vimu_text_field.vue";
+import { $pb, authStore } from "~/store";
 
 @Component({
+    head: {
+        title: "Login"
+    },
     layout: "default_no_footer",
     components: {
         LoginForm,

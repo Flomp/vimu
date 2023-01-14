@@ -75,6 +75,9 @@ import PlotScatterWeightedComponent from "~/components/editor/rete/components/pl
 import PlotBarWeightedComponent from "~/components/editor/rete/components/plot/plot_bar_weighted";
 
 @Component({
+  head: {
+    title: "Editor"
+  },
   layout: "editor",
   fetchOnServer: false,
   components: {
@@ -324,7 +327,7 @@ export default class Editor extends Vue {
 
     editor.bind('setdata');
     editor.on('setdata' as any, async ({ data, updateBackend }: { data: Data, updateBackend: boolean }) => {
-      if(!data) {
+      if (!data) {
         return;
       }
       fileStore.setData(data);

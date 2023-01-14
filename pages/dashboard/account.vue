@@ -68,6 +68,9 @@ import AccountDeleteDialog from "~/components/dashboard/account_delete_dialog.vu
 
 
 @Component({
+    head: {
+        title: "Account"
+    },
     layout: 'dashboard',
     components: {
         VimuTextField,

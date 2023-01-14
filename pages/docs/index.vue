@@ -17,6 +17,9 @@ import DocsTableOfContents from "~/components/documentation/documentation_table_
 import QuickstartHero from "~/components/global/quickstart_hero.vue";
 
 @Component({
+    head: {
+        title: "Docs"
+    },
     layout: "documentation",
     components: {
         DocsTableOfContents,

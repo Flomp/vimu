@@ -9,9 +9,10 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
+      { hid: 'description', name: 'description', content: 'vimu is the modern way to analyse your music. It provides a rich toolbox for researchers, students and enthusiasts.' },
       { name: 'format-detection', content: 'telephone=no' }
     ],
+    htmlAttrs: { lang: 'en' },
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ],

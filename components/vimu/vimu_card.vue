@@ -29,7 +29,7 @@ export default class VimuCard extends Vue {
 
 <style>
 .vimu-card {
-    border: 2px solid currentColor;
+    outline: 2px solid currentColor;
     border-radius: 10px;
 }
 

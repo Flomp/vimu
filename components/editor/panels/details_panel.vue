@@ -2,9 +2,6 @@
   <div>
     <div class="d-flex align-center justify-space-between vimu-editor-header" style="height: 36px">
       <h5 class="px-3">Details</h5>
-      <v-btn icon @click="removeNode()" v-if="showDelete">
-        <v-icon size="20">mdi-delete</v-icon>
-      </v-btn>
     </div>
 
     <div v-if="selectedNode">
@@ -80,10 +77,6 @@ export default class DetailsPanel extends Vue {
   @InjectReactive()
   editor!: NodeEditor;
 
-  get showDelete() {
-    return !fileStore.readonly && this.selectedNode && this.selectedNode.name != "output"
-  }
-
   get selectedNode(): Node | undefined {
     return this.editor?.selected.list[0];
   }
@@ -110,18 +103,6 @@ export default class DetailsPanel extends Vue {
     this.selectedNode?.update();
     if (this.selectedNode) {
       this.editor!.selectNode(this.selectedNode);
-    }
-  }
-
-  removeNode() {
-    if (this.selectedNode && this.editor) {
-      logStore.log({
-        level: LogLevel.info,
-        text: `Removed node ${this.selectedNode.name}`,
-      });
-
-      this.editor?.removeNode(this.selectedNode);
-      this.editor.selected.clear();
     }
   }
 

@@ -19,14 +19,21 @@ export default class EngineStore extends VuexModule {
         this.loading = loading
     }
 
+    @Mutation
+    reset() {
+        this.data = ""
+        this.plots = []
+        this.error = null
+    }
+
     @MutationAction({ mutate: ['data', 'plots', 'error'] })
     async process(data: Data) {
         try {
             const result = await $axios.post('/engine', data);
             
             return {
-                data: result.data.data?.output ?? engineStore.data,
-                plots: result.data.data?.plots ?? engineStore.plots,
+                data: result.data.data?.output ?? "",
+                plots: result.data.data?.plots ?? [],
                 error: result.data.error
             };
         } catch (e) {
