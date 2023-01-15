@@ -7,7 +7,7 @@
                 </vimu-searchbar>
                 <span class="vimu-title">{{ title }}</span>
 
-                <v-row class="align-center justify-space-between py-5">
+                <v-row class="align-center justify-space-between my-5">
                     <v-col cols="12" md="auto">
                         <vimu-btn class="mt-3 mt-sm-0" :primary="true" :large="true" @click="createFile()">New file
                         </vimu-btn>

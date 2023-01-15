@@ -23,6 +23,7 @@
 <script lang="ts">
 import { Component, Emit, Prop, Vue } from "nuxt-property-decorator";
 import FileContextMenu from "~/components/dashboard/file/file_context_menu.vue";
+import VimuAvatar from "~/components/vimu/vimu_avatar.vue";
 import { File, FilePermission } from "~/models/file";
 import getRelativeTime from "~/utils/date";
 import FileShareCard from "./file_share_card.vue";
@@ -32,7 +33,8 @@ import FileShareMenu from "./file_share_menu.vue";
     components: {
         FileShareCard,
         FileContextMenu,
-        FileShareMenu
+        FileShareMenu,
+        VimuAvatar
     }
 })
 export default class FileCard extends Vue {

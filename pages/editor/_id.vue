@@ -316,7 +316,7 @@ export default class Editor extends Vue {
       async (source) => {
         if (fileStore.file != null && !fileStore.readonly && !Object.keys(example_files).includes(fileStore.file.id) && !this.editor?.silent) {
           editor.trigger('addhistory' as any, editor.toJSON());
-          fileStore.updateData({ id: fileStore.file.data, json: JSON.stringify(editor.toJSON()) })
+          fileStore.updateData({ id: fileStore.file.expand.data.id, json: JSON.stringify(editor.toJSON()) })
         }
       }
     );
@@ -334,7 +334,7 @@ export default class Editor extends Vue {
       await editor.fromJSON(JSON.parse(JSON.stringify(data)));
       await engineStore.process(editor.toJSON());
       if (updateBackend && fileStore.file != null) {
-        fileStore.updateData({ id: fileStore.file.data, json: JSON.stringify(editor.toJSON()) })
+        fileStore.updateData({ id: fileStore.file.expand.data.id, json: JSON.stringify(editor.toJSON()) })
       }
     });
 

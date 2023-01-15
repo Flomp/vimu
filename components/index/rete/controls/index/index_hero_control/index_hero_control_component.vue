@@ -1,7 +1,7 @@
 <template>
     <div class="px-6">
         <p class="pb-4" style="max-width: 400px; font-size:1.1rem">
-            <b>vimu</b> is the modern way to analyse your music.
+            <b>vimu</b> is the modern way to analyse your sheet music.
             It provides a rich toolbox for researchers, students and enthusiasts.
         </p>
         <v-row class="pb-4 align-center">

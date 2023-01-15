@@ -1,6 +1,6 @@
 <template>
     <vimu-text-field v-model="query" placeholder="Username" :hide-details="true">
-        <vimu-btn :primary="true" @click="add" :loading="loading" :disabled="loading">Add</vimu-btn>
+        <vimu-btn :primary="true" @click="add" :loading="loading" :disabled="loading" style="margin-top: -7px">Add</vimu-btn>
 
     </vimu-text-field>
 </template>

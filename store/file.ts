@@ -5,6 +5,7 @@ import { example_files, File, FileData, FilePermission } from '~/models/file';
 import { Score } from '~/models/score';
 import { generateName } from '~/utils/string';
 import { $pb, fileStore, notificationStore } from '.';
+import { rename } from '~/utils/json';
 
 @Module({
     name: 'file',
@@ -34,7 +35,8 @@ export default class FileStore extends VuexModule {
     @MutationAction({ mutate: ['files', 'maxPage'] })
     async list(data: { page: number, filter: string, sort: string, perPage?: number }) {
         try {
-            const response = await $pb.collection('files').getList(undefined, undefined, { sort: data.sort, filter: data.filter, expand: 'data,collaborators.user' })
+            const response = await $pb.collection('files').getList(undefined, undefined, { sort: data.sort, filter: data.filter, expand: 'file_data(file),collaborators.user,owner' })
+            response.items = rename(response.items, 'file_data(file)', 'data')
             if (data.page == 1) {
                 return { files: response.items, maxPage: response.totalPages }
             } else {
@@ -48,7 +50,7 @@ export default class FileStore extends VuexModule {
     @MutationAction({ mutate: ['favorites'] })
     async listFavorites() {
         try {
-            const response = await $pb.collection('files').getFullList<File>(undefined, { sort: 'name', filter: 'favorite=true', expand: 'data', '$autoCancel': false })
+            const response = await $pb.collection('files').getFullList<File>(undefined, { sort: 'name', filter: 'favorite=true', '$autoCancel': false })
             return { favorites: response }
         } catch {
             return { favorites: this.favorites }
@@ -61,7 +63,8 @@ export default class FileStore extends VuexModule {
             if (Object.keys(example_files).includes(id)) {
                 return { file: example_files[id] }
             }
-            const response = await $pb.collection('files').getOne<File>(id, { expand: 'data,collaborators.user' })
+            let response = await $pb.collection('files').getOne<File>(id, { expand: 'file_data(file),collaborators.user' })
+            response = rename(response, 'file_data(file)', 'data')
             fileStore.updateClient({ id: id, updatedFile: response })
             return { file: response }
         } catch (error) {
@@ -74,8 +77,8 @@ export default class FileStore extends VuexModule {
         try {
             const name = data.name ?? generateName();
             const json = data.template !== undefined ? data.template!.expand.data.json : '{"id":"vimu@0.1.0","nodes":{"1":{"id":1,"data":{},"inputs":{"in_0":{"connections":[{"node":24,"output":"out_0","data":{}}]}},"outputs":{},"position":[156,-1],"name":"output"},"24":{"id":24,"data":{},"inputs":{},"outputs":{"out_0":{"connections":[{"node":1,"input":"in_0","data":{}}]}},"position":[-119.5,-41],"name":"source_score"}}}'
-            const fileData: FileData = await $pb.collection('file_data').create<FileData>({ json: json })
-            const file: File = await $pb.collection('files').create<File>({ name: name, owner: $pb.authStore.model!.id, data: fileData.id }, { expand: 'data,collaborators.user' })
+            const file: File = await $pb.collection('files').create<File>({ name: name, owner: $pb.authStore.model!.id })
+            const fileData: FileData = await $pb.collection('file_data').create<FileData>({ json: json, file: file.id })
 
             return file;
         } catch (error) {
@@ -89,8 +92,9 @@ export default class FileStore extends VuexModule {
         try {
             const name = generateName();
             const json = `{"id":"vimu@0.1.0","nodes":{"1":{"id":1,"data":{},"inputs":{"in_0":{"connections":[{"node":24,"output":"out_0","data":{}}]}},"outputs":{},"position":[156,-1],"name":"output"},"24":{"id":24,"data":{"data":{"id":"${score.id}","name":"${score.name}","data":"${score.data}"}},"inputs":{},"outputs":{"out_0":{"connections":[{"node":1,"input":"in_0","data":{}}]}},"position":[-119.5,-41],"name":"source_score"}}}`
-            const fileData: FileData = await $pb.collection('file_data').create<FileData>({ json: json })
-            const file: File = await $pb.collection('files').create<File>({ name: name, owner: $pb.authStore.model!.id, data: fileData.id }, { expand: 'data,collaborators.user' })
+            const file: File = await $pb.collection('files').create<File>({ name: name, owner: $pb.authStore.model!.id })
+            const fileData: FileData = await $pb.collection('file_data').create<FileData>({ json: json, file: file.id })
+
             return file;
         } catch (error) {
             notificationStore.sendNotification({ title: 'Error creating new file', color: 'error' })
@@ -101,7 +105,8 @@ export default class FileStore extends VuexModule {
     @Action
     async update(data: { id: string, name?: string, favorite?: boolean, public?: boolean, collaborators?: string[] }): Promise<File | null> {
         try {
-            const updatedFile: File = await $pb.collection('files').update(data.id, { 'name': data.name, 'favorite': data.favorite, 'collaborators': data.collaborators, 'public': data.public }, { expand: 'data,collaborators.user' })
+            let updatedFile: File = await $pb.collection('files').update(data.id, { 'name': data.name, 'favorite': data.favorite, 'collaborators': data.collaborators, 'public': data.public }, { expand: 'file_data(file),collaborators.user' })
+            updatedFile = rename(updatedFile, 'file_data(file)', 'data')
             fileStore.updateClient({ id: data.id, updatedFile })
             return updatedFile;
         } catch (error) {
@@ -146,8 +151,7 @@ export default class FileStore extends VuexModule {
     @Action
     async delete(file: File): Promise<boolean> {
         try {
-            let success: boolean = await $pb.collection('file_data').delete(file.data)
-            success = await $pb.collection('files').delete(file.id)
+            const success = await $pb.collection('files').delete(file.id)
             fileStore.updateClient({ id: file.id })
             return success;
         } catch (error) {

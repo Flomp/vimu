@@ -55,7 +55,14 @@ export default class ScoreStore extends VuexModule {
     @MutationAction({ mutate: ['scores', 'maxPage'] })
     async list(data: { page: number, filter: string, sort: string, perPage?: number }) {
         try {
-            const response = await $pb.collection('scores').getList(data.page, data.perPage, { sort: data.sort, filter: data.filter, expand: 'meta' })
+            const response = await $pb.collection('scores').getList(data.page, data.perPage, { sort: data.sort, filter: data.filter, expand: 'score_meta(score)' })
+            response.items = JSON.parse(JSON.stringify(response.items), function (k, v) {
+                if (k === "score_meta(score)") {
+                    this.meta = v;
+                    return;
+                }
+                return v;
+            })
             if (data.page == 1) {
                 return { scores: response.items, maxPage: response.totalPages }
             } else {
@@ -81,10 +88,9 @@ export default class ScoreStore extends VuexModule {
 
         formData.append("owner", $pb.authStore.model!.id);
         try {
-            const resultMeta: ScoreMeta = await $pb.collection('score_meta').create({ ...data.score.expand.meta })
-            formData.append("meta", resultMeta.id!)
-            const resultScore: Score = await $pb.collection('scores').create(formData, { expand: 'meta' })
-            return resultScore;
+            const score: Score = await $pb.collection('scores').create(formData)
+            const meta: ScoreMeta = await $pb.collection('score_meta').create({ ...data.score.expand.meta, score: score.id })
+            return score;
         } catch (error) {
             notificationStore.sendNotification({ title: 'Error creating new score', color: 'error' })
             return null;
@@ -95,7 +101,14 @@ export default class ScoreStore extends VuexModule {
     async update(score: Score): Promise<Score | null> {
         try {
             const updatedMeta: ScoreMeta = await $pb.collection('score_meta').update(score.expand.meta.id!, score.expand.meta)
-            const updatedScore: Score = await $pb.collection('scores').update(score.id!, score, { expand: 'meta' })
+            let updatedScore: Score = await $pb.collection('scores').update(score.id!, score, { expand: 'score_meta(score)' })
+            updatedScore = JSON.parse(JSON.stringify(updatedScore), function (k, v) {
+                if (k === "score_meta(score)") {
+                    this.meta = v;
+                    return;
+                }
+                return v;
+            })
             scoreStore.updateClient({ score, updatedScore });
             return updatedScore;
         } catch (error) {
@@ -106,23 +119,23 @@ export default class ScoreStore extends VuexModule {
 
     @Mutation
     updateClient(data: { score: Score, updatedScore?: Score }) {
-        const fileIndex = this.scores.findIndex((s) => s.id == data.score.id)
+        const scoreIndex = this.scores.findIndex((s) => s.id == data.score.id)
         const isCurrentFile = this.score?.id == data.updatedScore?.id;
         if (data.updatedScore !== undefined) {
             if (isCurrentFile) {
                 this.score = data.updatedScore;
             }
-            if (fileIndex !== -1) {
+            if (scoreIndex !== -1) {
                 if (data.updatedScore !== undefined) {
-                    Vue.set(this.scores, fileIndex, data.updatedScore)
-                } 
+                    Vue.set(this.scores, scoreIndex, data.updatedScore)
+                }
             }
         } else {
             if (isCurrentFile) {
                 this.score = null;
             }
-            if (fileIndex !== -1) {
-                this.scores.splice(fileIndex, 1);
+            if (scoreIndex !== -1) {
+                this.scores.splice(scoreIndex, 1);
             }
         }
     }
@@ -130,10 +143,9 @@ export default class ScoreStore extends VuexModule {
     @Action
     async delete(score: Score): Promise<boolean> {
         try {
-            const successMeta: boolean = await $pb.collection('score_meta').delete(score.expand.meta.id!)
             const success: boolean = await $pb.collection('scores').delete(score.id!)
             scoreStore.updateClient({ score })
-            return success && successMeta;
+            return success;
         } catch (error) {
             notificationStore.sendNotification({ title: 'Error deleting score', color: 'error' })
             return false;
