@@ -117,6 +117,7 @@ export default class AccountPage extends Vue {
         if (result.length) {
             this.oauthProvider = result[0].provider;
         }
+        await subscriptionStore.sub();
     }
 
     get emailChanged(): boolean {

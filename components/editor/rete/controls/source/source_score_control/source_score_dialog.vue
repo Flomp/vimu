@@ -69,7 +69,7 @@ export default class SourceScoreDialog extends Vue {
         if (!value) {
             this.filters.query = ""
         } else {
-            this.filters.query = `(name~"${value}"||meta.composer~"${value}")`
+            this.filters.query = `(name~"${value}"||meta.lyrics~"${value}")`
         }
         this.currentPage = 1;
         this.list(true);

@@ -223,7 +223,7 @@ export default class ScoresPage extends Vue {
         if (!value) {
             this.filters.query = ""
         } else {
-            this.filters.query = `(name~"${value}")`
+            this.filters.query = `(name~"${value}"||meta.lyrics~"${value}")`
         }
         this.currentPage = 1;
         this.list(true);
