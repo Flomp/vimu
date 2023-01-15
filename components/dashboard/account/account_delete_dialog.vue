@@ -20,8 +20,8 @@
 
 <script lang="ts">
 import { Vue, Component, VModel, Prop, Emit } from "nuxt-property-decorator";
-import VimuBtn from "../vimu/vimu_button.vue";
-import VimuTextField from "../vimu/vimu_text_field.vue";
+import VimuBtn from "../../vimu/vimu_button.vue";
+import VimuTextField from "../../vimu/vimu_text_field.vue";
 
 @Component({
     components: {

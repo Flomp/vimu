@@ -14,6 +14,8 @@ import PocketBase from 'pocketbase';
 import osmd from '~/store/osmd';
 import settings from '~/store/settings';
 
+import stripe from '~/store/stripe'
+import subscription from '~/store/subscription';
 
 let authStore: auth;
 let fileStore: file;
@@ -24,6 +26,9 @@ let logStore: log;
 let notificationStore: notification;
 let osmdStore: osmd;
 let settingsStore: settings;
+
+let stripeStore: stripe;
+let subscriptionStore: subscription;
 
 let $axios: NuxtAxiosInstance;
 let $pb: PocketBase;
@@ -46,6 +51,9 @@ function initialiseStores(store: Store<any>): void {
     notificationStore = getModule(notification, store)
     osmdStore = getModule(osmd, store)
     settingsStore = getModule(settings, store)
+
+    stripeStore = getModule(stripe, store);
+    subscriptionStore = getModule(subscription, store);
 }
 
 export {
@@ -61,5 +69,8 @@ export {
     logStore,
     notificationStore,
     osmdStore,
-    settingsStore
+    settingsStore,
+    stripeStore,
+    subscriptionStore
 };
+

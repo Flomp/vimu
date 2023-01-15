@@ -1,8 +1,15 @@
 <template>
     <v-sheet class="page">
-        <v-container>
+        <v-container class="px-12">
             <h1 class="vimu-title">Account</h1>
-            <h2 class="vimu-subtitle mt-10">Profile information</h2>
+            <div class="d-flex justify-space-between align-center mt-10">
+                <h2 class="vimu-subtitle">Profile information</h2>
+                <vimu-btn :disabled="(!usernameChanged && !emailChanged) || !username.length || !email.length"
+                    :loading="saveLoading" @click="save">
+                    Save
+                </vimu-btn>
+            </div>
+
             <v-form ref="account-form">
                 <v-row class="mt-4 align-center">
                     <v-col cols="12" sm="auto" class="pr-sm-12 d-flex justify-center" style="position: relative">
@@ -13,42 +20,46 @@
                         </v-btn>
 
                     </v-col>
-                    <v-col cols="12" sm="6">
-                        <div class="py-5" style="max-width: 400px">
+                    <v-col cols="12" sm="auto">
+                        <div class="py-5">
                             <span class="font-weight-bold">Username</span>
                             <vimu-text-field v-model="username">
                             </vimu-text-field>
-                            <span class="font-weight-bold">Email</span>
-                            <vimu-text-field v-model="email" :disabled="oauthProvider !== ''">
-                                <v-tooltip bottom v-if="verified">
-                                    <template v-slot:activator="{ on, attrs }">
-                                        <v-icon color="success" v-bind="attrs" v-on="on">
-                                            mdi-email-check-outline
-                                        </v-icon>
-                                    </template>
-                                    <span v-if="oauthProvider === ''">Verified</span>
-                                    <span v-else>Managed by {{ oauthProvider }}</span>
-                                </v-tooltip>
-                                <v-tooltip bottom v-else>
-                                    <template v-slot:activator="{ on, attrs }">
-                                        <v-icon color="error" v-bind="attrs" v-on="on">
-                                            mdi-email-remove-outline
-                                        </v-icon>
-                                    </template>
-                                    <span>Not verified</span>
-                                </v-tooltip></vimu-text-field>
                         </div>
-                        <vimu-btn :disabled="(!usernameChanged && !emailChanged) || !username.length || !email.length"
-                            :loading="saveLoading" @click="save">
-                            Save
-                        </vimu-btn>
                     </v-col>
+                    <v-col cols="12" sm="auto"> <span class="font-weight-bold">Email</span>
+                        <vimu-text-field v-model="email" :disabled="oauthProvider !== ''">
+                            <v-tooltip bottom v-if="verified">
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-icon color="success" v-bind="attrs" v-on="on">
+                                        mdi-email-check-outline
+                                    </v-icon>
+                                </template>
+                                <span v-if="oauthProvider === ''">Verified</span>
+                                <span v-else>Managed by {{ oauthProvider }}</span>
+                            </v-tooltip>
+                            <v-tooltip bottom v-else>
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-icon color="error" v-bind="attrs" v-on="on">
+                                        mdi-email-remove-outline
+                                    </v-icon>
+                                </template>
+                                <span>Not verified</span>
+                            </v-tooltip></vimu-text-field></v-col>
                 </v-row>
             </v-form>
-            <h2 class="vimu-subtitle mt-10">Danger zone</h2>
+            <v-divider class="my-10"></v-divider>
+            <h2 class="vimu-subtitle">Active plan</h2>
+            <client-only>
+                <subscription-card-pro v-if="subscribed"></subscription-card-pro>
+                <subscription-card-default v-else></subscription-card-default>
+            </client-only>
+
+            <v-divider class="my-10"></v-divider>
+
+            <h2 class="vimu-subtitle">Danger zone</h2>
             <div class="py-8">
                 <vimu-btn :danger="true" @click="deleteConfirmDialog = true">Delete account</vimu-btn>
-
             </div>
         </v-container>
         <account-delete-dialog v-model="deleteConfirmDialog" title="Are you sure?"
@@ -61,10 +72,12 @@
 import { Vue, Component, Ref, Watch } from "nuxt-property-decorator";
 import VimuTextField from "~/components/vimu/vimu_text_field.vue";
 import VimuBtn from "~/components/vimu/vimu_button.vue";
-import { $pb, authStore, notificationStore } from "~/store";
+import { $pb, authStore, notificationStore, stripeStore, subscriptionStore } from "~/store";
 import { ClientResponseError } from "pocketbase";
 import { generateSeed } from "~/utils/string";
-import AccountDeleteDialog from "~/components/dashboard/account_delete_dialog.vue";
+import AccountDeleteDialog from "~/components/dashboard/account/account_delete_dialog.vue";
+import SubscriptionCardDefault from "~/components/dashboard/account/subscription_card_default.vue";
+import SubscriptionCardPro from "~/components/dashboard/account/subscription_card_pro.vue";
 
 
 @Component({
@@ -75,7 +88,9 @@ import AccountDeleteDialog from "~/components/dashboard/account_delete_dialog.vu
     components: {
         VimuTextField,
         VimuBtn,
-        AccountDeleteDialog
+        AccountDeleteDialog,
+        SubscriptionCardDefault,
+        SubscriptionCardPro
     },
 })
 export default class AccountPage extends Vue {
@@ -117,6 +132,10 @@ export default class AccountPage extends Vue {
             return false;
         }
         return $pb.authStore.model?.verified ?? false
+    }
+
+    get subscribed() {
+        return subscriptionStore.subscribed;
     }
 
     mounted() {
@@ -179,7 +198,7 @@ export default class AccountPage extends Vue {
     }
 
     async deleteAccount() {
-        if(!$pb.authStore.model) {
+        if (!$pb.authStore.model) {
             return;
         }
         try {

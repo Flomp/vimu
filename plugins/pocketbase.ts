@@ -1,5 +1,6 @@
 import { Context } from '@nuxt/types';
 import { Inject, NuxtApp } from '@nuxt/types/app';
+import { Subscription } from '~/models/subscription';
 import { initialisePocketbase } from "~/utils/store-accessor";
 
 export default async (ctx: Context, inject: Inject) => {
@@ -15,11 +16,14 @@ export default async (ctx: Context, inject: Inject) => {
     (ctx as any).$cookies.set('pb_auth', pb.authStore.exportToCookie().replace('pb_auth=', ''))
   });
 
+  inject('pb', pb);
+  initialisePocketbase(pb);
 
   try {
     // get an up-to-date auth store state by veryfing and refreshing the loaded auth model (if any)
-    if (process.client) {
-      pb.authStore.isValid && await pb.collection('users').authRefresh();
+    if (process.client && pb.authStore.isValid) {
+      await pb.collection('users').authRefresh();
+
     }
 
   } catch (_) {
@@ -27,7 +31,16 @@ export default async (ctx: Context, inject: Inject) => {
     pb.authStore.clear();
   }
 
-  inject('pb', pb);
-  initialisePocketbase(pb)
+
+  try {
+    if (process.client && pb.authStore.isValid) {      
+      // Check active subscriptions
+      await ctx.store.dispatch('subscription/sub');
+    }
+
+  }catch (_) {
+  }
+
+
 
 };
