@@ -35,7 +35,7 @@ export default class SubscriptionCardPro extends Vue {
 
 
     async manageSubscription() {
-        
+        window.location.href = 'https://billing.stripe.com/p/login/test_3cs5lc0mM6eGbT24gg'
     }
 
 }
