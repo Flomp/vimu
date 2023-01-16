@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app class="layout">
     <notification-center />
     <vimu-appbar />
     <v-main class="main">

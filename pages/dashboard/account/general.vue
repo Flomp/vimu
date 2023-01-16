@@ -1,67 +1,62 @@
 <template>
     <v-sheet class="page">
-        <v-container class="px-12">
-            <h1 class="vimu-title">Account</h1>
-            <div class="d-flex justify-space-between align-center mt-10">
-                <h2 class="vimu-subtitle">Profile information</h2>
-                <vimu-btn :disabled="(!usernameChanged && !emailChanged) || !username.length || !email.length"
-                    :loading="saveLoading" @click="save">
-                    Save
-                </vimu-btn>
-            </div>
+        <h1 class="vimu-title ml-8 mt-2">Account</h1>
+        <account-navigation v-if="$vuetify.breakpoint.smAndDown" :sticky="false"></account-navigation>
+        <div class="d-flex">
+            <v-container class="px-12">
+                <div class="d-flex justify-space-between align-center mt-4">
+                    <h2 class="vimu-subtitle">Profile information</h2>
+                    <vimu-btn :disabled="(!usernameChanged && !emailChanged) || !username.length || !email.length"
+                        :loading="saveLoading" @click="save">
+                        Save
+                    </vimu-btn>
+                </div>
 
-            <v-form ref="account-form">
-                <v-row class="mt-4 align-center">
-                    <v-col cols="12" sm="auto" class="pr-sm-12 d-flex justify-center" style="position: relative">
-                        <vimu-avatar :seed="avatarSeed" :size="172"></vimu-avatar>
-                        <v-btn color="primary" :loading="seedLoading" :disabled="seedLoading" absolute icon bottom right
-                            @click="regenSeed">
-                            <v-icon>mdi-cached</v-icon>
-                        </v-btn>
+                <v-form ref="account-form">
+                    <v-row class="mt-4 align-center">
+                        <v-col cols="12" sm="auto" class="pr-sm-12 d-flex justify-center" style="position: relative">
+                            <vimu-avatar :seed="avatarSeed" :size="172"></vimu-avatar>
+                            <v-btn color="primary" :loading="seedLoading" :disabled="seedLoading" absolute icon bottom
+                                right @click="regenSeed">
+                                <v-icon>mdi-cached</v-icon>
+                            </v-btn>
 
-                    </v-col>
-                    <v-col cols="12" sm="auto">
-                        <div class="py-5">
+                        </v-col>
+                        <v-col cols="12" sm="auto"> <span class="font-weight-bold">Email</span>
+                            <vimu-text-field class="mb-4" v-model="email" :disabled="true || oauthProvider !== ''" :hideDetails="true">
+                                <v-tooltip bottom v-if="verified">
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-icon color="success" v-bind="attrs" v-on="on">
+                                            mdi-email-check-outline
+                                        </v-icon>
+                                    </template>
+                                    <span v-if="oauthProvider === ''">Verified</span>
+                                    <span v-else>Managed by {{ oauthProvider }}</span>
+                                </v-tooltip>
+                                <v-tooltip bottom v-else>
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-icon color="error" v-bind="attrs" v-on="on">
+                                            mdi-email-remove-outline
+                                        </v-icon>
+                                    </template>
+                                    <span>Not verified</span>
+                                </v-tooltip></vimu-text-field>
                             <span class="font-weight-bold">Username</span>
-                            <vimu-text-field v-model="username">
+                            <vimu-text-field v-model="username" :hideDetails="true">
                             </vimu-text-field>
-                        </div>
-                    </v-col>
-                    <v-col cols="12" sm="auto"> <span class="font-weight-bold">Email</span>
-                        <vimu-text-field v-model="email" :disabled="oauthProvider !== ''">
-                            <v-tooltip bottom v-if="verified">
-                                <template v-slot:activator="{ on, attrs }">
-                                    <v-icon color="success" v-bind="attrs" v-on="on">
-                                        mdi-email-check-outline
-                                    </v-icon>
-                                </template>
-                                <span v-if="oauthProvider === ''">Verified</span>
-                                <span v-else>Managed by {{ oauthProvider }}</span>
-                            </v-tooltip>
-                            <v-tooltip bottom v-else>
-                                <template v-slot:activator="{ on, attrs }">
-                                    <v-icon color="error" v-bind="attrs" v-on="on">
-                                        mdi-email-remove-outline
-                                    </v-icon>
-                                </template>
-                                <span>Not verified</span>
-                            </v-tooltip></vimu-text-field></v-col>
-                </v-row>
-            </v-form>
-            <v-divider class="my-10"></v-divider>
-            <h2 class="vimu-subtitle">Active plan</h2>
-            <client-only>
-                <subscription-card-pro v-if="subscribed"></subscription-card-pro>
-                <subscription-card-default v-else></subscription-card-default>
-            </client-only>
+                        </v-col>
+                    </v-row>
+                </v-form>
+                <v-divider class="my-10"></v-divider>
 
-            <v-divider class="my-10"></v-divider>
+                <h2 class="vimu-subtitle">Danger zone</h2>
+                <div class="py-8">
+                    <vimu-btn :danger="true" @click="deleteConfirmDialog = true">Delete account</vimu-btn>
+                </div>
+            </v-container>
+            <account-navigation v-if="$vuetify.breakpoint.mdAndUp"></account-navigation>
 
-            <h2 class="vimu-subtitle">Danger zone</h2>
-            <div class="py-8">
-                <vimu-btn :danger="true" @click="deleteConfirmDialog = true">Delete account</vimu-btn>
-            </div>
-        </v-container>
+        </div>
         <account-delete-dialog v-model="deleteConfirmDialog" title="Are you sure?"
             text="You are about to permanently delete this score" action="Delete" @confirm="deleteAccount">
         </account-delete-dialog>
@@ -69,15 +64,14 @@
 </template>
   
 <script lang="ts">
-import { Vue, Component, Ref, Watch } from "nuxt-property-decorator";
-import VimuTextField from "~/components/vimu/vimu_text_field.vue";
-import VimuBtn from "~/components/vimu/vimu_button.vue";
-import { $pb, authStore, notificationStore, stripeStore, subscriptionStore } from "~/store";
+import { Component, Ref, Vue } from "nuxt-property-decorator";
 import { ClientResponseError } from "pocketbase";
-import { generateSeed } from "~/utils/string";
 import AccountDeleteDialog from "~/components/dashboard/account/account_delete_dialog.vue";
-import SubscriptionCardDefault from "~/components/dashboard/account/subscription_card_default.vue";
-import SubscriptionCardPro from "~/components/dashboard/account/subscription_card_pro.vue";
+import AccountNavigation from "~/components/dashboard/account/account_navigation.vue";
+import VimuBtn from "~/components/vimu/vimu_button.vue";
+import VimuTextField from "~/components/vimu/vimu_text_field.vue";
+import { $pb, authStore, notificationStore } from "~/store";
+import { generateSeed } from "~/utils/string";
 
 
 @Component({
@@ -89,11 +83,10 @@ import SubscriptionCardPro from "~/components/dashboard/account/subscription_car
         VimuTextField,
         VimuBtn,
         AccountDeleteDialog,
-        SubscriptionCardDefault,
-        SubscriptionCardPro
+        AccountNavigation
     },
 })
-export default class AccountPage extends Vue {
+export default class AccountPageGeneral extends Vue {
 
     @Ref("account-form")
     form!: HTMLFormElement;
@@ -117,7 +110,6 @@ export default class AccountPage extends Vue {
         if (result.length) {
             this.oauthProvider = result[0].provider;
         }
-        await subscriptionStore.sub();
     }
 
     get emailChanged(): boolean {
@@ -133,10 +125,6 @@ export default class AccountPage extends Vue {
             return false;
         }
         return $pb.authStore.model?.verified ?? false
-    }
-
-    get subscribed() {
-        return subscriptionStore.subscribed;
     }
 
     mounted() {

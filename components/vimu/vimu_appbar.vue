@@ -33,9 +33,9 @@
 
       <div v-if="showMenu">
         <div class="d-flex flex-column vimu-appbar-menu">
-          <v-list-item class="font-weight-bold px-5 vimu-appbar-menu-item" to="/docs">Documentation</v-list-item>
+          <v-list-item class="font-weight-bold mx-4 mb-2 px-5 vimu-appbar-menu-item" to="/docs">Documentation</v-list-item>
           <documentation-navigation class="ml-10" v-if="showDocNav"></documentation-navigation>
-          <span class="font-weight-bold px-5 pt-4 pb-3">Pricing</span>
+          <v-list-item class="font-weight-bold mx-4 mb-2 px-5 vimu-appbar-menu-item" to="/pricing">Pricing</v-list-item>
         </div>
       </div>
     </div>
@@ -85,9 +85,10 @@ export default class VimuAppBar extends Vue {
 <style>
 .vimu-appbar {
   position: fixed;
-  width: 100%;
+  width: clamp(200px, 100%, 1576px);
   background-color: white;
   z-index: 10;
+  
 }
 
 .vimu-appbar-menu {

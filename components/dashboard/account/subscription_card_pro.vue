@@ -1,5 +1,5 @@
 <template>
-    <div class="vimu-card pricing-card pa-6" style="max-width: 600px; margin: 16px auto">
+    <div class="vimu-card pricing-card pa-6" style="max-width: 600px;">
         <h5 class="vimu-card-title">vimu Pro</h5>
         <v-row>
             <v-col>

@@ -5,7 +5,7 @@
                 <Logo :width=128 />
             </nuxt-link>
         </v-list-item>
-        <v-list-item to="/dashboard/files/my">
+        <v-list-item class="mx-4" to="/dashboard/files/my">
             <v-list-item-avatar>
                 <v-icon size="20">mdi-file</v-icon>
             </v-list-item-avatar>
@@ -13,7 +13,7 @@
                 My Files
             </v-list-item-title>
         </v-list-item>
-        <v-list-item to="/dashboard/files/shared">
+        <v-list-item class="mx-4" to="/dashboard/files/shared">
             <v-list-item-avatar>
                 <v-icon size="20">mdi-share-variant</v-icon>
             </v-list-item-avatar>
@@ -21,7 +21,7 @@
                 Shared Files
             </v-list-item-title>
         </v-list-item>
-        <v-list-item to="/dashboard/scores">
+        <v-list-item class="mx-4 mb-4" to="/dashboard/scores">
             <v-list-item-avatar>
                 <v-icon size="20">mdi-music</v-icon>
             </v-list-item-avatar>

@@ -42,7 +42,8 @@
             v-else-if="!scores.length && !initialLoading && !searching">
             <bunny-wanted :width="150" />
             <span class="vimu-card-title mt-5">There are no scores here</span>
-            <span class="vimu-text">But you could upload some...</span>
+            <span class="vimu-text text-center">Not sure how to start? <br />Have a look at the <nuxt-link
+                    to="/docs/dashboard/scores">documentation</nuxt-link>!</span>
         </div>
         <search-empty-state class="mt-12" v-else-if="!scores.length && !initialLoading && searching">
         </search-empty-state>

@@ -10,7 +10,7 @@
                     <v-spacer></v-spacer>
                 </div>
                 <span class="vimu-title">Scores</span>
-                <v-row class="align-center pt-5">
+                <v-row class="align-center my-5">
                     <v-col cols="12" sm="auto">
                         <vimu-btn class="score-upload-btn" :loading="createLoading" :disabled="createLoading"
                             :primary="true" :large="true" @click="openCreateDialog">Upload

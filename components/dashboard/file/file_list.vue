@@ -43,7 +43,8 @@
             v-else-if="!files.length && !initialLoading && !searching">
             <bunny-wanted :width="150" />
             <span class="vimu-card-title mt-5">There are no files here</span>
-            <span class="vimu-text">But you could create a new one...</span>
+            <span class="vimu-text text-center">Not sure how to start? <br />Have a look at the <nuxt-link
+                    :to="docsLink">documentation</nuxt-link>!</span>
         </div>
         <search-empty-state class="mt-12" v-else-if="!files.length && !initialLoading && searching">
         </search-empty-state>
@@ -89,6 +90,10 @@ export default class FileList extends Vue {
     @Prop({ default: 6 }) readonly sm!: number;
     @Prop({ default: 4 }) readonly md!: number;
     @Prop({ default: 3 }) readonly lg!: number;
+
+    get docsLink() {
+        return this.shared ? "/docs/dashboard/shared" : "/docs/dashboard/files"
+    }
 
     @Emit()
     share(file: File) {

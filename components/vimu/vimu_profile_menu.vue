@@ -11,7 +11,7 @@
                     <span class="grey--text">User: </span><span>{{ username }}</span>
                 </v-list-item-title>
             </v-list-item>
-            <v-list-item to="/dashboard/account">
+            <v-list-item to="/dashboard/account/general">
                 <v-list-item-avatar>
                     <v-icon>mdi-account</v-icon>
                 </v-list-item-avatar>

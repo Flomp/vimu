@@ -10,7 +10,7 @@
                     <span class="vimu-footer-title pb-3">Product</span>
                     <nuxt-link to="/dashboard/files/my" class="vimu-footer-text py-1">Editor</nuxt-link>
                     <span class="vimu-footer-text py-1">Installation</span>
-                    <span class="vimu-footer-text py-1">Pricing</span>
+                    <nuxt-link to="/pricing" class="vimu-footer-text py-1">Pricing</nuxt-link>
                 </v-col>
                 <v-col cols="6" sm="3" class="d-flex flex-column mt-4">
                     <span class="vimu-footer-title pb-3">Resources</span>

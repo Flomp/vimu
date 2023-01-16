@@ -1,5 +1,5 @@
 <template>
-    <v-app>
+    <v-app class="layout">
         <vimu-appbar />
         <div class="d-flex">
             <docs-drawer v-if="$vuetify.breakpoint.mdAndUp"></docs-drawer>

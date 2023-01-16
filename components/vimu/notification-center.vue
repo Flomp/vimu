@@ -1,10 +1,7 @@
 <template>
-  <v-snackbar bottom right v-model="showSnackbar" :color="notification.color" :timeout="duration" min-width="300">
-    <p class="mb-1 font-weight-bold">{{ notification.title }}</p>
+  <v-snackbar outlined bottom right v-model="showSnackbar" :color="notification.color" :timeout="duration" min-width="0">
+    <h4>{{ notification.title }}</h4>
     <span v-if="notification.subtitle">{{ notification.subtitle }}</span>
-    <template v-slot:action="{ attrs }">
-      <v-btn text v-bind="attrs" @click="showSnackbar = false"> OK </v-btn>
-    </template>
   </v-snackbar>
 </template>
 

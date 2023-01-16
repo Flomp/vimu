@@ -1,5 +1,5 @@
 <template>
-    <v-app>
+    <v-app class="layout">
         <notification-center />
         <mobile-menu v-if="$vuetify.breakpoint.smAndDown"></mobile-menu>
         <drawer v-else></drawer>

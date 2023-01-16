@@ -1,5 +1,5 @@
 <template>
-    <div class="vimu-card pricing-card pa-6" style="max-width: 600px; margin: 16px auto">
+    <div class="vimu-card pricing-card pa-6" style="max-width: 600px">
         <h5 class="vimu-card-title">vimu Basic</h5>
         <v-row>
             <v-col>
@@ -23,7 +23,7 @@
 <script lang="ts">
 import { Vue, Component } from "nuxt-property-decorator";
 import VimuBtn from "~/components/vimu/vimu_button.vue";
-import { $pb, stripeStore } from "~/store";
+import { $pb, notificationStore, stripeStore } from "~/store";
 
 @Component({
     components: {
@@ -48,6 +48,8 @@ export default class SubscriptionCardDefault extends Vue {
 
         if (redirectURL) {
             window.location.href = redirectURL;
+        }else {
+            notificationStore.sendNotification({title: 'Error: could not redirect', color: 'error'})
         }
     }
 

@@ -8,6 +8,12 @@ $body-font-family: Inter;
 
 $navigation-drawer-mobile-temporary-elevation: 0 !important;
 
+.layout {
+  max-width: 1576px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .fill-width {
   width: 100%
 }
@@ -80,4 +86,12 @@ h2 {
 
 .v-autocomplete:not(.v-input--is-focused).v-select--chips input {
   max-height: 25px
+}
+
+.v-list-item--link, .v-list-item--link::before  {
+  border-radius: 10px;
+}
+
+.vimu-menu .v-list-item--link, .vimu-menu .v-list-item--link::before  {
+  border-radius: 0px;
 }
