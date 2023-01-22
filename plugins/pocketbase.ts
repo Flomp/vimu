@@ -1,6 +1,5 @@
 import { Context } from '@nuxt/types';
-import { Inject, NuxtApp } from '@nuxt/types/app';
-import { Subscription } from '~/models/subscription';
+import { Inject } from '@nuxt/types/app';
 import { initialisePocketbase } from "~/utils/store-accessor";
 
 export default async (ctx: Context, inject: Inject) => {

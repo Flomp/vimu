@@ -1,10 +1,10 @@
 <template>
-  <v-navigation-drawer class="score-drawer" v-model="drawer" width="500" right fixed overlay-opacity="0" >
+  <v-navigation-drawer class="score-drawer" v-model="drawer" width="500" right fixed overlay-opacity="0">
     <div class="score-data px-8 pb-3" v-if="score" style="padding-top: 64px">
       <v-btn class="pa-8" color="primary" icon @click="drawer = false" absolute style="top:0; left:0">
         <v-icon>mdi-close</v-icon>
       </v-btn>
-      <div class="d-flex justify-space-between mr-3"> 
+      <div class="d-flex justify-space-between mr-3">
         <span class="score-title">{{ score.name }}</span>
         <vimu-btn :primary="true" @click="create">Create File</vimu-btn>
       </div>
@@ -70,6 +70,9 @@ export default class ScoreDrawer extends Vue {
   }
 
   getMeta(key: keyof ScoreMeta) {
+    if (!this.score.expand.meta) {
+      return "?";
+    }
     return this.score.expand.meta[key] ? this.score.expand.meta[key] : "-"
   }
 

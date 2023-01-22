@@ -35,6 +35,34 @@ export default class AuthStore extends VuexModule {
     }
 
     @Action({ rawError: true })
+    async resendVerificationEmail() {
+        if (!$pb.authStore.model) {
+            return;
+        }
+        try {
+
+            const response = await $pb.collection('users').requestVerification($pb.authStore.model.email);
+        } catch (error: any) {
+            return false;
+        }
+        return true;
+    }
+
+    @Action({ rawError: true })
+    async checkVerification() {
+        if (!$pb.authStore.model) {
+            return;
+        }
+        try {
+            const response = await $pb.collection('users').getOne($pb.authStore.model.id);
+            $pb.authStore.save($pb.authStore.token, response);
+            return response.verified;
+        } catch (error: any) {
+            return false;
+        }
+    }
+
+    @Action({ rawError: true })
     async login(data: { email: string, password: string }): Promise<boolean> {
         try {
             const userData = await $pb?.collection('users').authWithPassword(data.email, data.password);

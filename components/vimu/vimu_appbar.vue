@@ -2,7 +2,7 @@
   <div class="vimu-appbar pt-2 pb-md-2">
     <div class="d-flex align-center justify-space-between px-8 px-md-12">
       <div>
-        <nuxt-link to="/">
+        <nuxt-link to="/" style="display: inline-block">
           <Logo :width=128 />
         </nuxt-link>
       </div>

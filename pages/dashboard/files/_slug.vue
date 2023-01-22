@@ -9,7 +9,8 @@
 
                 <v-row class="align-center justify-space-between my-5">
                     <v-col cols="12" md="auto">
-                        <vimu-btn class="mt-3 mt-sm-0" :primary="true" :large="true" @click="createFile()">New file
+                        <vimu-btn class="mt-3 mt-sm-0" :primary="true" :large="true" @click="createFile()"
+                            :disabled="createLoading" :loading="createLoading">New file
                         </vimu-btn>
                         <v-menu content-class="vimu-menu elevation-0" nudge-bottom="6" offset-y>
                             <template v-slot:activator="{ on, attrs }">
@@ -57,6 +58,7 @@
             text="You are about to permanently delete this file" action="Delete" @confirm="removeFile">
         </confirm-dialog>
         <file-share-dialog v-model="shareDialog" :file="file"></file-share-dialog>
+        <upgrade-dialog v-model="upgradeDialog" item="file" :limitReached="limitReached"></upgrade-dialog>
     </v-sheet>
 </template>
   
@@ -68,13 +70,15 @@ import FileCard from "~/components/dashboard/file/file_card.vue";
 import FileList from "~/components/dashboard/file/file_list.vue";
 import FileRenameDialog from "~/components/dashboard/file/file_rename_dialog.vue";
 import FileShareDialog from "~/components/dashboard/file/file_share_dialog.vue";
+import UpgradeDialog from "~/components/dashboard/upgrade_dialog.vue";
 import VimuBtn from "~/components/vimu/vimu_button.vue";
 import VimuSelect from "~/components/vimu/vimu_select.vue";
 import VimuTextField from "~/components/vimu/vimu_text_field.vue";
 
 import { File } from "~/models/file";
 import { ViewType } from "~/models/view";
-import { $pb, fileStore, notificationStore } from "~/store";
+import { $pb, fileStore, notificationStore, stripeStore, subscriptionStore } from "~/store";
+
 
 
 @Component({
@@ -91,13 +95,15 @@ import { $pb, fileStore, notificationStore } from "~/store";
         ConfirmDialog,
         FileList,
         FileShareDialog,
-        VimuSelect
+        VimuSelect,
+        UpgradeDialog
     },
 })
 export default class FilesPage extends Vue {
     renameDialog: boolean = false;
     deleteConfirmDialog: boolean = false;
     shareDialog: boolean = false;
+    upgradeDialog: boolean = false;
 
     filename: string = ""
     renamingFile: File | null = null;
@@ -117,10 +123,13 @@ export default class FilesPage extends Vue {
 
     listLoading: boolean = false;
     nextPageLoading: boolean = false;
+    createLoading: boolean = false;
 
     currentPage = 1;
 
     viewNumber = 0;
+
+    limitReached = true;
 
     get viewType(): ViewType {
         return this.viewNumber == 0 ? ViewType.tiles : ViewType.list;
@@ -203,7 +212,27 @@ export default class FilesPage extends Vue {
         this.listLoading = false;
     }
 
+    async checkSubscription() {
+        if (!subscriptionStore.subscribed) {
+            const result = await fileStore.getTotalFiles()
+            if (result === null) {
+                return true;
+            } else if (result >= 2) {
+                this.limitReached = true;
+                this.upgradeDialog = true;
+                return true;
+            }
+        }
+        return false
+    }
+
     async createFile(file?: File, name?: string, navigate: boolean = true) {
+        this.createLoading = true;
+        const fileLimitReached = await this.checkSubscription();
+        if (fileLimitReached) {
+            this.createLoading = false;
+            return;
+        }
         const newFile = await fileStore.create({ template: file, name: name });
         if (newFile === null) {
             return;
@@ -213,6 +242,7 @@ export default class FilesPage extends Vue {
         } else {
             this.list(false);
         }
+        this.createLoading = false;
     }
 
     async importFile() {
@@ -292,6 +322,11 @@ export default class FilesPage extends Vue {
     }
 
     showShareDialog(file: File) {
+        if(!subscriptionStore.subscribed) {
+            this.limitReached = false;
+            this.upgradeDialog = true;
+            return;
+        }
         fileStore.setFile(file)
         this.shareDialog = true;
     }

@@ -12,6 +12,33 @@
                     </div>
                 </client-only>
                 <h2 class="vimu-subtitle my-6">Invoices</h2>
+                <v-simple-table v-if="invoices && invoices.length">
+                    <thead>
+                        <tr>
+                            <th>
+                                Status
+                            </th>
+                            <th>
+                                Invoice No.
+                            </th>
+                            <th>Date</th>
+                            <th>Total</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="i in invoices" :key="i.id">
+                            <td><v-icon>{{ invoiceIcon(i.status) }}</v-icon></td>
+                            <td>{{ i.number }}</td>
+                            <td>{{ formatDate(i.created) }}</td>
+                            <td>{{ formatNumber(i.total) }}</td>
+                            <td><vimu-btn :href="i.hosted_invoice_url">View</vimu-btn></td>
+                        </tr>
+                    </tbody>
+                </v-simple-table>
+                <div class="d-flex align-center justify-center" style="height: 100px" v-else>
+                    <span class="vimu-text">Nothing here yet</span>
+                </div>
             </v-container>
             <account-navigation v-if="$vuetify.breakpoint.mdAndUp"></account-navigation>
         </div>
@@ -23,7 +50,8 @@ import { Component, Vue } from "nuxt-property-decorator";
 import AccountNavigation from "~/components/dashboard/account/account_navigation.vue";
 import SubscriptionCardDefault from "~/components/dashboard/account/subscription_card_default.vue";
 import SubscriptionCardPro from "~/components/dashboard/account/subscription_card_pro.vue";
-import { subscriptionStore } from "~/store";
+import VimuBtn from "~/components/vimu/vimu_button.vue";
+import { stripeStore, subscriptionStore } from "~/store";
 
 @Component({
     head: {
@@ -33,13 +61,37 @@ import { subscriptionStore } from "~/store";
     components: {
         SubscriptionCardDefault,
         SubscriptionCardPro,
-        AccountNavigation
+        AccountNavigation,
+        VimuBtn
     },
+    fetchOnServer: false
 })
 export default class AccountPageSubscription extends Vue {
 
+    async fetch() {
+        if (subscriptionStore.subscribed) {
+            await stripeStore.listInvoices(subscriptionStore.subscription!.stripe_customer_id);
+        }
+    }
+
+    get invoices() {
+        return stripeStore.invoices;
+    }
+
     get subscribed() {
         return subscriptionStore.subscribed;
+    }
+
+    invoiceIcon(status: string) {
+        return status === 'paid' ? "mdi-check-circle-outline" : "mdi-close"
+    }
+
+    formatDate(timestamp: number) {
+        return new Date(timestamp * 1000)?.toLocaleDateString() ?? "?"
+    }
+
+    formatNumber(cents: number) {
+        return (cents / 100).toLocaleString(undefined, { style: "currency", currency: "EUR" });;
     }
 
 }

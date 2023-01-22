@@ -92,6 +92,10 @@ h2 {
   border-radius: 10px;
 }
 
+.v-card__actions {
+  padding-bottom: 12px !important;
+}
+
 .vimu-menu .v-list-item--link, .vimu-menu .v-list-item--link::before  {
   border-radius: 0px;
 }

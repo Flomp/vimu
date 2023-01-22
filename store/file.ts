@@ -63,7 +63,7 @@ export default class FileStore extends VuexModule {
             if (Object.keys(example_files).includes(id)) {
                 return { file: example_files[id] }
             }
-            let response = await $pb.collection('files').getOne<File>(id, { expand: 'file_data(file),collaborators.user' })
+            let response = await $pb.collection('files').getOne<File>(id, { expand: 'file_data(file),collaborators.user,owner' })
             response = rename(response, 'file_data(file)', 'data')
             fileStore.updateClient({ id: id, updatedFile: response })
             return { file: response }
@@ -157,6 +157,17 @@ export default class FileStore extends VuexModule {
         } catch (error) {
             notificationStore.sendNotification({ title: 'Error deleting file', color: 'error' })
             return false;
+        }
+    }
+
+    @Action
+    async getTotalFiles(): Promise<number | null> {
+        try {
+            const response = await $pb.collection('files').getList();
+            return response.totalItems;
+        } catch (error) {
+            notificationStore.sendNotification({ title: 'Error getting', color: 'error' })
+            return null;
         }
     }
 

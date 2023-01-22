@@ -37,8 +37,8 @@
             <client-only>
                 <score-list :scores="scores" :loading="listLoading || nextPageLoading" :initialLoading="listLoading"
                     :nextPageLoading="nextPageLoading" @create="createFile" @edit="openEditDialog"
-                    :searching="searching" :view-type="viewType" @remove="showDeleteConfirm"
-                    @click="setDrawerScore" @next="nextPage">
+                    :searching="searching" :view-type="viewType" @remove="showDeleteConfirm" @click="setDrawerScore"
+                    @next="nextPage">
                 </score-list>
             </client-only>
 
@@ -49,6 +49,7 @@
         <confirm-dialog v-model="deleteConfirmDialog" title="Are you sure?"
             text="You are about to permanently delete this score" action="Delete" @confirm="removeScore">
         </confirm-dialog>
+        <upgrade-dialog v-model="upgradeDialog" :item="limitedItem"></upgrade-dialog>
     </v-sheet>
 </template>
 
@@ -62,13 +63,14 @@ import ScoreDialog from "~/components/dashboard/score/score_dialog.vue";
 import ScoreDrawer from "~/components/dashboard/score/score_drawer.vue";
 import ScoreFilterMenu from "~/components/dashboard/score/score_filter_menu.vue";
 import ScoreList from "~/components/dashboard/score/score_list.vue";
+import UpgradeDialog from "~/components/dashboard/upgrade_dialog.vue";
 import VimuBtn from "~/components/vimu/vimu_button.vue";
 import VimuSearchbar from "~/components/vimu/vimu_searchbar.vue";
 import VimuTabs from "~/components/vimu/vimu_tabs.vue";
 import VimuTextField from "~/components/vimu/vimu_text_field.vue";
 import { Score, ScoreFilter } from "~/models/score";
 import { ViewType } from "~/models/view";
-import { $pb, fileStore, scoreStore } from "~/store";
+import { $pb, fileStore, scoreStore, subscriptionStore } from "~/store";
 
 @Component({
     head: {
@@ -86,13 +88,15 @@ import { $pb, fileStore, scoreStore } from "~/store";
         VimuSearchbar,
         ConfirmDialog,
         ScoreList,
-        ScoreFilterMenu
+        ScoreFilterMenu,
+        UpgradeDialog
     }
 })
 export default class ScoresPage extends Vue {
     tabs: string[] = ["My scores", "Library"]
     activeTab = 0;
     dialog: boolean = false;
+    upgradeDialog: boolean = false;
     drawer: boolean = true;
 
     listLoading: boolean = false;
@@ -124,6 +128,8 @@ export default class ScoresPage extends Vue {
     currentPage = 1;
 
     viewNumber = 0;
+
+    limitedItem = "score"
 
     get viewType(): ViewType {
         return this.viewNumber == 0 ? ViewType.tiles : ViewType.list;
@@ -181,7 +187,13 @@ export default class ScoresPage extends Vue {
         scoreStore.setScore(score);
     }
 
-    openCreateDialog() {
+    async openCreateDialog() {
+        this.createLoading = true;
+        const scoreLimitReached = await this.checkScoreSubscription();
+        this.createLoading = false
+        if (scoreLimitReached) {
+            return;
+        }
         this.dialogEditMode = false;
         this.editScore = null;
         this.dialog = true;
@@ -235,7 +247,43 @@ export default class ScoresPage extends Vue {
         this.listLoading = false;
     }
 
+    async checkFileSubscription() {
+        if (!subscriptionStore.subscribed) {
+            const result = await fileStore.getTotalFiles()
+            if (result === null) {
+                return true;
+            } else if (result >= 2) {
+                this.limitedItem = "file";
+                this.upgradeDialog = true;
+                return true;
+            }
+        }
+        return false
+    }
+
+    async checkScoreSubscription() {
+        if (!subscriptionStore.subscribed) {
+            const result = await scoreStore.getTotalScores()
+            
+            if (result === null) {
+                return true;
+            } else if (result >= 0) {
+                console.log("here");
+                
+                this.limitedItem = "score";
+                this.upgradeDialog = true;
+                return true;
+            }
+        }
+        return false
+    }
+
     async createFile(score: Score) {
+        const fileLimitReached = await this.checkFileSubscription();
+        if (fileLimitReached) {
+            this.createLoading = false;
+            return;
+        }
         const file = await fileStore.createFileFromScore(score)
         if (file != null) {
             this.$router.push('/editor/' + file.id)

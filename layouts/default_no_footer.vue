@@ -2,7 +2,7 @@
   <v-app class="layout">
     <notification-center />
     <vimu-appbar />
-    <v-main>
+    <v-main class="main">
       <nuxt />
     </v-main>
   </v-app>

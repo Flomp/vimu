@@ -10,7 +10,6 @@ const auth = ({ $pb, route, redirect, store }: Context & { $pb: PocketBase }) =>
   ]
 
   const loggedIn = $pb.authStore.isValid;
-
   if (!loggedIn) {
     for (const r of protectedRoutes) {
       if (route.path.startsWith(r)) {
@@ -19,6 +18,21 @@ const auth = ({ $pb, route, redirect, store }: Context & { $pb: PocketBase }) =>
       }
     }
   } else {
+    const verified = $pb.authStore.model?.verified;
+
+    if(!verified) {
+      for (const r of protectedRoutes) {
+        if (route.path.startsWith(r)) {
+          redirect('/dashboard/verify')
+        }
+      }
+      return;
+    }else {
+      if (route.path.startsWith('/dashboard/verify')) {
+        redirect('/dashboard/files/my')
+        return;
+      }
+    }
     if (route.path.startsWith('/login')) {
       redirect('/dashboard/files/my')
       return;

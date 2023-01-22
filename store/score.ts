@@ -130,13 +130,27 @@ export default class ScoreStore extends VuexModule {
     @Action
     async delete(score: Score): Promise<boolean> {
         try {
-            const successMeta: boolean = await $pb.collection('score_meta').delete(score.expand.meta.id!)
+            let successMeta: boolean = true;
+            if (score.expand.meta) {
+                successMeta = await $pb.collection('score_meta').delete(score.expand.meta.id!)
+            }
             const success: boolean = await $pb.collection('scores').delete(score.id!)
             scoreStore.updateClient({ score })
             return success && successMeta;
         } catch (error) {
             notificationStore.sendNotification({ title: 'Error deleting score', color: 'error' })
             return false;
+        }
+    }
+
+    @Action
+    async getTotalScores(): Promise<number | null> {
+        try {
+            const response = await $pb.collection('scores').getList();
+            return response.totalItems;
+        } catch (error) {
+            notificationStore.sendNotification({ title: 'Error getting', color: 'error' })
+            return null;
         }
     }
 }
