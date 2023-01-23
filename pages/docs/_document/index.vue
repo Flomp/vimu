@@ -13,6 +13,7 @@
 import { IContentDocument } from "@nuxt/content/types/content";
 import { Context } from "@nuxt/types";
 import { Vue, Component } from "nuxt-property-decorator";
+import DocumentationContentCard from "~/components/documentation/documentation_content_card.vue";
 import DocsTableOfContents from "~/components/documentation/documentation_table_of_contents.vue";
 
 @Component({
@@ -21,7 +22,8 @@ import DocsTableOfContents from "~/components/documentation/documentation_table_
     },
     layout: "documentation",
     components: {
-        DocsTableOfContents
+        DocsTableOfContents,
+        DocumentationContentCard
     }
 })
 export default class DocumentationPage extends Vue {

@@ -1,5 +1,16 @@
 # Dashboard
 
-<framed-gif path="/imgs/dashboard.png"></framed-gif>
-
-The dashboard is your central hub for **vimu**. From here you can access all of your <nuxt-link to="/docs/dashboard/files">files</nuxt-link>, <nuxt-link to="/docs/dashboard/shared">shared files</nuxt-link> and <nuxt-link to="/docs/dashboard/scores">scores</nuxt-link> via the sidebar. You can reach it by clicking the "Dashboard" button on the main page. Or by clicking on your profile avatar in the top right corner and selecting "Dashboard" from the dropdown menu.
+<div class="row">
+    <div class="col-12 col-sm-6">
+        <documentation-content-card title="Files" text="Each analysis of a score is stored in a vimu file" to="/docs/dashboard/files"></documentation-content-card>
+    </div>
+    <div class="col-12 col-sm-6">
+        <documentation-content-card title="Shared Files" text="Files that have been shared with you will be listed in this section of the dashboard." to="/docs/dashboard/shared"></documentation-content-card>
+    </div>
+    <div class="col-12 col-sm-6">
+        <documentation-content-card title="Scores" text="Next to files, scores are the other integral part that makes vimu work." to="/docs/dashboard/scores"></documentation-content-card>
+    </div>
+    <div class="col-12 col-sm-6">
+        <documentation-content-card title="Account" text="vimu accounts are how a user interacts with vimu. Accounts currently are linked to one email or one Google account." to="/docs/dashboard/account"></documentation-content-card>
+    </div>
+</div>

@@ -14,6 +14,7 @@
             <v-simple-table v-else>
                 <thead>
                     <tr>
+                        <th v-if="!readonly"></th>
                         <th>
                             File name
                         </th>
@@ -24,11 +25,11 @@
                             Created
                         </th>
                         <th></th>
-                        <th></th>
+                        <th v-if="!readonly"></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <file-table-row v-for="file in files" :key="file.id" :file="file" :shared="shared" @share="share"
+                    <file-table-row v-for="file in files" :key="file.id" :file="file" :readonly="readonly" :shared="shared" @share="share"
                         @remove="remove" @rename="rename" @favorite="favorite" @duplicate="duplicate" @open="open"
                         @open-in-new-tab="openInNewTab">
 
@@ -43,7 +44,7 @@
             v-else-if="!files.length && !initialLoading && !searching">
             <bunny-wanted :width="150" />
             <span class="vimu-card-title mt-5">There are no files here</span>
-            <span class="vimu-text text-center">Not sure how to start? <br />Have a look at the <nuxt-link
+            <span class="vimu-text text-center" v-if="!readonly">Not sure how to start? <br />Have a look at the <nuxt-link
                     :to="docsLink">documentation</nuxt-link>!</span>
         </div>
         <search-empty-state class="mt-12" v-else-if="!files.length && !initialLoading && searching">
@@ -84,6 +85,8 @@ export default class FileList extends Vue {
     @Prop() readonly loading!: boolean;
     @Prop() readonly shared!: boolean;
     @Prop() readonly searching!: boolean;
+    @Prop() readonly readonly!: boolean;
+
     @Prop({ default: ViewType.tiles }) readonly viewType!: ViewType;
 
     @Prop({ default: 12 }) readonly cols!: number;

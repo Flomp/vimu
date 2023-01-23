@@ -5,6 +5,18 @@
         <div id="rete" @contextmenu="showContextMenu"></div>
         <sub-menu v-model="showMenu" :absolute="true" :positionX="x" :positionY="y" :items="menuItems"
             @menu-click="createNode" v-if="!readonly" />
+        <v-snackbar outlined bottom right v-model="showSnackbar" :timeout="10000" min-width="0">
+            Would you like to open the Plot Panel?
+
+            <template v-slot:action="{ attrs }">
+                <v-btn color="primary" text v-bind="attrs" @click="showSnackbar = false">
+                    No
+                </v-btn>
+                <v-btn color="primary" text v-bind="attrs" @click="showPlotPanel">
+                    Yes
+                </v-btn>
+            </template>
+        </v-snackbar>
     </div>
 </template>
 
@@ -13,7 +25,8 @@ import { Component, InjectReactive, Vue, Watch } from "nuxt-property-decorator";
 import { Component as rComponent, NodeEditor } from "rete";
 import ErrorBadge from "~/components/vimu/error_badge.vue";
 import { LogLevel } from "~/models/log";
-import { engineStore, fileStore, logStore } from "~/store";
+import { Settings } from "~/models/settings";
+import { engineStore, fileStore, logStore, settingsStore } from "~/store";
 import MainMenu from "../main_menu.vue";
 import { editorMenuItems, MenuItem } from "../palette/menu_item";
 import SubMenu from "../palette/sub_menu.vue";
@@ -36,6 +49,8 @@ export default class EditorPanel extends Vue {
     editorY = 0;
 
     errorNode: HTMLElement | undefined;
+
+    showSnackbar: boolean = false;
 
     get readonly() {
         return fileStore.readonly
@@ -83,7 +98,7 @@ export default class EditorPanel extends Vue {
             const affectedNode = this.editor?.nodes.find(n => n.id == this.engineError?.node.id);
             if (affectedNode) {
                 const affectedEl = this.editor?.view.nodes.get(affectedNode)?.el
-                if(affectedEl === this.errorNode) {
+                if (affectedEl === this.errorNode) {
                     this.errorNode?.lastChild?.remove()
                 }
                 affectedEl?.children[0].classList.add('engine-error')
@@ -135,6 +150,9 @@ export default class EditorPanel extends Vue {
         if (!item.key || !this.editor) {
             return;
         }
+        if (item.key.startsWith('plot') && !settingsStore.settings.view.plot) {
+            this.showSnackbar = true;
+        }
         const node = await (
             this.editor?.components.get(item.key) as rComponent
         ).createNode();
@@ -147,6 +165,16 @@ export default class EditorPanel extends Vue {
             level: LogLevel.info,
             text: `Added new node ${item.key}`,
         });
+    }
+
+    showPlotPanel() {
+        const settings: Settings = JSON.parse(
+            JSON.stringify(settingsStore.settings)
+        );
+        settings.view.plot = true;
+
+        settingsStore.changeSettings(settings);
+        this.showSnackbar = false;
     }
 }
 </script>

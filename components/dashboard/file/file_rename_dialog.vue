@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="dialog" width="500">
+  <v-dialog v-model="dialog" width="500">
     <v-card>
       <v-card-title>
         Rename file
@@ -22,30 +22,30 @@ import VimuBtn from "~/components/vimu/vimu_button.vue";
 import { required } from "~/utils/verification_rules";
 
 @Component({
-    components: {
-        VimuBtn
-    }
+  components: {
+    VimuBtn
+  }
 })
 export default class FileRenameDialog extends Vue {
-    @VModel() dialog!: boolean;
-    @Prop() filename!: string;
-    filenameLocal: string = this.filename;
+  @VModel() dialog!: boolean;
+  @Prop() filename!: string;
+  filenameLocal: string = this.filename;
 
-    filenameRules = [required]
+  filenameRules = [required]
 
-    @Watch("dialog")
-    onDialogChanged(value: boolean) {
-        if(!value) {
-            return;
-        }
-        this.filenameLocal = this.filename;
+  @Watch("dialog")
+  onDialogChanged(value: boolean) {
+    if (!value) {
+      return;
     }
+    this.filenameLocal = this.filename;
+  }
 
-    @Emit()
-    save() {
-        this.dialog = false;
-        return this.filenameLocal;
-    }
+  @Emit()
+  save() {
+    this.dialog = false;
+    return this.filenameLocal;
+  }
 }
 </script>
 

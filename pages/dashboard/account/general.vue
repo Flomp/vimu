@@ -5,7 +5,7 @@
         <div class="d-flex">
             <v-container class="px-12">
                 <div class="d-flex justify-space-between align-center mt-4">
-                    <h2 class="vimu-subtitle">Profile information</h2>
+                    <h2>Profile information</h2>
                     <vimu-btn :disabled="(!usernameChanged && !emailChanged) || !username.length || !email.length"
                         :loading="saveLoading" @click="save">
                         Save
@@ -23,7 +23,8 @@
 
                         </v-col>
                         <v-col cols="12" sm="auto"> <span class="font-weight-bold">Email</span>
-                            <vimu-text-field class="mb-4" v-model="email" :disabled="true || oauthProvider !== ''" :hideDetails="true">
+                            <vimu-text-field class="mb-4" v-model="email" :disabled="true || oauthProvider !== ''"
+                                :hideDetails="true">
                                 <v-tooltip bottom v-if="verified">
                                     <template v-slot:activator="{ on, attrs }">
                                         <v-icon color="success" v-bind="attrs" v-on="on">
@@ -48,8 +49,51 @@
                     </v-row>
                 </v-form>
                 <v-divider class="my-10"></v-divider>
-
-                <h2 class="vimu-subtitle">Danger zone</h2>
+                <h2>Email preferences <v-progress-circular indeterminate v-if="$fetchState.pending"></v-progress-circular></h2>
+                <v-row v-if="!$fetchState.pending">
+                    <v-col cols="12" sm="6">
+                        <v-checkbox color="accent" v-model="localEmailSettings.share" @change="updateEmailSettings">
+                            <template v-slot:label>
+                                <div>
+                                    <p class="black--text mb-1">New shared file</p>
+                                    <span style="font-size: 15px">Get notified when somone shares a file with you</span>
+                                </div>
+                            </template>
+                        </v-checkbox>
+                    </v-col>
+                    <v-col cols="12" sm="6">
+                        <v-checkbox color="accent" v-model="localEmailSettings.team" @change="updateEmailSettings">
+                            <template v-slot:label>
+                                <div>
+                                    <p class="black--text mb-1">New Team</p>
+                                    <span style="font-size: 15px">Get notified when you are added to a team</span>
+                                </div>
+                            </template>
+                        </v-checkbox>
+                    </v-col>
+                    <v-col cols="12" sm="6">
+                        <v-checkbox color="accent" v-model="localEmailSettings.changelog" @change="updateEmailSettings">
+                            <template v-slot:label>
+                                <div>
+                                    <p class="black--text mb-1">Changelog</p>
+                                    <span style="font-size: 15px">Get updated on new features</span>
+                                </div>
+                            </template>
+                        </v-checkbox>
+                    </v-col>
+                    <v-col cols="12" sm="6">
+                        <v-checkbox color="accent" v-model="localEmailSettings.marketing" @change="updateEmailSettings">
+                            <template v-slot:label>
+                                <div>
+                                    <p class="black--text mb-1">Marketing</p>
+                                    <span style="font-size: 15px">Recieve our newsletter</span>
+                                </div>
+                            </template>
+                        </v-checkbox>
+                    </v-col>
+                </v-row>
+                <v-divider class="my-10"></v-divider>
+                <h2>Danger zone</h2>
                 <div class="py-8">
                     <vimu-btn :danger="true" @click="deleteConfirmDialog = true">Delete account</vimu-btn>
                 </div>
@@ -70,7 +114,8 @@ import AccountDeleteDialog from "~/components/dashboard/account/account_delete_d
 import AccountNavigation from "~/components/dashboard/account/account_navigation.vue";
 import VimuBtn from "~/components/vimu/vimu_button.vue";
 import VimuTextField from "~/components/vimu/vimu_text_field.vue";
-import { $pb, authStore, notificationStore } from "~/store";
+import { default_email_settings, EmailSettings } from "~/models/settings";
+import { $pb, authStore, notificationStore, settingsStore } from "~/store";
 import { generateSeed } from "~/utils/string";
 
 
@@ -85,6 +130,7 @@ import { generateSeed } from "~/utils/string";
         AccountDeleteDialog,
         AccountNavigation
     },
+    fetchOnServer: false
 })
 export default class AccountPageGeneral extends Vue {
 
@@ -105,11 +151,17 @@ export default class AccountPageGeneral extends Vue {
 
     deleteConfirmDialog: boolean = false;
 
+    localEmailSettings: EmailSettings = default_email_settings;
+
     async fetch() {
         const result = await $pb.collection('users').listExternalAuths($pb.authStore.model?.id ?? "", { '$autoCancel': false });
         if (result.length) {
             this.oauthProvider = result[0].provider;
         }
+        await settingsStore.getEmailSettings();        
+
+        this.localEmailSettings = JSON.parse(JSON.stringify(settingsStore.emailSettings));
+
     }
 
     get emailChanged(): boolean {
@@ -183,6 +235,14 @@ export default class AccountPageGeneral extends Vue {
             return;
         } finally {
             this.saveLoading = false;
+        }
+    }
+
+    async updateEmailSettings() {
+        const updatedEmailSettings = await settingsStore.updateEmailSettings(this.localEmailSettings);
+
+        if(updatedEmailSettings !== null) {
+            this.localEmailSettings = updatedEmailSettings;
         }
     }
 

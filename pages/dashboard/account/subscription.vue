@@ -4,14 +4,14 @@
         <account-navigation v-if="$vuetify.breakpoint.smAndDown" :sticky="false"></account-navigation>
         <div class="d-flex">
             <v-container class="px-12">
-                <h2 class="vimu-subtitle mt-6">Active plan</h2>
+                <h2 class="mt-6">Active plan</h2>
                 <client-only>
                     <div class="my-8">
                         <subscription-card-pro v-if="subscribed"></subscription-card-pro>
                         <subscription-card-default v-else></subscription-card-default>
                     </div>
                 </client-only>
-                <h2 class="vimu-subtitle my-6">Invoices</h2>
+                <h2 class="my-6">Invoices</h2>
                 <v-simple-table v-if="invoices && invoices.length">
                     <thead>
                         <tr>

@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 interface Settings {
     view: {
         score: boolean;
@@ -8,14 +10,31 @@ interface Settings {
     }
 }
 
+interface EmailSettings {
+    id: string;
+    share: boolean;
+    team: boolean;
+    changelog: boolean;
+    marketing: boolean;
+    user?: string;
+}
+
 const default_settings: Settings  = {
     view: {
         score: true,
         log: false,
-        plot: true,
+        plot: false,
         minimap: true,
         pixelGrid: true
     }
 }
 
-export { Settings, default_settings }
+const default_email_settings: EmailSettings = {
+    id: "default",
+    share: true,
+    team: true,
+    changelog: true,
+    marketing: true
+}
+
+export { Settings, EmailSettings, default_settings, default_email_settings }

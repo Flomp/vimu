@@ -16,7 +16,7 @@ To create a new file from a score, navigate to the <nuxt-link to="/dashboard/sco
 You can also duplicate an existing file. Open the action menu of the file you wish to duplicate and select "Duplicate". A new file will be created that has the exact content as the original.
 
 ### Import file
-**vimu** allows you to <nuxt-link to="/docs/editor/file-menu">export files</nuxt-link>. To import a previously exported file, open the dropdown menu next to the "New File" button, click "Import File" and select the file you wish to import from your hard drive.
+**vimu** allows you to <nuxt-link to="/docs/editor/menu#export">export files</nuxt-link>. To import a previously exported file, open the dropdown menu next to the "New File" button, click "Import File" and select the file you wish to import from your hard drive.
 
 ## Rename a file
 

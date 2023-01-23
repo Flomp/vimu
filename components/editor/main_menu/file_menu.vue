@@ -8,6 +8,7 @@
     </sub-menu>
     <file-share-dialog v-model="shareDialog" :file="file"></file-share-dialog>
     <file-rename-dialog v-model="renameDialog" :filename="filename" @save="renameFile"></file-rename-dialog>
+    <file-open-dialog v-model="openDialog" @open="openFile"></file-open-dialog>
   </div>
 
 </template>
@@ -15,17 +16,20 @@
 <script lang="ts">
 import { Component, InjectReactive, Vue } from "nuxt-property-decorator";
 import { NodeEditor } from "rete";
+import FileOpenDialog from "~/components/dashboard/file/file_open_dialog.vue";
 import FileRenameDialog from "~/components/dashboard/file/file_rename_dialog.vue";
 import FileShareDialog from "~/components/dashboard/file/file_share_dialog.vue";
 import { MenuItem } from "~/components/editor/palette/menu_item";
 import SubMenu from "~/components/editor/palette/sub_menu.vue";
-import { engineStore, fileStore, notificationStore } from "~/store";
+import { File } from "~/models/file";
+import { fileStore, notificationStore } from "~/store";
 
 @Component({
   components: {
     SubMenu,
     FileShareDialog,
     FileRenameDialog,
+    FileOpenDialog
   },
 })
 export default class FileMenu extends Vue {
@@ -35,22 +39,25 @@ export default class FileMenu extends Vue {
 
   open: boolean = false;
 
+  openDialog: boolean = false;
   shareDialog: boolean = false;
   renameDialog: boolean = false;
 
   get items(): MenuItem[] {
     return [
-      ...this.readonly ? [] : [{ name: "Open...", divider: true },
-      { name: "Share", key: "file_share" },
-      { name: "Rename", divider: true, key: "file_rename" },
-      {
-        name: "Import", key: "file_import",
-      },
-      {
-        name: "Export",
-        divider: true,
-        key: "file_export",
-      },],
+      ...this.readonly ? [] : [
+        { name: "Open...", divider: true, key: 'file_open', },
+        { name: "Share", key: "file_share" },
+        { name: "Rename", divider: true, key: "file_rename" },
+        {
+          name: "Import", key: "file_import",
+        },
+        {
+          name: "Export",
+          divider: true,
+          key: "file_export",
+        },
+      ],
       { name: "Close", key: "file_close" },
     ];
   }
@@ -69,8 +76,11 @@ export default class FileMenu extends Vue {
 
   handleClick(item: MenuItem) {
     switch (item.key) {
+      case "file_open":
+        this.openDialog = true;
+        break;
       case "file_close":
-        this.$router.back();
+        this.$router.push('/dashboard/files/my');
         break;
       case "file_share":
         this.shareDialog = true;
@@ -85,6 +95,10 @@ export default class FileMenu extends Vue {
         this.exportJSON();
         break;
     }
+  }
+
+  openFile(file: File) {   
+    window.location.href = "/editor/" + file.id;
   }
 
   async renameFile(newFilename: string) {

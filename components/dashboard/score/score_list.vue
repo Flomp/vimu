@@ -42,7 +42,7 @@
             v-else-if="!scores.length && !initialLoading && !searching">
             <bunny-wanted :width="150" />
             <span class="vimu-card-title mt-5">There are no scores here</span>
-            <span class="vimu-text text-center">Not sure how to start? <br />Have a look at the <nuxt-link
+            <span class="vimu-text text-center" v-if="!readonly">Not sure how to start? <br />Have a look at the <nuxt-link
                     to="/docs/dashboard/scores">documentation</nuxt-link>!</span>
         </div>
         <search-empty-state class="mt-12" v-else-if="!scores.length && !initialLoading && searching">
@@ -78,7 +78,7 @@ export default class ScoreList extends Vue {
     @Prop() readonly initialLoading!: boolean;
     @Prop() readonly nextPageLoading!: boolean;
     @Prop() readonly loading!: boolean;
-    @Prop() readonly readOnly!: boolean;
+    @Prop() readonly readonly!: boolean;
     @Prop() readonly searching!: boolean;
     @Prop({ default: ViewType.tiles }) readonly viewType!: ViewType;
 

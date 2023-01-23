@@ -13,9 +13,9 @@
 import { Component, Prop, Vue } from "nuxt-property-decorator";
 import { fileStore } from "~/store";
 import { } from "./palette/menu_item";
-import EditMenu from "./rete/main_menu/edit_menu.vue";
-import FileMenu from "./rete/main_menu/file_menu.vue";
-import ViewMenu from "./rete/main_menu/view_menu.vue";
+import EditMenu from "./main_menu/edit_menu.vue";
+import FileMenu from "./main_menu/file_menu.vue";
+import ViewMenu from "./main_menu/view_menu.vue";
 
 @Component({
   components: {

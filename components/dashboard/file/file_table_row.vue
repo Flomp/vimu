@@ -1,9 +1,11 @@
 <template>
     <tr @click="open" class="hover-table-row">
-        <td>
+        <td v-if="!readonly">
             <v-btn color="primary" icon @click="favoriteButton" v-if="!shared">
                 <v-icon>{{ favoriteIcon }}</v-icon>
             </v-btn>
+        </td>
+        <td>
             {{ file.name }}
         </td>
         <td v-if="!$vuetify.breakpoint.mobile">
@@ -14,7 +16,7 @@
         </td>
         <td> <file-share-menu :file="file" :shared="shared"></file-share-menu>
         </td>
-        <td>
+        <td v-if="!readonly">
             <file-context-menu @share="share" @remove="remove" @rename="rename" @favorite="favoriteMenu"
                 @duplicate="duplicate" @open="open" @open-in-new-tab="openInNewTab" :file="file" :shared="shared">
             </file-context-menu>
@@ -38,6 +40,7 @@ import FileShareMenu from "./file_share_menu.vue";
 export default class FileTableRow extends Vue {
     @Prop() file!: File;
     @Prop() shared!: boolean;
+    @Prop() readonly!: boolean;
 
     get favoriteIcon() {
         return this.file.favorite ? 'mdi-star' : 'mdi-star-outline'

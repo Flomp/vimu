@@ -176,7 +176,7 @@ export default class FilesPage extends Vue {
 
         switch (slug) {
             case 'shared':
-                this.filters.slug = `collaborators.user.id~"${$pb.authStore.model?.id}"`
+                this.filters.slug = `collaborators.user.id?="${$pb.authStore.model?.id}"`
                 break;
             default:
                 this.filters.slug = `owner="${$pb.authStore.model?.id}"`
