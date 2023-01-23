@@ -1,7 +1,7 @@
 <template>
     <v-card :to="to" class="vimu-card content-card" elevation="0">
         <v-card-title>
-            {{ title }}
+            📄 {{ title }}
         </v-card-title>
         <v-card-text class="ellipsis-text">
             {{ text }}

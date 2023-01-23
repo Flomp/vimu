@@ -80,7 +80,7 @@ export default class FileMenu extends Vue {
         this.openDialog = true;
         break;
       case "file_close":
-        this.$router.push('/dashboard/files/my');
+        this.$router.back();
         break;
       case "file_share":
         this.shareDialog = true;

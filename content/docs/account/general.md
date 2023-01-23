@@ -1,7 +1,7 @@
-# Account
+# General
 
-**vimu** accounts are how a user interacts with **vimu**.
-Accounts currently are linked to one email or one Google account. Every account has a unique username that is generated upon creation. To open the account settings click you avatar in the top right corner and select "Account".
+Accounts are how a user interacts with **vimu**.
+Accounts currently are linked to one email or one Google account. Every account has a unique username that is generated upon creation. To open the account settings click your avatar in the top right corner and select "Account".
 
 ## Account actions
 ### Change your username
@@ -14,6 +14,9 @@ If you used Google to authenticate this option is not available.
 
 ### Update avatar
 If you do not like your avatar you can generate a new one by clicking the <i class="v-icon mdi mdi-cached theme--light"></i> icon next to your current avatar.
+
+### Update your email preferences
+In this section, you can determine in which cases you like to be notified by **vimu**. Just tick or untick the boxes to suite your preferences.
 
 ### Delete account
 At the bottom of the page, you can select "Delete Account" to have all your account and data related to your account deleted. This action cannot be undone. 

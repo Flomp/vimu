@@ -1,7 +1,7 @@
 import { AuthProviderInfo } from 'pocketbase';
 import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators';
 import { generateSeed } from '~/utils/string';
-import { $pb, notificationStore } from '.';
+import { $pb, notificationStore, subscriptionStore } from '.';
 
 @Module({
     name: 'auth',
@@ -66,6 +66,7 @@ export default class AuthStore extends VuexModule {
     async login(data: { email: string, password: string }): Promise<boolean> {
         try {
             const userData = await $pb?.collection('users').authWithPassword(data.email, data.password);
+            await subscriptionStore.sub();
         } catch (error: any) {
             if (error.status == 400 && error.data?.message == 'Failed to authenticate.') {
                 notificationStore.sendNotification({ title: 'Wrong email or password', color: 'error' })
@@ -100,6 +101,7 @@ export default class AuthStore extends VuexModule {
     @Action({ rawError: true })
     logout() {
         $pb.authStore.clear();
+        subscriptionStore.clear()
     }
 
     get loggedIn() {

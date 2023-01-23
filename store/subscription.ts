@@ -1,5 +1,5 @@
 import { MutationAction } from 'nuxt-property-decorator';
-import { Module, VuexModule } from 'vuex-module-decorators';
+import { Module, Mutation, VuexModule } from 'vuex-module-decorators';
 import { Subscription } from '~/models/subscription';
 import { $pb } from '.';
 
@@ -10,6 +10,11 @@ import { $pb } from '.';
 })
 export default class SubscriptionStore extends VuexModule {
     subscription: Subscription | null = null
+
+    @Mutation
+    clear() {
+        this.subscription = null;
+    }
 
     @MutationAction({ mutate: ['subscription'] })
     async sub() {              

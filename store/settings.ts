@@ -17,13 +17,23 @@ export default class SettingsStore extends VuexModule {
         this.settings = settings;
     }
 
+    @Mutation
+    toggleView(key: "score" | "plot", value?: boolean) {
+
+        if (value) {
+            this.settings.view[key] = value;
+        } else {
+            this.settings.view[key] = !this.settings.view[key];
+        }
+    }
+
     @MutationAction({ mutate: ['emailSettings'] })
     async getEmailSettings() {
         try {
             const emailSettings: EmailSettings = await $pb.collection('email_settings').getFirstListItem(`user='${$pb.authStore.model?.id}'`)
 
             return { emailSettings: emailSettings };
-        } catch (error) {            
+        } catch (error) {
             return { emailSettings: this.emailSettings }
         }
     }
@@ -32,11 +42,11 @@ export default class SettingsStore extends VuexModule {
     async updateEmailSettings(emailSettings: EmailSettings) {
         try {
             let updatedEmailSettings: EmailSettings;
-            if(emailSettings.id == "default") {
+            if (emailSettings.id == "default") {
                 emailSettings.user = $pb.authStore.model?.id;
                 emailSettings.id = ""
                 updatedEmailSettings = await $pb.collection('email_settings').create(emailSettings);
-            }else {
+            } else {
                 updatedEmailSettings = await $pb.collection('email_settings').update(emailSettings.id, emailSettings)
             }
 

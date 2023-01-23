@@ -45,12 +45,12 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, ProvideReactive } from "nuxt-property-decorator";
-import VimuBtn from "./vimu_button.vue";
-import Logo from "./illustrations/logo.vue";
-import VimuProfileMenu from "./vimu_profile_menu.vue";
-import { $pb } from "~/store";
+import { Component, Vue } from "nuxt-property-decorator";
+import { $pb, subscriptionStore } from "~/store";
 import DocumentationNavigation from "../documentation/documentation_navigation.vue";
+import Logo from "./illustrations/logo.vue";
+import VimuBtn from "./vimu_button.vue";
+import VimuProfileMenu from "./vimu_profile_menu.vue";
 
 @Component({
   components: {
@@ -77,6 +77,10 @@ export default class VimuAppBar extends Vue {
 
   get menuIcon() {
     return this.showMenu ? "mdi-menu-up" : "mdi-menu-down"
+  }
+
+  get subscribed() {   
+    return subscriptionStore.subscribed;
   }
 
 }

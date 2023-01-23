@@ -168,13 +168,7 @@ export default class EditorPanel extends Vue {
     }
 
     showPlotPanel() {
-        const settings: Settings = JSON.parse(
-            JSON.stringify(settingsStore.settings)
-        );
-        settings.view.plot = true;
-
-        settingsStore.changeSettings(settings);
-        this.showSnackbar = false;
+        settingsStore.toggleView('plot', true)
     }
 }
 </script>

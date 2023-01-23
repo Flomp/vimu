@@ -12,7 +12,6 @@
         <doc-nav-link to="/docs/dashboard/files">Files</doc-nav-link>
         <doc-nav-link to="/docs/dashboard/shared">Shared Files</doc-nav-link>
         <doc-nav-link to="/docs/dashboard/scores">Scores</doc-nav-link>
-        <doc-nav-link to="/docs/dashboard/account">Account</doc-nav-link>
       </template>
     </doc-nav-link>
     <doc-nav-link to="/docs/editor" :main="true">
@@ -24,6 +23,14 @@
         <doc-nav-link to="/docs/editor/plot-panel">Plot Panel</doc-nav-link>
         <doc-nav-link to="/docs/editor/details-panel">Details Panel</doc-nav-link>
         <doc-nav-link to="/docs/editor/menu">Menu</doc-nav-link>
+      </template>
+    </doc-nav-link>
+    <doc-nav-link to="/docs/account" :main="true">
+      <template v-slot:default> Account</template>
+      <template v-slot:sub-items>
+        <doc-nav-link to="/docs/account/general">General</doc-nav-link>
+        <doc-nav-link to="/docs/account/editor">Editor Settings</doc-nav-link>
+        <doc-nav-link to="/docs/account/subscription">Subscription</doc-nav-link>
       </template>
     </doc-nav-link>
   </div>

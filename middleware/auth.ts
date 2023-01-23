@@ -13,8 +13,8 @@ const auth = ({ $pb, route, redirect, store }: Context & { $pb: PocketBase }) =>
   if (!loggedIn) {
     for (const r of protectedRoutes) {
       if (route.path.startsWith(r)) {
-        store.commit('auth/setRedirectPath', route.path)
-        redirect('/login')
+        redirect(302, '/login', {r: route.path})
+        return false;
       }
     }
   } else {
@@ -24,6 +24,7 @@ const auth = ({ $pb, route, redirect, store }: Context & { $pb: PocketBase }) =>
       for (const r of protectedRoutes) {
         if (route.path.startsWith(r)) {
           redirect('/dashboard/verify')
+          return;
         }
       }
       return;

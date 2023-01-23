@@ -178,12 +178,7 @@ export default class ViewMenu extends Vue {
   }
 
   toggleView(key: "score" | "plot") {
-    const settings: Settings = JSON.parse(
-      JSON.stringify(settingsStore.settings)
-    );
-    settings.view[key] = !settings.view[key];
-
-    settingsStore.changeSettings(settings);
+    settingsStore.toggleView(key);
   }
 
   arrangeNodes() {

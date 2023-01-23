@@ -105,7 +105,7 @@ export default class FileStore extends VuexModule {
     @Action
     async update(data: { id: string, name?: string, favorite?: boolean, public?: boolean, collaborators?: string[] }): Promise<File | null> {
         try {
-            let updatedFile: File = await $pb.collection('files').update(data.id, { 'name': data.name, 'favorite': data.favorite, 'collaborators': data.collaborators, 'public': data.public }, { expand: 'file_data(file),collaborators.user' })
+            let updatedFile: File = await $pb.collection('files').update(data.id, { 'name': data.name, 'favorite': data.favorite, 'collaborators': data.collaborators, 'public': data.public }, { expand: 'file_data(file),collaborators.user,owner' })
             updatedFile = rename(updatedFile, 'file_data(file)', 'data')
             fileStore.updateClient({ id: data.id, updatedFile })
             return updatedFile;

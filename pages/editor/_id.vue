@@ -275,6 +275,7 @@ export default class Editor extends Vue {
 
     if (data) {
       editor.trigger('addhistory' as any, data);
+      this.autoTogglePlotPanel(data);
       await editor.fromJSON(data)
       zoomAt(editor)
       await engineStore.process(editor.toJSON());
@@ -353,6 +354,20 @@ export default class Editor extends Vue {
     }
 
     return JSON.parse(JSON.stringify(fileStore.file!.expand.data.json));
+  }
+
+  autoTogglePlotPanel(data: Data) {
+    let showPlotPanel = false;
+    for (const nodeKey in data.nodes) {
+      const node = data.nodes[nodeKey]
+      if (node.name.startsWith("plot_")) {
+        showPlotPanel = true;
+        break;
+      }
+    }
+    console.log(showPlotPanel);
+
+    settingsStore.toggleView('plot', showPlotPanel)
   }
 
   setCursor(cursor: CSSStyleDeclaration["cursor"]) {
