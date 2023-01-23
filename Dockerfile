@@ -1,5 +1,6 @@
 FROM node:16-alpine
 
+ARG APP_URL
 ARG API_URL
 ARG POCKETBASE_URL
 
@@ -9,6 +10,7 @@ WORKDIR /usr/src/vimu
 RUN apk update && apk upgrade
 RUN apk add git
 
+ENV API_URL=${APP_URL}
 ENV API_URL=${API_URL}
 ENV POCKETBASE_URL=${POCKETBASE_URL}
 
