@@ -58,6 +58,7 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/vuetify',
     '@nuxt/content',
+    '@nuxtjs/sitemap',
     'cookie-universal-nuxt',
   ],
 
@@ -91,9 +92,35 @@ export default {
     markdown: {
       remarkAutolinkHeadings: {
         behavior: 'wrap',
-        linkProperties: { ariaHidden: 'true', tabIndex: -1, class: 'content-heading-link'},
+        linkProperties: { ariaHidden: 'true', tabIndex: -1, class: 'content-heading-link' },
       }
     }
+  },
+
+  sitemap: {
+    hostname: process.env.APP_URL,
+    exclude: [
+      '/dashboard/**',
+      '/oauth'
+    ],
+    routes: [
+      '/docs/get-started',
+      '/docs/dashboard',
+      '/docs/dashboard/files',
+      '/docs/dashboard/shared',
+      '/docs/dashboard/scores',
+      '/docs/editor',
+      '/docs/editor/overview',
+      '/docs/editor/node-panel',
+      '/docs/editor/output-panel',
+      '/docs/editor/plot-panel',
+      '/docs/editor/details-panel',
+      '/docs/editor/menu',
+      '/docs/account',
+      '/docs/account/general',
+      '/docs/account/editor',
+      '/docs/account/subscription',
+    ]
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
