@@ -10,7 +10,7 @@ WORKDIR /usr/src/vimu
 RUN apk update && apk upgrade
 RUN apk add git
 
-ENV API_URL=${APP_URL}
+ENV APP_URL=${APP_URL}
 ENV API_URL=${API_URL}
 ENV POCKETBASE_URL=${POCKETBASE_URL}
 
