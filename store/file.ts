@@ -163,7 +163,7 @@ export default class FileStore extends VuexModule {
     @Action
     async getTotalFiles(): Promise<number | null> {
         try {
-            const response = await $pb.collection('files').getList();
+            const response = await $pb.collection('files').getList(0, 1, {filter: `owner='${$pb.authStore.model?.id}'`})
             return response.totalItems;
         } catch (error) {
             notificationStore.sendNotification({ title: 'Error getting', color: 'error' })

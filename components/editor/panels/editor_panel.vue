@@ -147,9 +147,11 @@ export default class EditorPanel extends Vue {
     }
 
     async createNode(item: MenuItem) {
+        
         if (!item.key || !this.editor) {
             return;
         }
+
         if (item.key.startsWith('plot') && !settingsStore.settings.view.plot) {
             this.showSnackbar = true;
         }
@@ -158,7 +160,7 @@ export default class EditorPanel extends Vue {
         ).createNode();
 
         node.position = [this.editorX, this.editorY];
-
+        
         this.editor.addNode(node);
 
         logStore.log({

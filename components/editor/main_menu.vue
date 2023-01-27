@@ -29,7 +29,7 @@ export default class MainMenu extends Vue {
     if(!fileStore.file) {
       return "";
     }
-    return fileStore.file.name + (fileStore.readonly ? ' (read-only)' : '')
+    return fileStore.file.name + (fileStore.readonly ? ' (readonly)' : '')
   }
 
   get readonly() {

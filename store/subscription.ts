@@ -27,6 +27,6 @@ export default class SubscriptionStore extends VuexModule {
     }
 
     get subscribed() {
-        return this.subscription !== null;
+        return this.subscription !== null && this.subscription.status == "active";
     }
 }

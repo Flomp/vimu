@@ -5,7 +5,7 @@
             <span class="vimu-card-title score-card-title mr-1">
                 {{ score.name }}
             </span>
-            <v-tooltip bottom v-if="score.public && owned && !readOnly">
+            <v-tooltip bottom v-if="score.public && owned && !readonly">
                 <template v-slot:activator="{ on, attrs }">
                     <v-icon v-bind="attrs" v-on="on">
                         mdi-earth
@@ -14,7 +14,7 @@
                 <span>Public</span>
             </v-tooltip>
             <v-spacer></v-spacer>
-            <score-context-menu @edit="edit" @remove="remove" v-if="owned && !readOnly"></score-context-menu>
+            <score-context-menu @edit="edit" @remove="remove" v-if="owned && !readonly"></score-context-menu>
         </div>
     </div>
 
@@ -33,7 +33,7 @@ import ScoreContextMenu from "./score_context_menu.vue";
 })
 export default class ScoreCard extends Vue {
     @Prop() readonly score!: Score;
-    @Prop() readonly readOnly!: boolean;
+    @Prop() readonly readonly!: boolean;
 
 
     get thumbnailPath() {

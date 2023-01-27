@@ -264,12 +264,10 @@ export default class ScoresPage extends Vue {
     async checkScoreSubscription() {
         if (!subscriptionStore.subscribed) {
             const result = await scoreStore.getTotalScores()
-            
+
             if (result === null) {
                 return true;
-            } else if (result >= 0) {
-                console.log("here");
-                
+            } else if (result >= 2) {
                 this.limitedItem = "score";
                 this.upgradeDialog = true;
                 return true;
@@ -290,11 +288,18 @@ export default class ScoresPage extends Vue {
         }
     }
 
-    async createScore(data: { score: Score, file: File, update: boolean }) {
+    async createScore(data: { score: Score, file: File | Blob, update: boolean }) {
         this.createLoading = !data.update;
         if (data.update) {
             await scoreStore.update(data.score);
-        } else {
+        } else {                       
+            if (data.score.expand.meta?.format != "musicxml") {               
+                const convertedFile = await scoreStore.convertScoreFile(data.file);
+                if (convertedFile) {
+                    data.file = convertedFile;
+                }
+            }
+
             const thumbnail = await scoreStore.getThumbnail(data.file);
             await scoreStore.create({ ...data, thumbnail: thumbnail ?? undefined })
             await this.list(true);

@@ -5,7 +5,7 @@ interface Score {
     data: string;
     public: boolean;
     expand: {
-        meta: ScoreMeta
+        meta?: ScoreMeta
     }
     owner: string;
     updated: string;
@@ -21,6 +21,7 @@ interface ScoreMeta {
     language?: string;
     opus?: string;
     times?: string;
+    format?: string;
 }
 
 interface ScoreFilter {
@@ -40,7 +41,8 @@ const empty_score_meta: ScoreMeta = {
     keys: "",
     language: "",
     opus: "",
-    times: ""
+    times: "",
+    format: ""
 }
 
 const empty_score: Score = {

@@ -30,19 +30,14 @@
       </div>
     </div>
     <div>
-      <div>
-        <div :class="{ 'd-none': scoreLoading }" id="osmdContainer"></div>
-      </div>
-    </div>
-    <div class="d-flex justify-center align-center pt-6" v-if="scoreLoading">
-      <v-progress-circular :indeterminate="true"></v-progress-circular>
+      <h3 class="ml-8">Preview</h3>
+      <img :src="thumbnailPath" width="100%" style="object-fit: contain;" v-if="score"/>
     </div>
   </v-navigation-drawer>
 </template>
 
 <script lang="ts">
 import { Component, Emit, Prop, VModel, Vue, Watch } from "nuxt-property-decorator";
-import { OpenSheetMusicDisplay } from "opensheetmusicdisplay";
 import { VNavigationDrawer } from "vuetify/lib";
 import { Score, ScoreMeta } from "~/models/score";
 import { $pb } from "~/store";
@@ -57,18 +52,6 @@ export default class ScoreDrawer extends Vue {
   @VModel() drawer!: boolean;
   @Prop() readonly score!: Score;
 
-  osmd!: OpenSheetMusicDisplay;
-
-  scoreLoading: boolean = false;
-
-  mounted() {
-    this.osmd = new OpenSheetMusicDisplay("osmdContainer");
-    this.osmd.setOptions({
-      backend: "svg",
-      drawTitle: true,
-    });
-  }
-
   getMeta(key: keyof ScoreMeta) {
     if (!this.score.expand.meta) {
       return "?";
@@ -80,15 +63,8 @@ export default class ScoreDrawer extends Vue {
     return $pb.getFileUrl(this.score as any, this.score.data)
   }
 
-  @Watch("score")
-  async onScoreChanged() {
-    this.scoreLoading = true;
-    setTimeout(async () => {
-      this.scoreLoading = false;
-      await this.osmd?.load(this.dataPath)
-      this.osmd.zoom = 0.5;
-      this.osmd.render();
-    }, 500)
+  get thumbnailPath() {
+    return $pb.getFileUrl(this.score as any, this.score.thumbnail)
   }
 
   @Emit()

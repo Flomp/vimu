@@ -104,18 +104,17 @@ import ConnectionPlugin from "rete-connection-plugin";
 import Vuetify from "vuetify";
 import IndexEastereggComponent from "~/components/index/rete/components/index/index_easteregg_component";
 import IndexHeroComponent from "~/components/index/rete/components/index/index_hero_component";
-import VimuArticle from "~/components/vimu/vimu_article.vue";
-import VimuCard from "~/components/vimu/vimu_card.vue"
-import Terminal from "~/components/index/terminal.vue"
-import SpeedCarrot from "~/components/vimu/illustrations/speed_carrot.vue";
-import MatrixBunny from "~/components/vimu/illustrations/matrix_bunny.vue";
+import Terminal from "~/components/index/terminal.vue";
 import BunnyDeadCarrot from "~/components/vimu/illustrations/bunny_dead_carrot.vue";
+import MatrixBunny from "~/components/vimu/illustrations/matrix_bunny.vue";
+import SpeedCarrot from "~/components/vimu/illustrations/speed_carrot.vue";
+import VimuArticle from "~/components/vimu/vimu_article.vue";
+import VimuCard from "~/components/vimu/vimu_card.vue";
 //@ts-ignore
-import Typewriter from 'typewriter-effect/dist/core';
 
 @Component({
     head: {
-        title: "vimu"
+        title: "The visual musicology editor"
     },
     components: {
         VimuArticle,

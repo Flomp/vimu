@@ -33,7 +33,7 @@
                         </v-menu>
                     </div>
 
-                    <v-expansion-panels flat>
+                    <v-expansion-panels flat v-if="scoreLocal.expand.meta">
                         <v-expansion-panel>
                             <v-expansion-panel-header class="font-weight-bold px-0">
                                 Additional information
@@ -75,7 +75,7 @@
 
 <script lang="ts">
 import { Component, Emit, Prop, Ref, VModel, Vue, Watch } from "nuxt-property-decorator";
-import { empty_score, Score } from "~/models/score";
+import { empty_score, empty_score_meta, Score } from "~/models/score";
 import { scoreStore } from "~/store";
 import { required } from "~/utils/verification_rules";
 import VimuBtn from "../../vimu/vimu_button.vue";
@@ -136,6 +136,9 @@ export default class ScoreDialog extends Vue {
     onDialogChanged(value: boolean) {
         if (value) {
             this.scoreLocal = JSON.parse(JSON.stringify(this.score ?? empty_score))
+            if(!this.scoreLocal.expand.meta) {
+                this.scoreLocal.expand.meta = JSON.parse(JSON.stringify(empty_score_meta))
+            }
             this.file = null;
             this.validationLoading = false;
         }

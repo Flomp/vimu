@@ -36,7 +36,24 @@ export default class ScoreStore extends VuexModule {
     }
 
     @Action({ rawError: true })
-    async getThumbnail(file: File): Promise<Blob | null> {
+    async convertScoreFile(file: File | Blob): Promise<Blob | null> {
+        const formData = new FormData();
+        formData.append("file", file);
+        try {
+            const response = await $axios.post('/musicxml/convert', formData, {
+                responseType: 'blob',
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })           
+            return response.data
+        } catch {
+            return null;
+        }
+    }
+
+    @Action({ rawError: true })
+    async getThumbnail(file: File | Blob): Promise<Blob | null> {
         const formData = new FormData();
         formData.append("file", file);
         try {
@@ -67,7 +84,7 @@ export default class ScoreStore extends VuexModule {
     }
 
     @Action
-    async create(data: { score: Score, file: File, thumbnail?: Blob }): Promise<Score | null> {
+    async create(data: { score: Score, file: File | Blob, thumbnail?: Blob }): Promise<Score | null> {
         const formData = new FormData();
         formData.append("data", data.file);
         if (data.thumbnail) {
@@ -94,7 +111,7 @@ export default class ScoreStore extends VuexModule {
     @Action
     async update(score: Score): Promise<Score | null> {
         try {
-            const updatedMeta: ScoreMeta = await $pb.collection('score_meta').update(score.expand.meta.id!, score.expand.meta)
+            const updatedMeta: ScoreMeta = await $pb.collection('score_meta').update(score.expand.meta?.id!, score.expand.meta)
             const updatedScore: Score = await $pb.collection('scores').update(score.id!, score, { expand: 'meta' })
             scoreStore.updateClient({ score, updatedScore });
             return updatedScore;
@@ -146,7 +163,7 @@ export default class ScoreStore extends VuexModule {
     @Action
     async getTotalScores(): Promise<number | null> {
         try {
-            const response = await $pb.collection('scores').getList();
+            const response = await $pb.collection('scores').getList(0, 1, { filter: `owner='${$pb.authStore.model?.id}'` })
             return response.totalItems;
         } catch (error) {
             notificationStore.sendNotification({ title: 'Error getting', color: 'error' })

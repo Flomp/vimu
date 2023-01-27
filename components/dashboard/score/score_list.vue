@@ -5,7 +5,7 @@
             <v-row v-if="viewType == 'tiles'">
                 <template>
                     <v-col :cols="cols" :sm="sm" :md="md" :lg="lg" v-for="score in scores" :key="score.id">
-                        <score-card :score="score" :read-only="readOnly" @click="click" @create="create" @edit="edit"
+                        <score-card :score="score" :readonly="readonly" @click="click" @create="create" @edit="edit"
                             @remove="remove">
                         </score-card>
                     </v-col>
@@ -28,7 +28,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <score-table-row v-for="score in scores" :key="score.id" :score="score" :read-only="readOnly"
+                    <score-table-row v-for="score in scores" :key="score.id" :score="score" :readonly="readonly"
                         @click="click" @edit="edit" @remove="remove">
 
                     </score-table-row>

@@ -231,7 +231,7 @@ export default class OSMDPanel extends Vue {
     const element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(engineStore.data));
     const timestamp = new Date().getTime();
-    element.setAttribute('download', `vimu_export_${timestamp}.mxml`);
+    element.setAttribute('download', `vimu_export_${timestamp}.musicxml`);
 
     element.style.display = 'none';
     document.body.appendChild(element);

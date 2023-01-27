@@ -8,14 +8,14 @@
 
         </td>
         <td v-if="!$vuetify.breakpoint.mobile">
-            {{ score.expand.meta.composer }}
+            {{ composer }}
         </td>
         <td v-if="!$vuetify.breakpoint.mobile">
-            {{ score.expand.meta.opus }}
+            {{ opus }}
         </td>
         <td>
             <div class="d-flex align-center">
-                <v-tooltip bottom v-if="score.public && owned && !readOnly">
+                <v-tooltip bottom v-if="score.public && owned && !readonly">
                     <template v-slot:activator="{ on, attrs }">
                         <v-icon v-bind="attrs" v-on="on">
                             mdi-earth
@@ -23,7 +23,7 @@
                     </template>
                     <span>Public</span>
                 </v-tooltip>
-                <score-context-menu @edit="edit" @remove="remove" v-if="owned && !readOnly"></score-context-menu>
+                <score-context-menu @edit="edit" @remove="remove" v-if="owned && !readonly"></score-context-menu>
             </div>
         </td>
     </tr>
@@ -43,7 +43,7 @@ import ScoreContextMenu from "./score_context_menu.vue";
 })
 export default class ScoreTableRow extends Vue {
     @Prop() readonly score!: Score;
-    @Prop() readonly readOnly!: boolean;
+    @Prop() readonly readonly!: boolean;
 
     editedTimestamp = getRelativeTime(this.score.updated)
     createdTimestamp = getRelativeTime(this.score.created)
@@ -54,6 +54,14 @@ export default class ScoreTableRow extends Vue {
 
     get owned() {
         return this.score.owner == $pb.authStore.model?.id
+    }
+
+    get composer() {
+        return this.score.expand.meta?.composer ?? "";
+    }
+
+    get opus() {
+        return this.score.expand.meta?.opus ?? "";
     }
 
     @Emit()

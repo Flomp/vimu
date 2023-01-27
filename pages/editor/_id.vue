@@ -33,17 +33,26 @@ import ConnectionPlugin from "rete-connection-plugin";
 import MinimapPlugin from "rete-minimap-plugin";
 // @ts-ignore
 import AutoArrangePlugin from 'rete-auto-arrange-plugin';
-import HistoryPlugin from "~/plugins/rete/history"
+import HistoryPlugin from "~/plugins/rete/history";
 
 import Vuetify from "vuetify";
+import DetailsPanel from "~/components/editor/panels/details_panel.vue";
+import EditorPanel from "~/components/editor/panels/editor_panel.vue";
+import OSMDPanel from "~/components/editor/panels/osmd_panel.vue";
+import PlotPanel from "~/components/editor/panels/plot_panel.vue";
 import AnalysisAmbitusComponent from "~/components/editor/rete/components/analysis/analysis_ambitus_component";
 import AnalysisKeyComponent from "~/components/editor/rete/components/analysis/analysis_key_component";
 import AnalysisRomanNumeralComponent from "~/components/editor/rete/components/analysis/analysis_roman_numeral_component";
 import DetectModulationComponent from "~/components/editor/rete/components/detect/detect_modulation_component";
 import DetectParallelsComponent from "~/components/editor/rete/components/detect/detect_parallels_component";
 import DetectVoiceCrossingsComponent from "~/components/editor/rete/components/detect/detect_voice_crossings_component";
-
+import FiguredBassRealizeComponent from "~/components/editor/rete/components/figured_bass/figured_bass_realize_component";
 import OutputComponent from "~/components/editor/rete/components/output/output_component";
+import PlotBarComponent from "~/components/editor/rete/components/plot/plot_bar_component";
+import PlotBarWeightedComponent from "~/components/editor/rete/components/plot/plot_bar_weighted";
+import PlotHistogramComponent from "~/components/editor/rete/components/plot/plot_histogram_component";
+import PlotScatterComponent from "~/components/editor/rete/components/plot/plot_scatter_component";
+import PlotScatterWeightedComponent from "~/components/editor/rete/components/plot/plot_scatter_weighted_component";
 import SearchLyricsComponent from "~/components/editor/rete/components/search/search_lyrics_component";
 import SearchPartComponent from "~/components/editor/rete/components/search/search_part_component";
 import SelectMeasuresComponent from "~/components/editor/rete/components/select/select_measures_component";
@@ -52,27 +61,19 @@ import SelectPartsComponent from "~/components/editor/rete/components/select/sel
 import SourceCorpusComponent from "~/components/editor/rete/components/source/source_corpus_component";
 import SourceTinynotationComponent from "~/components/editor/rete/components/source/source_tinynotation_component";
 import TransformChordifyComponent from "~/components/editor/rete/components/transform/transform_chordify_component";
-import TransformFlattenComponent from "~/components/editor/rete/components/transform/transform_flatten_component";
 import TransformTransposeComponent from "~/components/editor/rete/components/transform/transform_transpose_component";
-import PlotBarComponent from "~/components/editor/rete/components/plot/plot_bar_component";
-
-import DetailsPanel from "~/components/editor/panels/details_panel.vue";
-import EditorPanel from "~/components/editor/panels/editor_panel.vue";
-import OSMDPanel from "~/components/editor/panels/osmd_panel.vue";
 
 import { $pb, authStore, engineStore, fileStore, osmdStore, settingsStore } from "~/store";
+import { Context } from "@nuxt/types";
+import { RecordSubscription } from "pocketbase";
 // @ts-ignore
 import { zoomAt } from "rete-area-plugin/src/zoom-at";
-import SourceScoreComponent from "~/components/editor/rete/components/source/source_score_component";
-import { Context } from "@nuxt/types";
-import { example_files, File, FileData } from "~/models/file";
 import { Data } from "rete/types/core/data";
-import { RecordSubscription } from "pocketbase";
-import PlotHistogramComponent from "~/components/editor/rete/components/plot/plot_histogram_component";
-import PlotPanel from "~/components/editor/panels/plot_panel.vue";
-import PlotScatterComponent from "~/components/editor/rete/components/plot/plot_scatter_component";
-import PlotScatterWeightedComponent from "~/components/editor/rete/components/plot/plot_scatter_weighted_component";
-import PlotBarWeightedComponent from "~/components/editor/rete/components/plot/plot_bar_weighted";
+import SourceScoreComponent from "~/components/editor/rete/components/source/source_score_component";
+import { example_files, FileData } from "~/models/file";
+import TransformAppendComponent from "~/components/editor/rete/components/transform/transform_append_component";
+import TransformStackComponent from "~/components/editor/rete/components/transform/transform_stack_component";
+
 
 @Component({
   head: {
@@ -251,9 +252,11 @@ export default class Editor extends Vue {
       new AnalysisRomanNumeralComponent(editor),
       new TransformTransposeComponent(editor),
       new TransformChordifyComponent(editor),
-      new TransformFlattenComponent(editor),
+      new TransformAppendComponent(editor),
+      new TransformStackComponent(editor),
       new SearchPartComponent(editor),
       new SearchLyricsComponent(editor),
+      new FiguredBassRealizeComponent(editor),
       new DetectModulationComponent(editor),
       new DetectParallelsComponent(editor),
       new DetectVoiceCrossingsComponent(editor),
@@ -280,7 +283,6 @@ export default class Editor extends Vue {
       zoomAt(editor)
       await engineStore.process(editor.toJSON());
     }
-
 
     editor.on(
       [
@@ -339,7 +341,7 @@ export default class Editor extends Vue {
       }
     });
 
-    this.editor = editor;
+    this.editor = editor;    
     osmdStore.setNeedsUpdate(true);
   }
 
