@@ -13,7 +13,18 @@ interface MenuItem {
 
 const editorMenuItems: MenuItem[] = [
     {
-        name: "Analysis", children:
+        name: "Source", 
+        icon: "mdi-music-note",
+        children:
+            [
+                { name: "Score", key: "source_score" },
+                { name: "Tinynotation", key: "source_tinynotation" }
+            ]
+    },
+    {
+        name: "Analysis", 
+        icon: "mdi-google-analytics",
+        children:
             [
                 { name: "Key", key: "analysis_key" },
                 { name: "Ambitus", key: "analysis_ambitus" },
@@ -22,6 +33,7 @@ const editorMenuItems: MenuItem[] = [
     },
     {
         name: "Figured bass",
+        icon: "mdi-music-clef-bass",
         children:
             [
                 { name: "Realize", key: "figured_bass_realize" },
@@ -29,6 +41,7 @@ const editorMenuItems: MenuItem[] = [
     },
     {
         name: "Detect",
+        icon: "mdi-leak",
         children:
             [
                 { name: "Modulation", key: "detect_modulation" },
@@ -38,6 +51,7 @@ const editorMenuItems: MenuItem[] = [
     },
     {
         name: "Plot",
+        icon: "mdi-chart-line",
         children:
             [
                 { name: "Piano roll", key: "plot_piano_roll" },
@@ -49,7 +63,9 @@ const editorMenuItems: MenuItem[] = [
             ],
     },
     {
-        name: "Search", children:
+        name: "Search", 
+        icon: "mdi-magnify",
+        children:
             [
                 { name: "Part", key: "search_part" },
                 { name: "Lyrics", key: "search_lyrics" }
@@ -57,6 +73,7 @@ const editorMenuItems: MenuItem[] = [
     },
     {
         name: "Select",
+        icon: "mdi-arrow-expand-horizontal",
         children:
             [
                 { name: "Measures", key: "select_measures" },
@@ -65,14 +82,8 @@ const editorMenuItems: MenuItem[] = [
             ]
     },
     {
-        name: "Source", children:
-            [
-                { name: "Score", key: "source_score" },
-                { name: "Tinynotation", key: "source_tinynotation" }
-            ]
-    },
-    {
         name: "Transform",
+        icon: "mdi-move-resize-variant",
         children:
             [
                 { name: "Append", key: "transform_append" },

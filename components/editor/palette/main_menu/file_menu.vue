@@ -1,7 +1,7 @@
 <template>
   <div>
-    <sub-menu v-model="open" :items="items" @menu-click="handleClick" name="File" :dense="true"
-      :removeForcedOffset="true">
+    <sub-menu v-model="open" :items="items" @menu-click="handleClick" name="File" :is-sub-menu="true"
+      :is-offset-x="true" :is-offset-y="false" :is-open-on-hover="true" :dense="true">
       <template v-slot:activator="{ on, attrs }">
         <v-btn class="text-capitalize rounded-0 menu-item" elevation="0" v-bind="attrs" v-on="on" text>File</v-btn>
       </template>
@@ -58,7 +58,6 @@ export default class FileMenu extends Vue {
           key: "file_export",
         },
       ],
-      { name: "Close", key: "file_close" },
     ];
   }
 
@@ -79,9 +78,6 @@ export default class FileMenu extends Vue {
       case "file_open":
         this.openDialog = true;
         break;
-      case "file_close":
-        this.$router.back();
-        break;
       case "file_share":
         this.shareDialog = true;
         break;
@@ -97,7 +93,7 @@ export default class FileMenu extends Vue {
     }
   }
 
-  openFile(file: File) {   
+  openFile(file: File) {
     window.location.href = "/editor/" + file.id;
   }
 

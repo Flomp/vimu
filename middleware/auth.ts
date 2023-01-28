@@ -1,7 +1,7 @@
 import { Context } from "@nuxt/types";
 import PocketBase from "pocketbase";
 
-const auth = ({ $pb, route, redirect, store }: Context & { $pb: PocketBase }) => {
+const auth = ({ $pb, route, redirect }: Context & { $pb: PocketBase }) => {
   const protectedRoutes = [
     '/dashboard/account',
     '/dashboard/files/my',

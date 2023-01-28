@@ -1,5 +1,6 @@
 <template>
-  <sub-menu v-model="open" :items="items" @menu-click="handleClick" name="Edit" :dense="true">
+  <sub-menu v-model="open" :items="items" @menu-click="handleClick" name="Edit" :is-sub-menu="true" :is-offset-x="true"
+    :is-offset-y="false" :is-open-on-hover="true" :dense="true">
     <template v-slot:activator="{ on, attrs }">
       <v-btn class="text-capitalize rounded-0 menu-item" elevation="0" v-bind="attrs" v-on="on" text>Edit</v-btn>
     </template>
@@ -83,20 +84,20 @@ export default class EditMenu extends Vue {
       const activeElement = document.activeElement as HTMLInputElement;
       if (activeElement?.tagName == "INPUT" && ["number", "text"].includes(activeElement.type)) {
         return;
-      }      
+      }
       if (e.code == "Backspace") {
         this.delete()
       } else if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.repeat) {
-        switch (e.code) {
-          case 'KeyY': this.undo(); break;
-          case 'KeyC': this.copy(); break;
-          case 'KeyV': this.paste(); break;
+        switch (e.key) {
+          case 'z': this.undo(); break;
+          case 'c': this.copy(); break;
+          case 'v': this.paste(); break;
 
           default:
         }
       } else if ((e.ctrlKey || e.metaKey) && e.shiftKey && !e.repeat) {
-        switch (e.code) {
-          case 'KeyY': this.redo(); break;
+        switch (e.key) {
+          case 'z': this.redo(); break;
           default:
         }
       }

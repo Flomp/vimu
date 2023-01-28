@@ -72,8 +72,8 @@ export default class LogPanel extends Vue {
 
   minimize() {
     const settings = JSON.parse(JSON.stringify(settingsStore.settings))
-    settings.view.log = false;
-    settingsStore.changeSettings(settings);
+    settings.log = false;
+    settingsStore.updateEditorSettings(settings);
   }
 }
 </script>

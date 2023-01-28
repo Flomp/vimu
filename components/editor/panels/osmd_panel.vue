@@ -244,8 +244,8 @@ export default class OSMDPanel extends Vue {
 
   minimize() {
     const settings = JSON.parse(JSON.stringify(settingsStore.settings));
-    settings.view.score = false;
-    settingsStore.changeSettings(settings);
+    settings.score = false;
+    settingsStore.updateEditorSettings(settings);
   }
 }
 </script>

@@ -60,8 +60,8 @@ export default class PlotPanel extends Vue {
 
   minimize() {
     const settings = JSON.parse(JSON.stringify(settingsStore.settings))
-    settings.view.plot = false;
-    settingsStore.changeSettings(settings);
+    settings.plot = false;
+    settingsStore.updateEditorSettings(settings);
   }
 
   zoom(e: MouseEvent) {

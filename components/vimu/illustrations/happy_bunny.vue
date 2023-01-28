@@ -70,7 +70,7 @@
 import { Vue, Component, Prop } from "nuxt-property-decorator";
 
 @Component({})
-export default class Bunny extends Vue {
+export default class BunnyHappy extends Vue {
     @Prop() readonly width!: number;
 }
 </script>

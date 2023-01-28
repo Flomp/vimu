@@ -1,11 +1,12 @@
 <template>
     <div style="position: relative;">
-        <main-menu></main-menu>
+        <!-- <div class="text-center grey lighten-4">
+            <span class="font-weight-bold">{{ title }}</span>
+        </div> -->
+        <editor-palette class="palette py-2" @menu-click="createNode"></editor-palette>
         <v-progress-linear absolute indeterminate color="black" height="2" v-if="apiLoading"></v-progress-linear>
         <div id="rete" @contextmenu="showContextMenu"></div>
-        <sub-menu v-model="showMenu" :absolute="true" :positionX="x" :positionY="y" :items="menuItems"
-            @menu-click="createNode" v-if="!readonly" />
-        <v-snackbar outlined bottom right v-model="showSnackbar" :timeout="10000" min-width="0">
+        <v-snackbar outlined bottom left v-model="showSnackbar" :timeout="10000" min-width="0">
             Would you like to open the Plot Panel?
 
             <template v-slot:action="{ attrs }">
@@ -17,24 +18,28 @@
                 </v-btn>
             </template>
         </v-snackbar>
+        <welcome-dialog v-model="showWelcomeDialog" @done="disableTutorial"></welcome-dialog>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, InjectReactive, Vue, Watch } from "nuxt-property-decorator";
 import { Component as rComponent, NodeEditor } from "rete";
+import { VBtn, VProgressLinear, VSnackbar } from "vuetify/lib";
 import ErrorBadge from "~/components/vimu/error_badge.vue";
 import { LogLevel } from "~/models/log";
-import { Settings } from "~/models/settings";
+import { EditorSettings } from "~/models/settings";
 import { engineStore, fileStore, logStore, settingsStore } from "~/store";
-import MainMenu from "../main_menu.vue";
+import EditorPalette from "../palette/editor_palette.vue";
 import { editorMenuItems, MenuItem } from "../palette/menu_item";
 import SubMenu from "../palette/sub_menu.vue";
+import WelcomeDialog from "../welcome_dialog.vue";
 
 @Component({
     components: {
-        MainMenu,
         SubMenu,
+        EditorPalette,
+        WelcomeDialog
     }
 })
 export default class EditorPanel extends Vue {
@@ -52,6 +57,8 @@ export default class EditorPanel extends Vue {
 
     showSnackbar: boolean = false;
 
+    showWelcomeDialog: boolean = false;
+
     get readonly() {
         return fileStore.readonly
     }
@@ -68,16 +75,23 @@ export default class EditorPanel extends Vue {
         return this.editor.nodes.find(n => n.name == "output")
     }
 
-    get title() {
-        return fileStore.file?.name ?? "";
-    }
-
     get engineError() {
         return engineStore.error;
     }
 
+    get title() {
+        if (!fileStore.file) {
+            return "";
+        }
+        return fileStore.file.name + (fileStore.readonly ? ' (readonly)' : '')
+    }
+
     mounted() {
         this.bindKeys()
+
+        if (settingsStore.settings.tutorial_completed === false) {
+            this.showWelcomeDialog = true;
+        }
     }
 
 
@@ -120,13 +134,7 @@ export default class EditorPanel extends Vue {
             if (activeElement?.tagName == "INPUT" && activeElement.type == "text") {
                 return;
             }
-            if (e.code === "Space") {
-                this.x = this.editorX + 2;
-                this.y = this.editorY + 30;
-                this.$nextTick(() => {
-                    this.showMenu = true;
-                });
-            } else if (e.code === "Enter" && this.selectedNode) {
+            if (e.code === "Enter" && this.selectedNode) {
                 this.outputNode?.setMeta({ "Gallo": "WElt" })
                 for (const connection of this.outputNode!.getConnections()) {
                     this.editor.removeConnection(connection)
@@ -137,22 +145,20 @@ export default class EditorPanel extends Vue {
     }
 
     showContextMenu(e: MouseEvent) {
-        e.preventDefault();
+        // e.preventDefault();
         this.showMenu = false;
-        this.x = e.clientX;
-        this.y = e.clientY;
         this.$nextTick(() => {
             this.showMenu = true;
         });
     }
 
     async createNode(item: MenuItem) {
-        
+
         if (!item.key || !this.editor) {
             return;
         }
 
-        if (item.key.startsWith('plot') && !settingsStore.settings.view.plot) {
+        if (item.key.startsWith('plot') && !settingsStore.settings.plot) {
             this.showSnackbar = true;
         }
         const node = await (
@@ -160,7 +166,7 @@ export default class EditorPanel extends Vue {
         ).createNode();
 
         node.position = [this.editorX, this.editorY];
-        
+
         this.editor.addNode(node);
 
         logStore.log({
@@ -170,7 +176,22 @@ export default class EditorPanel extends Vue {
     }
 
     showPlotPanel() {
-        settingsStore.toggleView('plot', true)
+        const settings: EditorSettings = JSON.parse(
+            JSON.stringify(settingsStore.settings)
+        );
+        settings.plot = true;
+        settingsStore.updateEditorSettings(settings);
+
+        this.showSnackbar = false;
+    }
+
+    disableTutorial() {
+        const settings: EditorSettings = JSON.parse(
+            JSON.stringify(settingsStore.settings)
+        );
+
+        settings.tutorial_completed = true;
+        settingsStore.updateEditorSettings(settings);
     }
 }
 </script>
@@ -178,6 +199,21 @@ export default class EditorPanel extends Vue {
 
 <style>
 #rete {
-    height: calc(100vh - 36px) !important;
+    height: 100vh;
+}
+
+.palette {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    background-color: transparent;
+    transition: 0.25s;
+    backdrop-filter: blur(3px);
+    border-bottom: 2px solid #f5f5f5;
+}
+
+.palette:hover {
+    background-color: #fff;
+
 }
 </style>

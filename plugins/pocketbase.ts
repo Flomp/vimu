@@ -29,17 +29,4 @@ export default async (ctx: Context, inject: Inject) => {
     // clear the auth store on failed refresh
     pb.authStore.clear();
   }
-
-
-  try {
-    if (process.client && pb.authStore.isValid) {      
-      // Check active subscriptions
-      await ctx.store.dispatch('subscription/sub');
-    }
-
-  }catch (_) {
-  }
-
-
-
 };

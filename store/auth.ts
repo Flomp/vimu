@@ -66,7 +66,7 @@ export default class AuthStore extends VuexModule {
     async login(data: { email: string, password: string }): Promise<boolean> {
         try {
             const userData = await $pb?.collection('users').authWithPassword(data.email, data.password);
-            await subscriptionStore.sub();
+            await subscriptionStore.getSubscription();
         } catch (error: any) {
             if (error.status == 400 && error.data?.message == 'Failed to authenticate.') {
                 notificationStore.sendNotification({ title: 'Wrong email or password', color: 'error' })

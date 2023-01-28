@@ -73,11 +73,11 @@ import SourceScoreComponent from "~/components/editor/rete/components/source/sou
 import { example_files, FileData } from "~/models/file";
 import TransformAppendComponent from "~/components/editor/rete/components/transform/transform_append_component";
 import TransformStackComponent from "~/components/editor/rete/components/transform/transform_stack_component";
-
+import { EditorSettings } from "~/models/settings";
 
 @Component({
   head: {
-    title: "Editor"
+    title: "Editor",
   },
   layout: "editor",
   fetchOnServer: false,
@@ -101,15 +101,19 @@ export default class Editor extends Vue {
   }
 
   get showFirstColumn() {
-    return settingsStore.settings.view.score || settingsStore.settings.view.plot;
+    return settingsStore.settings.score || settingsStore.settings.plot;
   }
 
   get showScore() {
-    return settingsStore.settings.view.score;
+    return settingsStore.settings.score;
   }
 
   get showPlot() {
-    return settingsStore.settings.view.plot;
+    return settingsStore.settings.plot;
+  }
+
+  async fetch() {
+    await settingsStore.getEditorSettings()
   }
 
   @Watch("showScore")
@@ -148,10 +152,6 @@ export default class Editor extends Vue {
   }
 
   async mounted() {
-    if (process.client) {
-      await this.initEditor()
-    }
-
     if (fileStore.file) {
       console.log("Subscribing...");
 
@@ -168,14 +168,8 @@ export default class Editor extends Vue {
     let page = document.getElementById("panel-grid");
 
     if (page) {
-      const initialTopHeight = 0.7
-      let rows = [
-        page.clientHeight * initialTopHeight - 2,
-        2,
-        page.clientHeight * (1 - initialTopHeight),
-      ];
-      let newRowDefn = rows.map(c => c.toString() + "px").join(" ");
-      page.style.gridTemplateRows = newRowDefn;
+      page.style.gridTemplateRows = settingsStore.settings.grid_rows;
+      page.style.gridTemplateColumns = settingsStore.settings.grid_columns;
     }
 
     if (!this.showFirstColumn) {
@@ -186,6 +180,10 @@ export default class Editor extends Vue {
     }
     if (!this.showPlot) {
       this.onShowPlotChange(false)
+    }
+
+    if (process.client) {
+      await this.initEditor()
     }
   }
 
@@ -202,7 +200,9 @@ export default class Editor extends Vue {
     const editor = new Rete.NodeEditor("vimu@0.1.0", container!);
 
     const background = document.createElement("div");
-    background.classList.add("pixel-grid");
+    if (settingsStore.settings.pixel_grid) {
+      background.classList.add("pixel-grid");
+    }
 
     const AreaPlugin = require("rete-area-plugin").default;
     editor.use(AreaPlugin, { background: background });
@@ -226,6 +226,14 @@ export default class Editor extends Vue {
     });
     editor.use(MinimapPlugin);
     editor.use(HistoryPlugin);
+
+    const minimap = document.getElementsByClassName(
+      "minimap"
+    )[0] as HTMLElement;
+
+    if (settingsStore.settings.minimap === false) {
+      minimap.style.display = "none"
+    }
 
     const [w, h] = [
       editor.view.container.clientWidth,
@@ -274,16 +282,6 @@ export default class Editor extends Vue {
       engine.register(component);
     }
 
-    const data = await this.loadData();
-
-    if (data) {
-      editor.trigger('addhistory' as any, data);
-      this.autoTogglePlotPanel(data);
-      await editor.fromJSON(data)
-      zoomAt(editor)
-      await engineStore.process(editor.toJSON());
-    }
-
     editor.on(
       [
         "process",
@@ -296,14 +294,9 @@ export default class Editor extends Vue {
         if (editor.silent) {
           return
         }
-        engineStore.setLoading(true);
-        try {
-          console.log(JSON.stringify(editor.toJSON()));
+        console.log(JSON.stringify(editor.toJSON()));
 
-          await engineStore.process(editor.toJSON());
-        } finally {
-          engineStore.setLoading(false);
-        }
+        await engineStore.process(editor.toJSON());
       }
     );
 
@@ -341,7 +334,18 @@ export default class Editor extends Vue {
       }
     });
 
-    this.editor = editor;    
+    this.editor = editor;
+
+    const data = await this.loadData();
+
+    if (data) {
+      editor.trigger('addhistory' as any, data);
+      await editor.fromJSON(data)
+      zoomAt(editor)
+      await engineStore.process(editor.toJSON());
+
+    }
+
     osmdStore.setNeedsUpdate(true);
   }
 
@@ -356,20 +360,6 @@ export default class Editor extends Vue {
     }
 
     return JSON.parse(JSON.stringify(fileStore.file!.expand.data.json));
-  }
-
-  autoTogglePlotPanel(data: Data) {
-    let showPlotPanel = false;
-    for (const nodeKey in data.nodes) {
-      const node = data.nodes[nodeKey]
-      if (node.name.startsWith("plot_")) {
-        showPlotPanel = true;
-        break;
-      }
-    }
-    console.log(showPlotPanel);
-
-    settingsStore.toggleView('plot', showPlotPanel)
   }
 
   setCursor(cursor: CSSStyleDeclaration["cursor"]) {
@@ -405,6 +395,19 @@ export default class Editor extends Vue {
     this.isRightDragging = false;
     this.isUpperDragging = false;
     this.setCursor("auto")
+    this.persistPanelSizes()
+  }
+
+  persistPanelSizes() {
+    let page = document.getElementById("panel-grid");
+    const settings: EditorSettings = JSON.parse(
+      JSON.stringify(settingsStore.settings)
+    );
+
+    settings.grid_columns = page!.style.gridTemplateColumns;
+    settings.grid_rows = page!.style.gridTemplateRows;
+
+    settingsStore.updateEditorSettings(settings);
   }
 
   onDrag(event: MouseEvent) {
@@ -444,20 +447,22 @@ export default class Editor extends Vue {
 
     } else if (this.isUpperDragging) {
       let page = document.getElementById("panel-grid");
-
-      let topColHeight = event.clientY
-
+      const pageHeight = page!.clientHeight;
       const dragbarHeight = 2;
 
+      let topColHeight = event.clientY
+      let bottomColHeight = pageHeight - dragbarHeight - event.clientY
+
+
       let rows = [
-        topColHeight,
-        dragbarHeight,
-        page!.clientHeight - dragbarHeight - topColHeight,
+        (topColHeight / pageHeight) * 100 + "%",
+        dragbarHeight + "px",
+        (bottomColHeight / pageHeight) * 100 + "%",
       ];
 
-      let newRowDefn = rows.map(c => c.toString() + "px").join(" ");
+      let newRowDefn = rows.join(" ");
 
-      if (rows[0] > 100 && rows[2] > 100) {
+      if (topColHeight > 100 && bottomColHeight > 100) {
         page!.style.gridTemplateRows = newRowDefn;
       }
     }
@@ -471,7 +476,7 @@ export default class Editor extends Vue {
   margin: 0;
   display: grid;
   grid-template-columns: 50% 2px calc(50% - 304px) 2px 300px;
-  grid-template-rows: 1fr 2px 300px;
+  grid-template-rows: 80% 2px calc(20% - 2px);
   max-height: 100vh;
 }
 

@@ -1,6 +1,6 @@
 import { Action, Module, Mutation, MutationAction, VuexModule } from 'vuex-module-decorators';
-import { default_email_settings, default_settings, EmailSettings, Settings } from '~/models/settings';
-import { $pb, notificationStore } from '.';
+import { default_email_settings, default_settings, EmailSettings, EditorSettings } from '~/models/settings';
+import { $pb, engineStore, notificationStore, settingsStore } from '.';
 
 @Module({
     name: 'settings',
@@ -8,22 +8,40 @@ import { $pb, notificationStore } from '.';
     namespaced: true,
 })
 export default class SettingsStore extends VuexModule {
-    settings: Settings = default_settings;
+    settings: EditorSettings = default_settings;
 
     emailSettings: EmailSettings = default_email_settings;
 
     @Mutation
-    changeSettings(settings: Settings) {
+    changeSettings(settings: EditorSettings) {
         this.settings = settings;
     }
 
-    @Mutation
-    toggleView(key: "score" | "plot", value?: boolean) {
+    @Action
+    async getEditorSettings() {
+        try {
+            const editorSettings: EditorSettings = await $pb.collection('editor_settings').getFirstListItem(`user='${$pb.authStore.model?.id}'`, { '$autoCancel': false })            
+            return editorSettings;
+        } catch (error) {
+            return null;
+        }
+    }
 
-        if (value) {
-            this.settings.view[key] = value;
-        } else {
-            this.settings.view[key] = !this.settings.view[key];
+    @MutationAction({ mutate: ['settings'] })
+    async updateEditorSettings(editorSettings: EditorSettings) {
+        try {
+            let updatedEditorSettings: EditorSettings;
+            if (editorSettings.id == "default") {
+                editorSettings.user = $pb.authStore.model?.id;
+                editorSettings.id = ""
+                updatedEditorSettings = await $pb.collection('editor_settings').create(editorSettings);
+            } else {
+                updatedEditorSettings = await $pb.collection('editor_settings').update(editorSettings.id, editorSettings)
+            }
+
+            return { settings: updatedEditorSettings };
+        } catch (error) {
+            return { settings: this.settings };
         }
     }
 

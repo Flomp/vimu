@@ -1,5 +1,6 @@
 <template>
-  <sub-menu v-model="open" :items="items" @menu-click="handleClick" name="View" :dense="true">
+  <sub-menu v-model="open" :items="items" @menu-click="handleClick" name="View" :is-sub-menu="true" :is-offset-x="true"
+    :is-offset-y="false" :is-open-on-hover="true" :dense="true">
     <template v-slot:activator="{ on, attrs }">
       <v-btn class="text-capitalize rounded-0 menu-item" elevation="0" v-bind="attrs" v-on="on" text>View</v-btn>
     </template>
@@ -9,12 +10,12 @@
 <script lang="ts">
 import { Component, InjectReactive, Vue } from "nuxt-property-decorator";
 import { NodeEditor } from "rete";
-import { MenuItem } from "~/components/editor/palette/menu_item";
-import SubMenu from "~/components/editor/palette/sub_menu.vue";
-import { Settings } from "~/models/settings";
 import { settingsStore } from "~/store";
+import { MenuItem } from "../menu_item";
+import SubMenu from "../sub_menu.vue";
 // @ts-ignore
 import { zoomAt } from "rete-area-plugin/src/zoom-at";
+import { EditorSettings } from "~/models/settings";
 @Component({
   components: {
     SubMenu,
@@ -50,23 +51,23 @@ export default class ViewMenu extends Vue {
       {
         name: "Pixel Grid",
         key: "view_pixel_grid",
-        selected: settingsStore.settings.view.pixelGrid,
+        selected: settingsStore.settings.pixel_grid,
       },
       {
         name: "Minimap",
         key: "view_minimap",
-        selected: settingsStore.settings.view.minimap,
+        selected: settingsStore.settings.minimap,
         divider: true,
       },
       {
         name: "Output",
         key: "view_score",
-        selected: settingsStore.settings.view.score,
+        selected: settingsStore.settings.score,
       },
       {
         name: "Plots",
         key: "view_plot",
-        selected: settingsStore.settings.view.plot,
+        selected: settingsStore.settings.plot,
       },
     ];
   }
@@ -80,10 +81,10 @@ export default class ViewMenu extends Vue {
       const activeElement = document.activeElement as HTMLInputElement;
       if (activeElement?.tagName == "INPUT" && activeElement.type == "text") {
         return;
-      }      
+      }
       if (e.key == "+") {
         this.zoom(1)
-      }else if(e.key == "-") {
+      } else if (e.key == "-") {
         this.zoom(-1)
       }
     });
@@ -140,45 +141,50 @@ export default class ViewMenu extends Vue {
   }
 
   togglePixelGrid() {
-    const settings: Settings = JSON.parse(
+    const settings: EditorSettings = JSON.parse(
       JSON.stringify(settingsStore.settings)
     );
 
     const editor = document.getElementsByClassName(
       "rete-background"
     )[0] as HTMLElement;
-    if (editor.classList.contains("pixel-grid")) {
+    if (settings.pixel_grid === true) {
       editor.classList.remove("pixel-grid");
-      settings.view.pixelGrid = false;
     } else {
       editor.classList.add("pixel-grid");
-      settings.view.pixelGrid = true;
     }
 
-    settingsStore.changeSettings(settings);
+    settings.pixel_grid = !settings.pixel_grid
+
+    settingsStore.updateEditorSettings(settings);
   }
 
   toggleMinimap() {
-    const settings: Settings = JSON.parse(
+    const settings: EditorSettings = JSON.parse(
       JSON.stringify(settingsStore.settings)
     );
 
     const minimap = document.getElementsByClassName(
       "minimap"
     )[0] as HTMLElement;
-    if (minimap.style.display == "none") {
+    if (settings.minimap === false) {
       minimap.style.display = "block";
-      settings.view.minimap = true;
     } else {
       minimap.style.display = "none";
-      settings.view.minimap = false;
     }
 
-    settingsStore.changeSettings(settings);
+    settings.minimap = !settings.minimap
+
+    settingsStore.updateEditorSettings(settings);
   }
 
   toggleView(key: "score" | "plot") {
-    settingsStore.toggleView(key);
+    const settings: EditorSettings = JSON.parse(
+      JSON.stringify(settingsStore.settings)
+    );
+
+    settings[key] = !settings[key];
+    settingsStore.updateEditorSettings(settings);
   }
 
   arrangeNodes() {

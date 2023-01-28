@@ -1,5 +1,5 @@
 import { MutationAction } from 'nuxt-property-decorator';
-import { Module, Mutation, VuexModule } from 'vuex-module-decorators';
+import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators';
 import { Subscription } from '~/models/subscription';
 import { $pb } from '.';
 
@@ -16,13 +16,18 @@ export default class SubscriptionStore extends VuexModule {
         this.subscription = null;
     }
 
-    @MutationAction({ mutate: ['subscription'] })
-    async sub() {              
+    @Mutation
+    setSubscription(subscription: Subscription) {
+        this.subscription = subscription
+    }
+
+    @Action
+    async getSubscription() {
         try {
-            const response = await $pb.collection('subscriptions').getFirstListItem(`user='${$pb.authStore.model?.id}'`);            
-            return { subscription: response }
-        } catch (e){            
-            return { subscription: this.subscription }
+            const response = await $pb.collection('subscriptions').getFirstListItem(`user='${$pb.authStore.model?.id}'`, { '$autoCancel': false });
+            return response
+        } catch (e) {
+            return this.subscription;
         }
     }
 
