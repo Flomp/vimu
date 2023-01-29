@@ -20,7 +20,7 @@ export default class SettingsStore extends VuexModule {
     @Action
     async getEditorSettings() {
         try {
-            const editorSettings: EditorSettings = await $pb.collection('editor_settings').getFirstListItem(`user='${$pb.authStore.model?.id}'`, { '$autoCancel': false })            
+            const editorSettings: EditorSettings = await $pb.collection('editor_settings').getFirstListItem(`user='${$pb.authStore.model?.id}'`, { '$autoCancel': false })
             return editorSettings;
         } catch (error) {
             return null;
@@ -29,6 +29,9 @@ export default class SettingsStore extends VuexModule {
 
     @MutationAction({ mutate: ['settings'] })
     async updateEditorSettings(editorSettings: EditorSettings) {
+        if (!$pb.authStore.isValid) {
+            return { settings: this.settings };
+        }
         try {
             let updatedEditorSettings: EditorSettings;
             if (editorSettings.id == "default") {

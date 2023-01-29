@@ -1,5 +1,5 @@
 <template>
-  <v-menu offset-y content-class="vimu-menu elevation-0 left-menu-offset" eager>
+  <v-menu offset-y nudge-bottom="4" content-class="vimu-menu elevation-0 left-menu-offset" eager>
     <template v-slot:activator="{ on, attrs }">
       <v-btn class="palette-button" v-bind="attrs" v-on="on" text>
         <div class="ma-1 d-flex">
@@ -19,7 +19,7 @@
 
       </v-btn>
     </template>
-    <v-list-item dense @click="back">
+    <v-list-item class="my-2" dense @click="back">
       <v-list-item-title>
         Back to files
       </v-list-item-title>

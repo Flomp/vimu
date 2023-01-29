@@ -152,15 +152,32 @@ export default class Editor extends Vue {
   }
 
   async mounted() {
+    const fid = this.$route.params.id;
+    if (fileStore.file == null || fileStore.file.id != fid) {
+      await fileStore.get(fid);
+    }
+
     if (fileStore.file) {
       console.log("Subscribing...");
 
       $pb.collection('file_data').subscribe<FileData>(fileStore.file.expand.data.id, async (e: RecordSubscription<FileData>) => {
-        if (e.action == "update" && this.editor) {
+        if (e.action == "update") {
           const fileData = e.record;
-          if (JSON.stringify(fileStore.file?.expand.data.json) !== JSON.stringify(fileData.json)) {
-            this.editor.trigger('setdata' as any, { data: fileData.json, updateBackend: false });
+
+          if (fileData.editors?.length != fileStore.file?.expand.data.editors?.length) {
+            fileStore.setEditors(fileData.editors);
+
+            await fileStore.getEditors(fileData.editors);
           }
+
+          if (JSON.stringify(fileStore.file?.expand.data.json) !== JSON.stringify(fileData.json)) {
+            fileStore.setData(fileData.json);
+
+            if (this.editor) {
+              this.editor.trigger('setdata' as any, { data: fileData.json, updateBackend: false });
+            }
+          }
+
         }
       });
     }
@@ -191,8 +208,11 @@ export default class Editor extends Vue {
   beforeDestroy() {
     console.log("Unsubscribing...");
 
-    $pb.collection('file_data').unsubscribe();
+    if (fileStore.file) {
+      $pb.collection('file_data').unsubscribe(fileStore.file.expand.data.id);
+    }
     this.editor?.trigger('clearhistory' as any);
+    fileStore.setFile(null)
   }
 
   async initEditor() {
@@ -326,7 +346,6 @@ export default class Editor extends Vue {
       if (!data) {
         return;
       }
-      fileStore.setData(data);
       await editor.fromJSON(JSON.parse(JSON.stringify(data)));
       await engineStore.process(editor.toJSON());
       if (updateBackend && fileStore.file != null) {
@@ -350,11 +369,6 @@ export default class Editor extends Vue {
   }
 
   async loadData(): Promise<Data | null> {
-    const fid = this.$route.params.id;
-    if (fileStore.file == null || fileStore.file.id != fid) {
-      await fileStore.get(fid);
-    }
-
     if (fileStore.file == null) {
       return null
     }
@@ -390,12 +404,14 @@ export default class Editor extends Vue {
       osmdStore.setNeedsUpdate(true);
       this.setCursor("auto");
       this.editor!.view.resize();
+      this.persistPanelSizes()
+
     }
     this.isLeftDragging = false;
     this.isRightDragging = false;
     this.isUpperDragging = false;
     this.setCursor("auto")
-    this.persistPanelSizes()
+    
   }
 
   persistPanelSizes() {

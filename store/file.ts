@@ -6,6 +6,7 @@ import { Score } from '~/models/score';
 import { generateName } from '~/utils/string';
 import { $pb, fileStore, notificationStore } from '.';
 import { rename } from '~/utils/json';
+import { User } from '~/models/user';
 
 @Module({
     name: 'file',
@@ -16,6 +17,7 @@ export default class FileStore extends VuexModule {
     files: File[] = []
     favorites: File[] = []
     file: File | null = null;
+    editors: User[] = [];
 
     maxPage: number = -1;
 
@@ -30,6 +32,14 @@ export default class FileStore extends VuexModule {
             return;
         }
         this.file.expand.data.json = json;
+    }
+
+    @Mutation
+    setEditors(editors: string[]) {
+        if (!this.file) {
+            return;
+        }
+        this.file.expand.data.editors = editors;
     }
 
     @MutationAction({ mutate: ['files', 'maxPage'] })
@@ -163,11 +173,23 @@ export default class FileStore extends VuexModule {
     @Action
     async getTotalFiles(): Promise<number | null> {
         try {
-            const response = await $pb.collection('files').getList(0, 1, {filter: `owner='${$pb.authStore.model?.id}'`})
+            const response = await $pb.collection('files').getList(0, 1, { filter: `owner='${$pb.authStore.model?.id}'` })
             return response.totalItems;
         } catch (error) {
             notificationStore.sendNotification({ title: 'Error getting', color: 'error' })
             return null;
+        }
+    }
+
+    @MutationAction({ mutate: ['editors'] })
+    async getEditors(ids: string[]) {
+        try {
+            const filter = ids.map(id => `id='${id}'`).join('||')
+            const response = await $pb.collection('file_data_editors').getFullList(undefined, { filter: filter, expand: 'user' })
+
+            return { editors: response.map(r => r.expand.user) }
+        } catch (error) {
+            return { editors: this.editors }
         }
     }
 

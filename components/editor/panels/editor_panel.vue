@@ -89,7 +89,7 @@ export default class EditorPanel extends Vue {
     mounted() {
         this.bindKeys()
 
-        if (settingsStore.settings.tutorial_completed === false) {
+        if (settingsStore.settings.tutorial_completed === false && this.$pb.authStore.isValid) {
             this.showWelcomeDialog = true;
         }
     }

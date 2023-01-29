@@ -1,6 +1,6 @@
 <template>
   <v-menu :close-on-content-click="closeOnContentClick" :offset-x="isOffsetX" :offset-y="isOffsetY" :open-on-hover="isOpenOnHover"
-    :transition="transition" :position-x="positionX" :position-y="positionY" :absolute="absolute" v-model="menuOpened"
+    :transition="transition" :position-x="positionX" :position-y="positionY" :absolute="absolute" :nudge-bottom="nudgeBottom" v-model="menuOpened"
     :content-class="removeForcedOffset ? 'left-menu-offset vimu-menu elevation-0' : 'vimu-menu elevation-0'">
     <template v-slot:activator="{ on, attrs }">
       <v-list-item class="d-flex justify-space-between" v-on="on" v-if="isSubMenu" :dense="dense" link>
@@ -63,6 +63,7 @@ export default class SubMenu extends Vue {
   @Prop() readonly absolute!: boolean;
   @Prop() readonly dense!: boolean;
   @Prop() readonly removeForcedOffset!: boolean;
+  @Prop() readonly nudgeBottom!: number | string;
 
   @VModel({ default: () => false }) menuOpened!: boolean;
 

@@ -1,7 +1,7 @@
 <template>
     <v-avatar class="profile-avatar" :size="size" color="grey lighten-3">
         <v-progress-circular width="2" indeterminate v-if="loading"></v-progress-circular>
-        <img class="pa-1" :src="avatarURL" alt="alt" v-else>
+        <img :src="avatarURL" alt="alt" v-else>
     </v-avatar>
 
 </template>
