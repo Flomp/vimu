@@ -10,9 +10,9 @@ To move around the canvas, click and hold anywhere on the grid area and drag you
 
 On the bottom right you can find a minimap. It is a miniature representation of the nodes that are currently present in the Node Panel. You cannot interact with it directly. It is only there to aid orientation.
 
-## Context menu
+## Node palette
 
-The context menu allows you to create new nodes. To open the context menu, click the right mouse button or simply press the <kbd class="keyboard-key nowrap">Space bar</kbd> on your keyboard.
+The Node Palette allows you to create new nodes and also contains the <nuxt-link to="/docs/editor/menu">menu</nuxt-link>. It is located at the top of the Node Panel. Above the Node Palette you can see the name of the file you are currently working on.
 
 ## Nodes
 

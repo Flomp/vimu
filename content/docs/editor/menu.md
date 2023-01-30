@@ -1,6 +1,6 @@
 # Menu
 
-The menu is located at the top of the <nuxt-link to="/docs/editor/node-panel">Node Panel</nuxt-link>. Three submenus allow you quick access to all functions of the editor. At the center of the menu, you can see the name of the file you are currently working on.
+The menu is located at the top of the <nuxt-link to="/docs/editor/node-panel">Node Panel</nuxt-link> as the first item of the <nuxt-link to="/docs/editor/node-panel#node-palette">Node Palette</nuxt-link>. Three submenus allow for quick access to all functions of the editor.
 
 ## File menu
 
@@ -45,6 +45,8 @@ Delete the currently selected node.
 
 
 ## View menu
+
+All settings you change here will automatically be persisted and synchronized between all your devices.
 
 ### Zoom in
 Zoom one step into the Node Panel.

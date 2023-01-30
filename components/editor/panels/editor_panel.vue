@@ -1,8 +1,5 @@
 <template>
     <div style="position: relative;">
-        <!-- <div class="text-center grey lighten-4">
-            <span class="font-weight-bold">{{ title }}</span>
-        </div> -->
         <editor-palette class="palette py-2" @menu-click="createNode"></editor-palette>
         <v-progress-linear absolute indeterminate color="black" height="2" v-if="apiLoading"></v-progress-linear>
         <div id="rete" @contextmenu="showContextMenu"></div>

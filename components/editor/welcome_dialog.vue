@@ -10,7 +10,7 @@
                         <bunny-engineer :width="150"></bunny-engineer>
                     </v-col>
                     <v-col class="d-flex flex-column justify-center black--text">
-                        <p>It looks like this is the first time that you use the <b>vimu</b> editor. </p>
+                        <p>It looks like this is the first time you are using the <b>vimu</b> editor. </p>
                         <p>We have written a comprehensive quickstart guide available in our documentation section. It
                             will teach you the basics of how to use the editor. Would you like to read it?</p>
                     </v-col>

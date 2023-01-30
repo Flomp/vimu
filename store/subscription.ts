@@ -24,7 +24,7 @@ export default class SubscriptionStore extends VuexModule {
     @Action
     async getSubscription() {
         try {
-            const response = await $pb.collection('subscriptions').getFirstListItem(`user='${$pb.authStore.model?.id}'`, { '$autoCancel': false });
+            const response = await $pb.collection('subscriptions').getFirstListItem<Subscription>(`user='${$pb.authStore.model?.id}'`, { '$autoCancel': false });
             return response
         } catch (e) {
             return this.subscription;
