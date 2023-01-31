@@ -104,7 +104,7 @@ export default {
       '/oauth'
     ],
     routes: [
-      '/docs/get-started',
+      '/docs/tutorials/get-started',
       '/docs/dashboard',
       '/docs/dashboard/files',
       '/docs/dashboard/shared',

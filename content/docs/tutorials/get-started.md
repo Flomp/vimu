@@ -1,5 +1,5 @@
-# Get started with vimu
-In this quickstart guide, you will 
+# Tutorial: Get started
+In this quickstart tutorial, you will 
 1. Create your first file
 2. Get a first glance at the editor
 3. Transpose a score up a semi-tone

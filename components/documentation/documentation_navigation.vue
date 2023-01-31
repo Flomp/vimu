@@ -3,8 +3,13 @@
     <doc-nav-link to="/docs" :main="true">
       <template v-slot:default> Introduction</template>
     </doc-nav-link>
-    <doc-nav-link to="/docs/get-started" :main="true">
-      <template v-slot:default> Get Started</template>
+    <doc-nav-link to="/docs/tutorials" :main="true">
+      <template v-slot:default> Tutorials</template>
+      <template v-slot:sub-items>
+        <doc-nav-link to="/docs/tutorials/get-started">Get started</doc-nav-link>
+        <doc-nav-link to="/docs/tutorials/search-melody">Search for melody</doc-nav-link>
+        <doc-nav-link to="/docs/tutorials/plot-histogram">Plot histogram</doc-nav-link>
+      </template>
     </doc-nav-link>
     <doc-nav-link to="/docs/dashboard" :main="true">
       <template v-slot:default> Dashboard</template>

@@ -19,7 +19,7 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn class="mr-4" color="grey" @click="done" text>No, Thanks</v-btn>
-                <vimu-btn :primary="true" href="/docs/get-started#the-editor" target="_blank" @click="done">Yes, please</vimu-btn>
+                <vimu-btn :primary="true" href="/docs/tutorials/get-started#the-editor" target="_blank" @click="done">Yes, please</vimu-btn>
             </v-card-actions>
         </v-card>
 
