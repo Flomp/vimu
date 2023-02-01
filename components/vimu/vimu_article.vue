@@ -4,7 +4,7 @@
         <div class="vimu-text py-6">
             <slot></slot>
         </div>
-        <vimu-btn>{{ callToAction }}</vimu-btn>
+        <vimu-btn :to="to">{{ callToAction }}</vimu-btn>
     </div>
 </template>
 
@@ -19,6 +19,8 @@ import VimuBtn from "./vimu_button.vue";
 export default class VimuArticle extends Vue {
     @Prop() readonly title!: string;
     @Prop() readonly callToAction!: string;
+    @Prop() readonly to!: string;
+
 
 }
 </script>

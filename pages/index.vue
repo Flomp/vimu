@@ -2,11 +2,27 @@
     <v-sheet class="page">
         <div id="index-rete" class="pa-0 pixel-grid">
         </div>
+        <section>
+            <div class="text-center" style="padding-top: 64px;">
+
+                <h1 class="vimu-title">Drag, Connect, Analyse</h1>
+
+                <div class="d-flex showcase">
+                    <img class="elevation-4" src="/gifs/index_showcase.gif" width="100%"
+                        style="border-radius: 10px;" />
+                    <img class="elevation-4" src="/imgs/scores.png" width="100%" style="border-radius: 10px;" />
+
+                </div>
+            </div>
+
+        </section>
+
         <v-container>
             <section>
                 <v-row class="content-row">
                     <v-col>
-                        <vimu-article title="Fully visual, fully intuitive" callToAction="Try it now">
+                        <vimu-article title="Fully visual, fully intuitive" callToAction="Try it now"
+                            to="/dashboard/files/my">
                             <b>vimu</b> works with a node based, graphical editor. You can create complex functionality
                             with
                             a few clicks. Just drag and connect the components that you need for your analysis and let
@@ -23,7 +39,7 @@
                         <speed-carrot :width="400"></speed-carrot>
                     </v-col>
                     <v-col>
-                        <vimu-article title="Speed up your research" callToAction="Explore">
+                        <vimu-article title="Speed up your research" callToAction="Learn more" to="/docs">
                             <b>vimu</b> does the grunt work for you, so you can focus more on the core of your
                             musicology
                             research questions.
@@ -49,8 +65,9 @@
             <section>
                 <div style="padding-top: 48px;">
                     <h1 class="vimu-title">What can you do with vimu?</h1>
-                    <p class="vimu-subtitle py-3">There are many <nuxt-link to="/examples">templates and
-                            examples</nuxt-link> to get you started!</p>
+                    <p class="vimu-subtitle py-3">There are many <nuxt-link to="/docs/tutorials">tutorials and
+                            examples</nuxt-link> to get you started! Here are three quick examples to give you an idea.
+                    </p>
                     <v-row class="pt-6">
                         <v-col>
                             <vimu-card title="Detect Modulation" callToAction="Open Example"
@@ -73,19 +90,13 @@
                                 properties. In this example you will learn how easy it is to plot with <b>vimu</b>.
                             </vimu-card>
                         </v-col>
-                        <!-- <v-col>
-                            <vimu-card title="Combine" callToAction="Open Example" to="/editor/example-plots">
-                                One of the big strength of <b>vimu</b> is its modularity. By combining multiple nodes you can
-                                easily create complex logic. See how it's done in this example.
-                            </vimu-card>
-                        </v-col> -->
                     </v-row>
                 </div>
             </section>
             <section>
                 <div class="text-center" style="padding-top: 128px; padding-bottom: 64px;">
                     <h1 ref="slogan" class="vimu-title">
-                        Drag, Connect, Analyse
+                        Sounds good?
                     </h1>
                     <vimu-button class="my-10" :primary="true" :x-large="true" to="/dashboard/files/my">Get started
                     </vimu-button>
@@ -243,6 +254,12 @@ export default class IndexPage extends Vue {
 <style>
 #index-rete {
     height: 600px !important;
+}
+
+.showcase {
+    margin: 64px 0 0 64px;
+    gap: 48px;
+    width: 140%;
 }
 
 .content-row {

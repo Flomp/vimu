@@ -15,10 +15,10 @@
                 <v-col cols="6" sm="3" class="d-flex flex-column mt-4">
                     <span class="vimu-footer-title pb-3">Resources</span>
                     <nuxt-link to="/docs" class="vimu-footer-text py-1">Documentation</nuxt-link>
-                    <span class="vimu-footer-text py-1">Examples</span>
+                    <nuxt-link to="/docs/tutorials" class="vimu-footer-text py-1">Examples</nuxt-link>
                     <span class="vimu-footer-text py-1">Contact us</span>
-                    <span class="vimu-footer-text py-1">Terms of service</span>
-                    <span class="vimu-footer-text py-1">Privacy policy</span>
+                    <nuxt-link to="/tos" class="vimu-footer-text py-1">Terms of service</nuxt-link>
+                    <nuxt-link to="/privacy" class="vimu-footer-text py-1">Privacy policy</nuxt-link>
                 </v-col>
                 <v-col cols="6" sm="3" class="d-flex flex-column mt-4">
                     <span class="vimu-footer-title pb-3">Developers</span>

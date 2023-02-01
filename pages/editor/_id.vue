@@ -355,6 +355,12 @@ export default class Editor extends Vue {
 
     this.editor = editor;
 
+    if(this.$route.params.id == "example-plots") {
+      const settings = JSON.parse(JSON.stringify(settingsStore.settings)) as EditorSettings;
+      settings.plot = true;
+      settingsStore.changeSettings(settings);
+    }
+
     const data = await this.loadData();
 
     if (data) {
@@ -492,7 +498,7 @@ export default class Editor extends Vue {
   margin: 0;
   display: grid;
   grid-template-columns: 50% 2px calc(50% - 304px) 2px 300px;
-  grid-template-rows: 80% 2px calc(20% - 2px);
+  grid-template-rows: 60% 2px calc(40% - 2px);
   max-height: 100vh;
 }
 
