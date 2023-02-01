@@ -3,7 +3,7 @@
         <div class="d-flex ml-4 mb-2">
             <span class="font-weight-bold text-h5">{{ title }}</span>
             <v-spacer></v-spacer>
-            <v-menu open-on-hover bottom offset-y nudge-bottom="2" content-class="vimu-menu elevation-0" v-for="editor in editors"
+            <v-menu open-on-hover bottom offset-y nudge-bottom="4" content-class="vimu-menu elevation-0" v-for="editor in editors"
                 :key="editor.id">
                 <template v-slot:activator="{ on, attrs }">
                     <div v-bind="attrs" v-on="on">
