@@ -1,7 +1,7 @@
 <template>
   <v-menu offset-y nudge-bottom="2" content-class="vimu-menu elevation-0 left-menu-offset" eager>
     <template v-slot:activator="{ on, attrs }">
-      <v-btn class="palette-button" v-bind="attrs" v-on="on" text>
+      <v-btn class="palette-button palette-main-menu" v-bind="attrs" v-on="on" text>
         <div class="ma-1 d-flex">
           <div>
             <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -60,6 +60,13 @@ export default class MainMenu extends Vue {
 </script>
 
 <style >
+.palette-main-menu {
+    position: sticky;
+    left: 8px;
+    background: white;
+    z-index: 2;
+}
+
 .menu-item {
   letter-spacing: inherit;
 }

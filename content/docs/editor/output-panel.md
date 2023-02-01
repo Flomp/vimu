@@ -1,9 +1,9 @@
 # Output Panel
 
-The Output Panel displays the final output of your analysis. Depending on the nodes you connect to the output node, this can either be a score or a plot.
+The Output Panel displays the final output of your analysis. Whatever the input to your output node will be displayed here.
 
 ## Score
-In case the output is a score, we use <a href="https://opensheetmusicdisplay.org/">OpenSheetMusicDisplay</a> to present the sheet music in the panel. 
+We use <a href="https://opensheetmusicdisplay.org/">OpenSheetMusicDisplay</a> to present the sheet music in the panel. 
 
 ### Playback
 To listen to the score click the <i class="v-icon mdi mdi-play theme--light"></i> button in the top right corner of the output panel. You can use the slider right below the play button to jump forwards or backward in the score. Click the <i class="v-icon mdi mdi-pause theme--light"></i> button to pause the playback.

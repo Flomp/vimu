@@ -1,8 +1,10 @@
 <template>
   <div class="vimu-card pricing-card pricing-card-pro pa-5">
-    <p class="vimu-card-title">
-      Pro
-    </p>
+    <div class="d-flex vimu-card-title mb-4">
+      <span>Pro</span>
+      <v-spacer></v-spacer>
+      <v-chip color="primary" v-if="active">Current plan</v-chip>
+    </div>
     <p class="pricing-description">For professional use and collaboration</p>
     <p><span class="price">4.99€</span><span class="vimu-subtitle">/month</span></p>
     <v-divider class="mb-4"></v-divider>
@@ -18,6 +20,7 @@
 
 <script lang="ts">
 import { Vue, Component } from "nuxt-property-decorator";
+import { subscriptionStore } from "~/utils/store-accessor";
 import VimuBtn from "../vimu/vimu_button.vue";
 
 @Component({
@@ -29,6 +32,10 @@ export default class PricingCardPro extends Vue {
   perks = [
     "<b>vimu</b> editor", "All library scores", "Unlimited files", "Unlimited personal scores", "File sharing", "Realtime collaboration", "Teams", "Daily backups", "Email support"
   ]
+
+  get active() {
+    return this.$pb.authStore.isValid && subscriptionStore.subscribed
+  }
 }
 </script>
 

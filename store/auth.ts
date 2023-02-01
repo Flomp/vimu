@@ -66,7 +66,10 @@ export default class AuthStore extends VuexModule {
     async login(data: { email: string, password: string }): Promise<boolean> {
         try {
             const userData = await $pb?.collection('users').authWithPassword(data.email, data.password);
-            await subscriptionStore.getSubscription();
+            const sub = await subscriptionStore.getSubscription();
+            if(sub != null) {
+                subscriptionStore.setSubscription(sub);
+            }
             const settings = await settingsStore.getEditorSettings();
             if(settings != null) {
                 settingsStore.changeSettings(settings);

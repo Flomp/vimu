@@ -10,7 +10,7 @@
                         <bunny-engineer :width="150"></bunny-engineer>
                     </v-col>
                     <v-col class="d-flex flex-column justify-center black--text">
-                        <p>It looks like this is the first time that you use the <b>vimu</b> editor. </p>
+                        <p>It looks like this is the first time you are using the <b>vimu</b> editor. </p>
                         <p>We have written a comprehensive quickstart guide available in our documentation section. It
                             will teach you the basics of how to use the editor. Would you like to read it?</p>
                     </v-col>
@@ -19,7 +19,7 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn class="mr-4" color="grey" @click="done" text>No, Thanks</v-btn>
-                <vimu-btn :primary="true" href="/docs/get-started#the-editor" target="_blank" @click="done">Yes, please</vimu-btn>
+                <vimu-btn :primary="true" href="/docs/tutorials/get-started#the-editor" target="_blank" @click="done">Yes, please</vimu-btn>
             </v-card-actions>
         </v-card>
 

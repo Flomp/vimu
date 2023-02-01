@@ -21,14 +21,14 @@
                 </v-list>
             </v-menu>
         </div>
-        <div class="d-flex" style="overflow-x: scroll">
+        <div class="d-flex" style="overflow-x: scroll; overflow-y: hidden">
             <main-menu></main-menu>
             <template v-if="!readonly">
                 <sub-menu :items="item.children" v-for="item, i  in items" :key="i" :dense="true"
                     :close-on-content-click="true" @menu-click="menuClick" nudge-bottom="2">
                     <template v-slot:activator="{ on, attrs }">
                         <v-btn class="palette-button" v-bind="attrs" v-on="on" text>
-                            <div class="ma-1 d-flex">
+                            <div class="pa-1 d-flex">
                                 <div>
                                     <v-icon color="primary">{{ item.icon }}</v-icon>
                                     <br>

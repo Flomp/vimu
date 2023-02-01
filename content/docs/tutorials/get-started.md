@@ -1,5 +1,5 @@
-# Get started with vimu
-In this quickstart guide, you will 
+# Tutorial: Get started
+In this quickstart tutorial, you will 
 1. Create your first file
 2. Get a first glance at the editor
 3. Transpose a score up a semi-tone
@@ -9,7 +9,7 @@ In this quickstart guide, you will
 First things first: to start using **vimu** you will need to sign up and create an account. Go to <nuxt-link to="/signup">https://vimu.app/signup</nuxt-link>. You can choose to authenticate either with your Google account or by using an email address. In the latter case, you will receive an email asking you to verify your email address.
 
 ## Create a file
-Once you have successfully <nuxt-link to="/signup">signed up for **vimu**</nuxt-link> you can start by creating a new file in the dashboard. There are <nuxt-link to="/docs/">multiple ways</nuxt-link> to do this. In this guide, we will simply create a blank file for a start. To do so click the "New File" button in the <nuxt-link to="/dashboard/files/my">dashboard</nuxt-link>. You are now automatically redirected to the editor to work on the file you just created.
+Once you have successfully <nuxt-link to="/signup">signed up for **vimu**</nuxt-link> you can start by creating a new file in the dashboard. There are <nuxt-link to="/docs/dashboard/files#create-a-file">multiple ways</nuxt-link> to do this. In this guide, we will simply create a blank file for a start. To do so click the "New File" button in the <nuxt-link to="/dashboard/files/my">dashboard</nuxt-link>. You are now automatically redirected to the editor to work on the file you just created.
 
 ## The editor
 **vimu** is a visual node editor. This means that functionality (like transposing a score or selecting measures) is bundled into nodes. These nodes usually take one or more inputs and produce an output that is handed to the next node it is connected to. You can imagine it like an assembly line where every worker has a specialised task and hands his work down to the next worker after he has done his task.
@@ -37,7 +37,9 @@ You can give it a listen by clicking the <i class="v-icon mdi mdi-play theme--li
 
 ## Add a node
 
-To transpose the score we have just selected we will need a new node. Open the context menu by right-clicking in the editor panel or pressing the space bar. The transpose node is grouped under the "Transform" utils. Select "Transform" -> "Transpose".
+<framed-gif path="/gifs/add_node.gif"></framed-gif>
+
+To transpose the score we have just selected we will need a new node.  The transpose node is grouped under the "Transform" utils. Select "Transform" -> "Transpose" from the Node Palette at the top of the Node Panel.
 
 The newly added <nuxt-link to="/docs/nodes/transform-transpose">transform_transpose</nuxt-link> node requires a score as an input and produces the transposed score as an output. It has a dial that takes in any positive or negative integer denoting the number of semi-tones you want to transpose the score up or down.
 
