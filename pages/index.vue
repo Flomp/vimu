@@ -8,16 +8,19 @@
                 <h1 class="vimu-title">Drag, Connect, Analyse</h1>
 
                 <div class="d-flex showcase">
-                    <img class="elevation-4" src="/gifs/index_showcase.gif" width="100%"
-                        style="border-radius: 10px;" />
-                    <img class="elevation-4" src="/imgs/scores.png" width="100%" style="border-radius: 10px;" />
+                    <video class="elevation-4" style="border-radius: 10px;" width="100%" autoplay muted loop
+                        alt="Showcase Clip" preload="none">
+                        <source src="/movs/editor.webm" type="video/webm">
+                    </video>
+                    <img format="webp" class="elevation-4" src="/imgs/scores_small.png" width="100%"
+                        style="border-radius: 10px;" loading="lazy" quality="100" alt="Score Page" />
 
                 </div>
             </div>
 
         </section>
 
-        <v-container>
+        <v-container style="max-width: 1185px">
             <section>
                 <v-row class="content-row">
                     <v-col>
@@ -70,11 +73,10 @@
                     </p>
                     <v-row class="pt-6">
                         <v-col>
-                            <vimu-card title="Detect Modulation" callToAction="Open Example"
-                                to="/editor/example-modulation">
-                                In this example you will learn how to employ <b>vimu's</b> sophisticated statistical
-                                model to accurately detect
-                                possible modulation sites in one of Bach chorales.
+                            <vimu-card title="Roman Numeral Analysis" callToAction="Open Example"
+                                to="/editor/example-roman-numeral-analysis">
+                                <b>vimu</b> can perform an automated roman numeral analysis of any score. We use
+                                artificial intelligence to accurately predict chord functions and modulation.
                             </vimu-card>
                         </v-col>
                         <v-col>

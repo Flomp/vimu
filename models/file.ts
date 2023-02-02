@@ -38,16 +38,16 @@ interface FileData {
 }
 
 const example_files: Record<string, File> = {
-    "example-modulation": {
-        id: "example-modulation",
-        name: "Example Modulation",
+    "example-roman-numeral-analysis": {
+        id: "example-roman-numeral-analysis",
+        name: "Example Roman Numeral Analysis",
         favorite: false,
         public: true,
         expand: {
             data: {
                 id: "0",
-                file: "example-modulation",
-                json: { "id": "vimu@0.1.0", "nodes": { "1": { "id": 1, "data": {}, "inputs": { "in_0": { "connections": [{ "node": 29, "output": "out_0", "data": {} }] } }, "outputs": {}, "position": [370.2233009708738, -27.618585298196958], "name": "output" }, "24": { "id": 24, "data": { "data": { "id":"dpie2sahgm1viyd","name":"Jesus, meine Zuversicht","data":"data_oWXi2hLQJL.xml" } }, "inputs": {}, "outputs": { "out_0": { "connections": [{ "node": 29, "input": "in_0", "data": {} }] } }, "position": [-189.129674875744, -80.22195074553605], "name": "source_score" }, "29": { "id": 29, "data": {}, "inputs": { "in_0": { "connections": [{ "node": 24, "output": "out_0", "data": {} }] } }, "outputs": { "out_0": { "connections": [{ "node": 1, "input": "in_0", "data": {} }] } }, "position": [109.88575117030376, -62.707264230054044], "name": "detect_modulation" } } },
+                file: "example-roman-numeral-analysis",
+                json: {"id":"vimu@0.1.0","nodes":{"1":{"id":1,"data":{},"inputs":{"in_0":{"connections":[{"node":25,"output":"out_0","data":{}}]}},"outputs":{},"position":[977.5,377],"name":"output"},"24":{"id":24,"data":{"data":{"id":"4rucputkejy2wpp","name":"Als Jesus Christus in der Nacht","data":"data_1x6GWg0dBp.xml"}},"inputs":{},"outputs":{"out_0":{"connections":[{"node":25,"input":"in_1","data":{}}]}},"position":[372.5,300.5],"name":"source_score"},"25":{"id":25,"data":{},"inputs":{"in_1":{"connections":[{"node":24,"output":"out_0","data":{}}]}},"outputs":{"out_0":{"connections":[{"node":1,"input":"in_0","data":{}}]}},"position":[664.5,283],"name":"analysis_roman_numeral"}}},
                 editors: []
             },
             owner: <User>{},

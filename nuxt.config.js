@@ -59,6 +59,7 @@ export default {
     '@nuxtjs/vuetify',
     '@nuxt/content',
     '@nuxtjs/sitemap',
+    '@nuxt/image',
     'cookie-universal-nuxt',
   ],
 
