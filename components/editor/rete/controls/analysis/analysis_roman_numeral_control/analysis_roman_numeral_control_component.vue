@@ -2,9 +2,9 @@
   <div>
     <v-form ref="form">
       <v-switch class="mr-2" v-model="autoDetect" label="Auto-Detect key" inset @change="update"></v-switch>
-      <vimu-text-field class="mr-6" v-model="key" label="Key" placeholder="(e.g. f-)" :disabled="autoDetect" :rules="[keyRule]"
-        :validate-on-blur="false" :timer="true" @update="update" style="max-width: 112px"
-        ></vimu-text-field>
+      <vimu-text-field class="mr-6" v-model="key" label="Key" placeholder="(e.g. f-)" :disabled="autoDetect"
+        :rules="[keyRule]" :validate-on-blur="false" :timer="true" @update="update"
+        style="max-width: 112px"></vimu-text-field>
     </v-form>
 
   </div>
@@ -36,8 +36,10 @@ export default class AnalysisRomanNumeralControlComponent extends Vue {
 
   key: string = "";
 
-  keyRule = (value: string | undefined) => {
-    return (value?.match('^[A-Ha-h][#-]?$')?.length ?? 0) > 0 || 'Not a valid key'
+  keyRule(value: string | undefined) {
+    console.log("here");
+    
+    return this.autoDetect || (value?.match('^[A-Ha-h][#-]?$')?.length ?? 0) > 0 || 'Not a valid key'
   }
 
   mounted() {
@@ -50,7 +52,7 @@ export default class AnalysisRomanNumeralControlComponent extends Vue {
 
   update() {
     if (this.ikey) {
-      if(!this.form.validate() && !this.autoDetect) {
+      if (!this.form.validate() && !this.autoDetect) {
         return
       }
       this.putData(this.ikey, this.autoDetect ? null : this.key);
