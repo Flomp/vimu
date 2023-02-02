@@ -36,9 +36,7 @@ export default class AnalysisRomanNumeralControlComponent extends Vue {
 
   key: string = "";
 
-  keyRule(value: string | undefined) {
-    console.log("here");
-    
+  keyRule(value: string | undefined) {    
     return this.autoDetect || (value?.match('^[A-Ha-h][#-]?$')?.length ?? 0) > 0 || 'Not a valid key'
   }
 
