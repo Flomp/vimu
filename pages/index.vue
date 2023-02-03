@@ -66,12 +66,12 @@
                 </v-row>
             </section>
             <section>
-                <div style="padding-top: 48px;">
+                <div class="text-center" style="padding-top: 48px;">
                     <h1 class="vimu-title">What can you do with vimu?</h1>
                     <p class="vimu-subtitle py-3">There are many <nuxt-link to="/docs/tutorials">tutorials and
                             examples</nuxt-link> to get you started! Here are three quick examples to give you an idea.
                     </p>
-                    <v-row class="pt-6">
+                    <v-row class="pt-6 text-left">
                         <v-col>
                             <vimu-card title="Roman Numeral Analysis" callToAction="Open Example"
                                 to="/editor/example-roman-numeral-analysis">
@@ -89,7 +89,7 @@
                         <v-col>
                             <vimu-card title="Plot with vimu" callToAction="Open Example" to="/editor/example-plots">
                                 <b>vimu</b> comes with the ability to graphically represent a wide range of score
-                                properties. In this example you will learn how easy it is to plot with <b>vimu</b>.
+                                properties. In this example you can see how easy it is to plot with <b>vimu</b>.
                             </vimu-card>
                         </v-col>
                     </v-row>
