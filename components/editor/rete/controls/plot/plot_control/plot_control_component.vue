@@ -14,14 +14,14 @@ import { NodeEditor } from "rete";
 import VimuSelect from "~/components/vimu/vimu_select.vue";
 
 enum AxisType {
-    GENERIC = 'generic',
+    //GENERIC = 'generic',
     DYNAMIC = 'dynamic',
     OFFSET = 'offset',
-    OFFSET_END = 'offsetEnd',
+    //OFFSET_END = 'offsetEnd',
     PITCH_CLASS = 'pitchClass',
     PITCH_SPACE = 'pitchSpace',
     PITCH_OCTAVE = 'octave',
-    POSITION = 'position',
+    //POSITION = 'position',
     QUARTER_LENGTH = 'quarterLength'
 }
 
@@ -39,11 +39,16 @@ export default class PlotControlComponent extends Vue {
     @Prop() getData!: Function;
     @Prop() putData!: Function;
 
-    xAxis: AxisType = AxisType.GENERIC;
-    yAxis: AxisType = AxisType.GENERIC;
+    xAxis: AxisType = AxisType.PITCH_CLASS;
+    yAxis: AxisType = AxisType.QUARTER_LENGTH;
 
     get items() {
-        return Object.values(AxisType)
+        return Object.values(AxisType).map(o => {
+            return {
+                text: o.charAt(0).toUpperCase() + o.slice(1, o.length), 
+                value: o
+            }
+        })
     }
 
     mounted() {

@@ -23,10 +23,15 @@ export default class PlotControlComponent extends Vue {
     @Prop() getData!: Function;
     @Prop() putData!: Function;
 
-    xAxis: AxisType = AxisType.GENERIC;
+    xAxis: AxisType = AxisType.PITCH_CLASS;
 
     get items() {
-        return Object.values(AxisType)
+        return Object.values(AxisType).map(o => {
+            return {
+                text: o.charAt(0).toUpperCase() + o.slice(1, o.length),
+                value: o
+            }
+        })
     }
 
     mounted() {
