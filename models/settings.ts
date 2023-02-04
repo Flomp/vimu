@@ -26,7 +26,7 @@ const default_settings: EditorSettings = {
     minimap: true,
     pixel_grid: true,
     grid_columns: "50% 2px calc(50% - 304px) 2px 300px",
-    grid_rows: "80% 2px 20%",
+    grid_rows: "60% 2px 40%",
     tutorial_completed: false
 }
 
