@@ -3,8 +3,8 @@
         <div class="d-flex ml-4 mb-2">
             <span class="font-weight-bold text-h5">{{ title }}</span>
             <v-spacer></v-spacer>
-            <v-menu open-on-hover bottom offset-y nudge-bottom="4" content-class="vimu-menu elevation-0" v-for="editor in editors"
-                :key="editor.id">
+            <v-menu open-on-hover bottom offset-y nudge-bottom="4" content-class="vimu-menu elevation-0"
+                v-for="editor in editors" :key="editor.id">
                 <template v-slot:activator="{ on, attrs }">
                     <div v-bind="attrs" v-on="on">
                         <vimu-avatar class="mx-4" :seed="editor.avatar" size="36"></vimu-avatar>
@@ -21,27 +21,30 @@
                 </v-list>
             </v-menu>
         </div>
-        <div class="d-flex" style="overflow-x: scroll; overflow-y: hidden">
+        <div class="d-flex">
             <main-menu></main-menu>
-            <template v-if="!readonly">
-                <sub-menu :items="item.children" v-for="item, i  in items" :key="i" :dense="true"
-                    :close-on-content-click="true" @menu-click="menuClick" nudge-bottom="2">
-                    <template v-slot:activator="{ on, attrs }">
-                        <v-btn class="palette-button" v-bind="attrs" v-on="on" text>
-                            <div class="pa-1 d-flex">
-                                <div>
-                                    <v-icon color="primary">{{ item.icon }}</v-icon>
-                                    <br>
-                                    <span class="palette-button-text"> {{
-                                        item.name
-                                    }} </span>
+            <div class="d-flex" style="overflow-x: scroll; overflow-y: hidden">
+                <template v-if="!readonly">
+                    <sub-menu :items="item.children" v-for="item, i  in items" :key="i" :dense="true"
+                        :close-on-content-click="true" @menu-click="menuClick" nudge-bottom="2">
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn class="palette-button" v-bind="attrs" v-on="on" text>
+                                <div class="pa-1 d-flex">
+                                    <div>
+                                        <v-icon color="primary">{{ item.icon }}</v-icon>
+                                        <br>
+                                        <span class="palette-button-text"> {{
+                                            item.name
+                                        }} </span>
+                                    </div>
+                                    <v-icon small>mdi-chevron-down</v-icon>
                                 </div>
-                                <v-icon small>mdi-chevron-down</v-icon>
-                            </div>
-                        </v-btn>
-                    </template>
-                </sub-menu>
-            </template>
+                            </v-btn>
+                        </template>
+                    </sub-menu>
+                </template>
+            </div>
+
 
         </div>
     </div>

@@ -60,12 +60,6 @@ export default class MainMenu extends Vue {
 </script>
 
 <style >
-.palette-main-menu {
-    position: sticky;
-    left: 8px;
-    background: white;
-    z-index: 2;
-}
 
 .menu-item {
   letter-spacing: inherit;

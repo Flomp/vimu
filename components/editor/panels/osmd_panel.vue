@@ -105,13 +105,16 @@ export default class OSMDPanel extends Vue {
     this.osmd.setOptions({
       backend: "svg",
       drawTitle: true,
+      followCursor: true
     });
 
     // const PlaybackEngine = require("osmd-audio-player/dist/PlaybackEngine");
 
     this.audioPlayer = new PlaybackEngine();
 
-    this.audioPlayer.on(PlaybackEvent.STATE_CHANGE, (state: string) => {
+    this.audioPlayer.on(PlaybackEvent.STATE_CHANGE, (state: string,) => {     
+      console.log(state);
+      
       if (state == "PLAYING") {
         this.playing = true;
       } else if (state == "PAUSED") {
@@ -122,21 +125,23 @@ export default class OSMDPanel extends Vue {
       }
     });
 
-    this.audioPlayer.on(PlaybackEvent.ITERATION, (state) => {
+    this.audioPlayer.on(PlaybackEvent.ITERATION, async (state) => {
       const currentIterationStep =
         (this.audioPlayer as any)?.currentIterationStep ?? 0;
       const iterationSteps = (this.audioPlayer as any)?.iterationSteps ?? 0;
-
-      if (currentIterationStep == iterationSteps) {
-        this.audioPlayer?.stop();
+      
+      if (currentIterationStep > iterationSteps) {
+        await this.audioPlayer?.stop();
+        return;
       }
 
       this.currentIterationStep = currentIterationStep;
+      
     });
   }
 
   beforeDestroy() {
-    this.audioPlayer?.stop();
+    this.audioPlayer?.stop().catch(() => { });
   }
 
   @Watch("needsUpdate")
@@ -172,10 +177,10 @@ export default class OSMDPanel extends Vue {
       this.osmd.zoom = 0.5;
       this.osmd.render();
       this.downloadDisabled = false;
-      this.audioPlayer?.stop().catch(()=>{});
+      this.audioPlayer?.stop().catch(() => { });
       await this.audioPlayer.loadScore(this.osmd as any);
       this.maxIterationStep = (this.audioPlayer as any).iterationSteps;
-      this.playDisabled = false;
+      setTimeout(() => this.playDisabled = false, 750)
     } catch (e: any) {
       logStore.log({
         level: LogLevel.error,
@@ -186,7 +191,7 @@ export default class OSMDPanel extends Vue {
     }
   }
 
-  playOrPause() {
+  playOrPause() {   
     if (this.playing) {
       this.audioPlayer.pause();
     } else {

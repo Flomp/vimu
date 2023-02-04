@@ -5,6 +5,7 @@ In this tutorial, you will
 2. Learn about the Plot Panel
 3. Plot a pitch histogram
 
+<br>
 For this tutorial, we will turn to a more realistic question: how often does the bass sing a B natural in Bach's chorale "O Lamm Gottes unschuldig"? Let's break down the problem: we need to select the chorale as an input, isolate the bass voice and then count the occurrences of B naturals.
 
 

@@ -8,6 +8,7 @@
       <template v-slot:sub-items>
         <doc-nav-link to="/docs/tutorials/get-started">Get started</doc-nav-link>
         <doc-nav-link to="/docs/tutorials/search-melody">Search for melody</doc-nav-link>
+        <doc-nav-link to="/docs/tutorials/roman-numeral">Roman numeral analysis</doc-nav-link>
         <doc-nav-link to="/docs/tutorials/plot-histogram">Plot histogram</doc-nav-link>
       </template>
     </doc-nav-link>

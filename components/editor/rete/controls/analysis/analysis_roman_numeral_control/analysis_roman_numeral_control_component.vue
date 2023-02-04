@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-form ref="form">
-      <v-switch class="mr-2" v-model="autoDetect" label="Auto-Detect key" inset @change="update"></v-switch>
+      <v-switch class="mr-2" v-model="autoDetect" label="auto-detect key" inset @change="update"></v-switch>
       <vimu-text-field class="mr-6" v-model="key" label="Key" placeholder="(e.g. f-)" :disabled="autoDetect"
         :rules="[keyRule]" :validate-on-blur="false" :timer="true" @update="update"
         style="max-width: 112px"></vimu-text-field>
