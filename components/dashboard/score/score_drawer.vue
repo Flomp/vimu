@@ -4,8 +4,8 @@
       <v-btn class="pa-8" color="primary" icon @click="drawer = false" absolute style="top:0; left:0">
         <v-icon>mdi-close</v-icon>
       </v-btn>
-      <div class="d-flex justify-space-between mr-3">
-        <span class="score-title">{{ score.name }}</span>
+      <div class="d-flex justify-space-between align-center mr-3">
+        <span class="score-title" style="flex: 0 1 50%; overflow: hidden; text-overflow: ellipsis;">{{ score.name }}</span>
         <vimu-btn :primary="true" @click="create">Create File</vimu-btn>
       </div>
       <div class="d-flex flex-wrap align-center pt-6">
@@ -31,7 +31,7 @@
     </div>
     <div>
       <h3 class="ml-8">Preview</h3>
-      <img :src="thumbnailPath" width="100%" style="object-fit: contain;" v-if="score"/>
+      <img :src="thumbnailPath" width="100%" style="object-fit: contain;" v-if="score" />
     </div>
   </v-navigation-drawer>
 </template>
@@ -84,7 +84,7 @@ export default class ScoreDrawer extends Vue {
 .score-title {
   font-size: 2.5rem !important;
   font-weight: 600;
-  line-height: 2.5rem;
+  line-height: 3rem;
   letter-spacing: -0.0083333333em !important;
 
 }

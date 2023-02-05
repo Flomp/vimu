@@ -38,6 +38,7 @@
                 <score-list :scores="scores" :loading="listLoading || nextPageLoading" :initialLoading="listLoading"
                     :nextPageLoading="nextPageLoading" @create="createFile" @edit="openEditDialog"
                     :searching="searching" :view-type="viewType" @remove="showDeleteConfirm" @click="setDrawerScore"
+                    @upload="checkAndCreateScore"
                     @next="nextPage">
                 </score-list>
             </client-only>
@@ -292,8 +293,8 @@ export default class ScoresPage extends Vue {
         this.createLoading = !data.update;
         if (data.update) {
             await scoreStore.update(data.score);
-        } else {                       
-            if (data.score.expand.meta?.format != "musicxml") {               
+        } else {
+            if (data.score.expand.meta?.format != "musicxml") {
                 const convertedFile = await scoreStore.convertScoreFile(data.file);
                 if (convertedFile) {
                     data.file = convertedFile;
@@ -306,6 +307,14 @@ export default class ScoresPage extends Vue {
         }
 
         this.createLoading = false;
+    }
+
+    async checkAndCreateScore(data: { score: Score, file: File | Blob, update: boolean }) {
+        const scoreLimitReached = await this.checkScoreSubscription();
+        if(scoreLimitReached) {
+            return;
+        }
+        await this.createScore(data);
     }
 
     async removeScore() {

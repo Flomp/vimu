@@ -1,6 +1,6 @@
 <template>
-    <div v-infinite-scroll="next" infinite-scroll-disabled="loading" infinite-scroll-immediate-check="false"
-        infinite-scroll-distance="10">
+    <div :class="{ 'offering-upload': offerUpload }" v-infinite-scroll="next" infinite-scroll-disabled="loading"
+        infinite-scroll-immediate-check="false" infinite-scroll-distance="10" ref="dropzone" style="min-height: 500px">
         <div v-if="scores.length && !initialLoading">
             <v-row v-if="viewType == 'tiles'">
                 <template>
@@ -38,14 +38,16 @@
                 <v-progress-circular indeterminate></v-progress-circular>
             </div>
         </div>
-        <div class="fill-width d-flex flex-column justify-center align-center mt-12"
+        <div class="fill-width d-flex flex-column justify-center align-center py-12"
             v-else-if="!scores.length && !initialLoading && !searching">
             <bunny-wanted :width="150" />
             <span class="vimu-card-title mt-5">There are no scores here</span>
-            <span class="vimu-text text-center" v-if="!readonly">Not sure how to start? <br />Have a look at the <nuxt-link
-                    to="/docs/dashboard/scores">documentation</nuxt-link>!</span>
+            <span class="vimu-text text-center" v-if="!readonly">Simply drag and drop a MusicXML or MIDI file
+                to upload it</span>
+            <span class="vimu-text text-center" v-else>You can upload one
+                <a target="_blank" href="/dashboard/scores">here</a></span>
         </div>
-        <search-empty-state class="mt-12" v-else-if="!scores.length && !initialLoading && searching">
+        <search-empty-state class="py-12" v-else-if="!scores.length && !initialLoading && searching">
         </search-empty-state>
         <v-row v-else>
             <v-col :cols="cols" :sm="sm" :md="md" :lg="lg" v-for="i in 4" :key="i">
@@ -56,10 +58,11 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Emit } from "nuxt-property-decorator";
+import { Vue, Component, Prop, Emit, Ref } from "nuxt-property-decorator";
 import BunnyWanted from "~/components/vimu/illustrations/bunny_wanted.vue";
-import { Score } from "~/models/score";
+import { empty_score, Score } from "~/models/score";
 import { ViewType } from "~/models/view";
+import { notificationStore, scoreStore } from "~/store";
 import SearchEmptyState from "../search_empty_state.vue";
 import ScoreCard from "./score_card.vue";
 import ScoreTableRow from "./score_table_row.vue";
@@ -87,6 +90,54 @@ export default class ScoreList extends Vue {
     @Prop({ default: 4 }) readonly md!: number;
     @Prop({ default: 3 }) readonly lg!: number;
 
+    @Ref() dropzone!: HTMLDivElement;
+
+    offerUpload: boolean = false;
+
+    mounted() {
+        this.dropzone.ondragover = (e) => {
+            this.offerUpload = true;
+            e.preventDefault();
+        }
+
+        this.dropzone.ondragleave = (e) => {
+            this.offerUpload = false;
+        }
+
+        this.dropzone.ondrop = async (e) => {
+            e.preventDefault();
+            this.offerUpload = false;
+
+            let file: File | null = null
+            if (e.dataTransfer?.items && e.dataTransfer?.items.length) {
+                const item = e.dataTransfer?.items[0];
+                if (item.kind === 'file') {
+                    file = item.getAsFile();
+                }
+            } else if (e.dataTransfer?.files && e.dataTransfer?.files.length) {
+                file = e.dataTransfer.files[0]
+            }
+            if (!file) {
+                return;
+            }
+
+            const meta = await scoreStore.getMeta(file);
+
+            if (meta === null) {
+                notificationStore.sendNotification({ title: "Invalid file format", color: "error" })
+                return;
+            }
+
+            const score: Score = Object.assign({}, empty_score)
+            score.name = file.name.replace(/\.[^/.]+$/, "");
+            score.expand.meta = meta;
+
+
+            this.upload({ score: score, file: file })
+
+        }
+    }
+
 
     @Emit()
     click(score: Score): any {
@@ -113,9 +164,18 @@ export default class ScoreList extends Vue {
         return;
     }
 
+
+    @Emit()
+    upload(data: { score: Score, file: File | Blob }) {
+        return { ...data, update: false };
+    }
+
 }
 </script>
 
 <style>
-
+.offering-upload {
+    outline: 2px dashed currentColor;
+    border-radius: 10px;
+}
 </style>
