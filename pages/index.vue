@@ -8,11 +8,11 @@
                 <h1 class="vimu-title">Drag, Connect, Analyse</h1>
 
                 <div class="d-flex showcase">
-                    <video class="elevation-4" style="border-radius: 10px;" width="100%" autoplay muted loop
+                    <video class="elevation-4" style="border-radius: 10px;" width="50%" autoplay muted loop
                         alt="Showcase Clip" preload="none">
                         <source src="/movs/editor.webm" type="video/webm">
                     </video>
-                    <img format="webp" class="elevation-4" src="/imgs/scores_small.png" width="100%"
+                    <img format="webp" class="elevation-4" src="/imgs/scores_small.png" width="50%"
                         style="border-radius: 10px;" loading="lazy" quality="100" alt="Score Page" />
 
                 </div>
