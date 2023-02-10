@@ -29,9 +29,13 @@ import DocsTableOfContents from "~/components/documentation/documentation_table_
 export default class DocumentationPage extends Vue {
     page!: IContentDocument;
 
-    async asyncData({ $content, route }: Context) {
-        const page = await $content(route.path + "/index").fetch<IContentDocument>();
-        return { page }
+    async asyncData({ $content, route, error }: Context) {
+        try {
+            const page = await $content(route.path + "/index").fetch<IContentDocument>();
+                return { page }
+        } catch (e) {
+            error({ statusCode: 404, message: 'Not found' })
+        }
     }
 }
 </script>

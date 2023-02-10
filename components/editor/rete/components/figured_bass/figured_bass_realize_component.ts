@@ -1,5 +1,6 @@
 import Rete, { Node, NodeEditor } from "rete";
 import { NodeData, WorkerInputs, WorkerOutputs } from "rete/types/core/data";
+import FiguredBassRealizeControl from "../../controls/figured_bass/figured_bass_realize_control";
 import { sockets } from "../../sockets/sockets";
 
 export default class FiguredBassRealizeComponent extends Rete.Component {
@@ -15,12 +16,13 @@ export default class FiguredBassRealizeComponent extends Rete.Component {
     var out0 = new Rete.Output("out_0", "Stream", sockets.stream);
 
     node
+      .addControl(new FiguredBassRealizeControl(this.editor, "data", true))
       .addInput(in0)
       .addOutput(out0)
 
   }
 
   async worker(nodeData: NodeData, inputs: WorkerInputs, outputs: WorkerOutputs) {
-    
+
   }
 }
