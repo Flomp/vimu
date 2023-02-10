@@ -28,8 +28,12 @@
     <file-menu v-if="!readonly"></file-menu>
     <edit-menu v-if="!readonly"></edit-menu>
     <view-menu></view-menu>
-
-
+<v-divider></v-divider>
+<v-list-item class="my-2" dense to="/docs">
+      <v-list-item-title>
+        Help
+      </v-list-item-title>
+    </v-list-item>
   </v-menu>
 </template>
 

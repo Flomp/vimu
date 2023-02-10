@@ -112,9 +112,7 @@ export default class OSMDPanel extends Vue {
 
     this.audioPlayer = new PlaybackEngine();
 
-    this.audioPlayer.on(PlaybackEvent.STATE_CHANGE, (state: string,) => {     
-      console.log(state);
-      
+    this.audioPlayer.on(PlaybackEvent.STATE_CHANGE, (state: string,) => {
       if (state == "PLAYING") {
         this.playing = true;
       } else if (state == "PAUSED") {
@@ -129,14 +127,14 @@ export default class OSMDPanel extends Vue {
       const currentIterationStep =
         (this.audioPlayer as any)?.currentIterationStep ?? 0;
       const iterationSteps = (this.audioPlayer as any)?.iterationSteps ?? 0;
-      
+
       if (currentIterationStep > iterationSteps) {
         await this.audioPlayer?.stop();
         return;
       }
 
       this.currentIterationStep = currentIterationStep;
-      
+
     });
   }
 
@@ -191,7 +189,7 @@ export default class OSMDPanel extends Vue {
     }
   }
 
-  playOrPause() {   
+  playOrPause() {
     if (this.playing) {
       this.audioPlayer.pause();
     } else {

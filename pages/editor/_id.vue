@@ -331,7 +331,7 @@ export default class Editor extends Vue {
       ],
       async (source) => {
         if (fileStore.file != null && !fileStore.readonly && !Object.keys(example_files).includes(fileStore.file.id) && !this.editor?.silent) {
-          editor.trigger('addhistory' as any, editor.toJSON());
+          editor.trigger('addhistory' as any, editor.toJSON());         
           fileStore.updateData({ id: fileStore.file.expand.data.id, json: JSON.stringify(editor.toJSON()) })
         }
       }

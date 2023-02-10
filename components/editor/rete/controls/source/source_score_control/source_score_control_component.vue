@@ -1,6 +1,6 @@
 <template>
   <div style="max-width: 200px">
-    <p class="score-title">{{ data.name }}</p>
+    <p class="score-title" style="word-wrap: break-word;">{{ data.name }}</p>
     <vimu-btn :primary="true" @click="dialog = true" v-if="!readonly">Browse</vimu-btn>
     <source-score-dialog v-model="dialog" @select="selectScore" v-if="!readonly"></source-score-dialog>
   </div>
