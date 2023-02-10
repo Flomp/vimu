@@ -14,7 +14,7 @@
         <span v-html="perk"></span>
       </div>
     </div>
-    <vimu-btn :primary="true">Get started</vimu-btn>
+    <vimu-btn :primary="true" to="/dashboard/account/subscription">Get started</vimu-btn>
   </div>
 </template>
 

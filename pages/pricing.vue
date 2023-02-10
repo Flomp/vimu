@@ -17,6 +17,26 @@
             </v-col>
 
         </v-row>
+
+        <v-row style="margin-top: 72px">
+            <v-col cols="auto" class="mr-12 mb-6">
+                <h1>Frequently<br />Asked<br />Questions</h1>
+            </v-col>
+            <v-col>
+                <v-expansion-panels class="faq-panels flex-shrink" flat multiple>
+                    <v-expansion-panel class="faq-panel" v-for="item, i in faqItems" :key="i">
+                        <v-expansion-panel-header>
+                            <h3>{{ item.title }}</h3>
+                        </v-expansion-panel-header>
+                        <v-expansion-panel-content>
+                            {{ item.text }}
+                        </v-expansion-panel-content>
+                        <v-divider class="mx-6"></v-divider>
+
+                    </v-expansion-panel>
+                </v-expansion-panels></v-col>
+
+        </v-row>
     </v-container>
 
 </template>
@@ -40,9 +60,39 @@ import PricingCardPro from "~/components/pricing/pricing_card_pro.vue";
     }
 })
 export default class PricingPage extends Vue {
+
+    faqItems = [
+        {
+            "title": "Which plan is right for me?",
+            "text": "If you are just trying out vimu, the free plan will be enough. You will have access to all features of the editor, but there will be some limits to the amount of files and scores you can create. If you wnat to get more serious, consider purchasing a subscription to gain access to all vimu features."
+        },
+        {
+            "title": "It's open source, why should I pay?",
+            "text": "You are more then welcome to install vimu on your own server. We provide extensive documentation to help you with the process. However, it costs money every month to provide our hosted version of vimu for free. By subscribing you help us to further develop the editor to create the best possible experience for all users and keep the service running."
+        },
+        {
+            "title": "Can I upgrade my plan later on?",
+            "text": "Yes, you can upgrade your plan anytime. You just need to log in to your account, click “Upgrade Now” on the top bar and upgrade to a plan of your choosing."
+        },
+        {
+            "title": "How do I cancel my subscription?",
+            "text": "You can cancel your subscription in your account settings under 'Subscription'. Please feel free to contact us if you have any questions regarding your subscription."
+        },
+        {
+            "title": "What payment options are available?",
+            "text": "We accept payments from every major credit card company."
+        }
+    ]
 }
 </script>
 
 <style>
+.faq-panels {
+    outline: 2px solid currentColor;
+    border-radius: 10px;
+}
 
+.faq-panel {
+    border-radius: 10px !important;
+}
 </style>

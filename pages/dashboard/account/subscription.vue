@@ -98,5 +98,8 @@ export default class AccountPageSubscription extends Vue {
 </script>
 
 <style>
-
+.pricing-card .price {
+    font-weight: 700;
+    font-size: 2rem;
+}
 </style>

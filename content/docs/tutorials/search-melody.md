@@ -60,4 +60,4 @@ Similarly unticking this box results in the search node ignoring the rhythm of t
 
 ## Up next
 
-You now know how to search for melodies in a score. In the next tutorial, we will take a look at plotting histograms, scatter plots and more.
+In the next tutorial, we will learn a bit more about tinynotation. We will use it to realize a figured bass line and generate a fully automatic roman numeral analysis for it.
