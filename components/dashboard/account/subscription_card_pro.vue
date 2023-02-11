@@ -16,14 +16,13 @@
         </v-row>
 
         <vimu-btn :primary="true" :loading="redirectLoading" :disabled="redirectLoading"
-            @click="manageSubscription">Manage</vimu-btn>
+            href="https://billing.stripe.com/p/login/5kA4i11Ey5j70O4aEE">Manage</vimu-btn>
     </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "nuxt-property-decorator";
+import { Component, Vue } from "nuxt-property-decorator";
 import VimuBtn from "~/components/vimu/vimu_button.vue";
-import { $pb, stripeStore } from "~/store";
 
 @Component({
     components: {
@@ -32,11 +31,6 @@ import { $pb, stripeStore } from "~/store";
 })
 export default class SubscriptionCardPro extends Vue {
     redirectLoading: boolean = false;
-
-
-    async manageSubscription() {
-        window.location.href = 'https://billing.stripe.com/p/login/test_3cs5lc0mM6eGbT24gg'
-    }
 
 }
 </script>

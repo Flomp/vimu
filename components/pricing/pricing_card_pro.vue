@@ -30,7 +30,7 @@ import VimuBtn from "../vimu/vimu_button.vue";
 })
 export default class PricingCardPro extends Vue {
   perks = [
-    "<b>vimu</b> editor", "All library scores", "Unlimited files", "Unlimited personal scores", "File sharing", "Realtime collaboration", "Teams", "Daily backups", "Email support"
+    "<b>vimu</b> editor", "All library scores", "Unlimited files", "Unlimited personal scores", "File sharing", "Realtime collaboration", "Teams", "Daily backups", "Priority support"
   ]
 
   get active() {

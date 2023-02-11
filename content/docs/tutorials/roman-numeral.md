@@ -8,7 +8,7 @@ In this tutorial, you will
 
 <framed-gif path="/gifs/rn_analysis.gif"></framed-gif>
 
-We will start again in a fresh file. First, we add two additional nodes: a tinynotation node and a node to realize our figure bass. Select "Source"->"Tinynotation" and "Figured bass"->"Realize" to add the two new nodes to our file. For this tutorial we won't need the default source_score node. So you can go ahead and delete it. Select the source_score node and press <kbd class="keyboard-key nowrap">⌫</kbd> on your keyboard. 
+We will start again in a fresh file. First, we add two additional nodes: a tinynotation node and a node to realize our figured bass. Select "Source"->"Tinynotation" and "Figured bass"->"Realize" to add the two new nodes to our file. For this tutorial we won't need the default source_score node. So you can go ahead and delete it. Select the source_score node and press <kbd class="keyboard-key nowrap">⌫</kbd> on your keyboard. 
 
 Now we connect the source_tinynotation output to the figured_bass_realize input and the figured_bass_realize output to the input of the output node. If you are interested in what the different buttons and checkboxes of the figured_bass_realize node do, please refer to the <nuxt-link to="/docs/nodes/figured-bass-realize">node's documentation</nuxt-link>.
 

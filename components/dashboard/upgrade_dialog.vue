@@ -24,7 +24,7 @@
                         </div>
                     </v-col>
                     <v-col class="text-center">
-                        <bunny-money :width="200"></bunny-money>
+                        <bunny-royal :width="200"></bunny-royal>
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -40,12 +40,12 @@
 
 <script lang="ts">
 import { Vue, Component, VModel, Prop } from "nuxt-property-decorator";
-import BunnyMoney from "../vimu/illustrations/bunny_money.vue";
+import BunnyRoyal from "../vimu/illustrations/bunny_royal.vue";
 import VimuBtn from "../vimu/vimu_button.vue";
 
 @Component({
     components: {
-        BunnyMoney,
+        BunnyRoyal,
         VimuBtn
     }
 })

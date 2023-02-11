@@ -16,7 +16,7 @@
                     <span class="vimu-footer-title pb-3">Resources</span>
                     <nuxt-link to="/docs" class="vimu-footer-text py-1">Documentation</nuxt-link>
                     <nuxt-link to="/docs/tutorials" class="vimu-footer-text py-1">Examples</nuxt-link>
-                    <span class="vimu-footer-text py-1">Contact us</span>
+                    <nuxt-link to="/contact" class="vimu-footer-text py-1">Contact us</nuxt-link>
                     <nuxt-link to="/tos" class="vimu-footer-text py-1">Terms of service</nuxt-link>
                     <nuxt-link to="/privacy" class="vimu-footer-text py-1">Privacy policy</nuxt-link>
                 </v-col>

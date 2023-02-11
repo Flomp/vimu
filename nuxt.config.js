@@ -106,6 +106,9 @@ export default {
     ],
     routes: [
       '/docs/tutorials/get-started',
+      '/docs/tutorials/search-melody',
+      '/docs/tutorials/roman-numeral',
+      '/docs/tutorials/plot-histogram',
       '/docs/dashboard',
       '/docs/dashboard/files',
       '/docs/dashboard/shared',

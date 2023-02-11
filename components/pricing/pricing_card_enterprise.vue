@@ -8,7 +8,7 @@
     <v-divider class="mb-4"></v-divider>
     <p>If you wish to provide <b>vimu</b> for a large user base within your company or research institution, feel free
       to contact us.</p>
-    <vimu-btn>Contact us</vimu-btn>
+    <vimu-btn href="mailto:info@vimu.app">Contact us</vimu-btn>
   </div>
 </template>
 

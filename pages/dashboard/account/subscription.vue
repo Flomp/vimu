@@ -37,7 +37,8 @@
                     </tbody>
                 </v-simple-table>
                 <div class="d-flex align-center justify-center" style="height: 100px" v-else>
-                    <span class="vimu-text">Nothing here yet</span>
+                    <span class="vimu-text" v-if="!$fetchState.pending">Nothing here yet</span>
+                    <v-progress-circular indeterminate v-else></v-progress-circular>
                 </div>
             </v-container>
             <account-navigation v-if="$vuetify.breakpoint.mdAndUp"></account-navigation>

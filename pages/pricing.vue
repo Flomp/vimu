@@ -64,7 +64,7 @@ export default class PricingPage extends Vue {
     faqItems = [
         {
             "title": "Which plan is right for me?",
-            "text": "If you are just trying out vimu, the free plan will be enough. You will have access to all features of the editor, but there will be some limits to the amount of files and scores you can create. If you wnat to get more serious, consider purchasing a subscription to gain access to all vimu features."
+            "text": "If you are just trying out vimu, the free plan will be enough. You will have access to all features of the editor, but there will be some limits to the amount of files and scores you can create. If you want to get more serious, consider purchasing a subscription to gain access to all vimu features."
         },
         {
             "title": "It's open source, why should I pay?",
