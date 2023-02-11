@@ -75,8 +75,9 @@
                         <v-col>
                             <vimu-card title="Roman Numeral Analysis" callToAction="Open Example"
                                 to="/editor/example-roman-numeral-analysis">
-                                <b>vimu</b> can perform an automated roman numeral analysis of any score. We use
-                                artificial intelligence to accurately predict chord functions and modulation.
+                                <b>vimu</b> can perform an automated roman numeral analysis of any score. We use <a
+                                    href="https://github.com/napulen/AugmentedNet">AugmentedNet</a> to accurately
+                                predict chord functions and modulation.
                             </vimu-card>
                         </v-col>
                         <v-col>
