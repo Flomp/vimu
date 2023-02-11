@@ -40,7 +40,7 @@ export default class SubscriptionCardDefault extends Vue {
         }
         this.redirectLoading = true;
         const redirectURL = await stripeStore.createSession({
-            price_id: 'price_1MQV9PBYGSbYZu0OTzlNGR1W',
+            price_id: 'price_1MQHkLBYGSbYZu0OOqq9WOTt',
             email: $pb.authStore.model?.email,
             user_id: $pb.authStore.model?.id
         })
