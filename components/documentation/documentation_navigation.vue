@@ -35,7 +35,6 @@
       <template v-slot:default> Account</template>
       <template v-slot:sub-items>
         <doc-nav-link to="/docs/account/general">General</doc-nav-link>
-        <doc-nav-link to="/docs/account/editor">Editor Settings</doc-nav-link>
         <doc-nav-link to="/docs/account/subscription">Subscription</doc-nav-link>
       </template>
     </doc-nav-link>

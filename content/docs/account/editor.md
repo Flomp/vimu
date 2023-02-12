@@ -1,3 +1,0 @@
-# Editor Settings
-
-Coming soon...

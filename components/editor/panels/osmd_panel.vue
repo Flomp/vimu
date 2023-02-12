@@ -2,6 +2,7 @@
   <div class="fill-height" style="position: relative;">
     <div class="d-flex align-center flex-row vimu-editor-header px-3">
       <h5>Output</h5>
+      <player-settings-dialog @save="setOptions"></player-settings-dialog>
       <v-spacer></v-spacer>
       <div>
         <v-btn @click="playOrPause" :disabled="playDisabled || showNothingSelected" light icon>
@@ -54,8 +55,8 @@
 
 <script lang="ts">
 import { Component, InjectReactive, Vue, Watch } from "nuxt-property-decorator";
-import { OpenSheetMusicDisplay } from "opensheetmusicdisplay";
-
+import { CursorType, OpenSheetMusicDisplay } from "opensheetmusicdisplay";
+import PlayerSettingsDialog from "~/components/editor/player_settings_dialog.vue";
 import PlaybackEngine, {
   PlaybackEvent
 } from "osmd-audio-player/dist/PlaybackEngine";
@@ -63,7 +64,13 @@ import { Node, NodeEditor } from "rete";
 import { LogLevel } from "~/models/log";
 import { engineStore, logStore, osmdStore, settingsStore } from "~/store";
 
-@Component({})
+
+
+@Component({
+  components: {
+    PlayerSettingsDialog
+  }
+})
 export default class OSMDPanel extends Vue {
   @InjectReactive()
   editor!: NodeEditor;
@@ -102,15 +109,10 @@ export default class OSMDPanel extends Vue {
 
   mounted() {
     this.osmd = new OpenSheetMusicDisplay("osmdContainer");
-    this.osmd.setOptions({
-      backend: "svg",
-      drawTitle: true,
-      followCursor: true
-    });
-
     // const PlaybackEngine = require("osmd-audio-player/dist/PlaybackEngine");
 
     this.audioPlayer = new PlaybackEngine();
+    this.setOptions()
 
     this.audioPlayer.on(PlaybackEvent.STATE_CHANGE, (state: string,) => {
       if (state == "PLAYING") {
@@ -165,6 +167,42 @@ export default class OSMDPanel extends Vue {
     }
   }
 
+  setOptions() {
+    this.osmd.setOptions({
+      backend: "svg",
+      drawTitle: settingsStore.settings.display_show_title,
+      drawComposer: settingsStore.settings.display_show_composer,
+      drawLyrics: settingsStore.settings.display_show_lyrics,
+      drawMeasureNumbers: settingsStore.settings.display_show_measure_numbers,
+      drawPartAbbreviations: settingsStore.settings.display_show_part_names,
+      drawPartNames: settingsStore.settings.display_show_part_names,
+      followCursor:  settingsStore.settings.display_follow_cursor,
+      cursorsOptions: [
+        {
+          type: CursorType.Standard,
+          color: "#2962FF",
+          alpha: 0.5,
+          follow: settingsStore.settings.display_follow_cursor,
+        }
+      ]
+    });
+
+    if (this.osmd.IsReadyToRender()) {
+      this.osmd.render()
+    }
+
+    this.setPlaybackOptions();
+  }
+
+  setPlaybackOptions() {
+    this.audioPlayer.setBpm(settingsStore.settings.player_tempo);
+    for (const instrument of this.audioPlayer.scoreInstruments) {
+      for (const voice of instrument.Voices) {
+        voice.Volume = settingsStore.settings.player_volume / 100;
+      }
+    }
+  }
+
   async loadScore(data: string) {
     console.log("Loading Score...")
     try {
@@ -177,6 +215,7 @@ export default class OSMDPanel extends Vue {
       this.downloadDisabled = false;
       this.audioPlayer?.stop().catch(() => { });
       await this.audioPlayer.loadScore(this.osmd as any);
+      this.setPlaybackOptions();
       this.maxIterationStep = (this.audioPlayer as any).iterationSteps;
       setTimeout(() => this.playDisabled = false, 750)
     } catch (e: any) {

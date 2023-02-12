@@ -21,9 +21,7 @@ export default class AccountNavigation extends Vue {
 
     links = [
         { text: "General", value: "/dashboard/account/general", icon: "mdi-cog" },
-        { text: "Editor Settings", value: "/dashboard/account/editor", icon: "mdi-math-compass" },
-        { text: "Subscription", value: "/dashboard/account/subscription", icon: "mdi-credit-card" }
-
+        { text: "Subscription", value: "/dashboard/account/subscription", icon: "mdi-credit-card" },
     ]
 }
 </script>
