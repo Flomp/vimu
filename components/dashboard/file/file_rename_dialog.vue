@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" width="500">
     <v-card>
       <v-card-title>
-        Rename file
+        Rename {{ renameable }}
       </v-card-title>
       <v-card-text class="pb-0">
         <vimu-text-field v-model="filenameLocal" :rules="filenameRules"></vimu-text-field>
@@ -29,6 +29,8 @@ import { required } from "~/utils/verification_rules";
 export default class FileRenameDialog extends Vue {
   @VModel() dialog!: boolean;
   @Prop() filename!: string;
+  @Prop({ default: "file" }) renameable!: string;
+
   filenameLocal: string = this.filename;
 
   filenameRules = [required]

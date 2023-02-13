@@ -1,109 +1,116 @@
 <template>
     <v-sheet class="page">
-        <h1 class="vimu-title ml-8 mt-2">Account</h1>
-        <account-navigation v-if="$vuetify.breakpoint.smAndDown" :sticky="false"></account-navigation>
-        <div class="d-flex">
-            <v-container class="px-12">
-                <div class="d-flex justify-space-between align-center mt-4">
-                    <h2>Profile information</h2>
-                    <vimu-btn :disabled="(!usernameChanged && !emailChanged) || !username.length || !email.length"
-                        :loading="saveLoading" @click="save">
-                        Save
-                    </vimu-btn>
-                </div>
+        <v-container class="pt-0">
+            <h1 class="vimu-title ml-8 mt-2">Account</h1>
+            <account-navigation v-if="$vuetify.breakpoint.smAndDown" :sticky="false"></account-navigation>
+            <div class="d-flex">
+                <v-container class="px-12">
+                    <div class="d-flex justify-space-between align-center mt-4">
+                        <h2>Profile information</h2>
+                        <vimu-btn :disabled="(!usernameChanged && !emailChanged) || !username.length || !email.length"
+                            :loading="saveLoading" @click="save">
+                            Save
+                        </vimu-btn>
+                    </div>
 
-                <v-form ref="account-form">
-                    <v-row class="mt-4 align-center">
-                        <v-col cols="12" sm="auto" class="pr-sm-12 d-flex justify-center" style="position: relative">
-                            <vimu-avatar :seed="avatarSeed" :size="172"></vimu-avatar>
-                            <v-btn color="primary" :loading="seedLoading" :disabled="seedLoading" absolute icon bottom
-                                right @click="regenSeed">
-                                <v-icon>mdi-cached</v-icon>
-                            </v-btn>
+                    <v-form ref="account-form">
+                        <v-row class="mt-4 align-center">
+                            <v-col cols="12" sm="auto" class="pr-sm-12 d-flex justify-center"
+                                style="position: relative">
+                                <vimu-avatar :seed="avatarSeed" :size="172"></vimu-avatar>
+                                <v-btn color="primary" :loading="seedLoading" :disabled="seedLoading" absolute icon
+                                    bottom right @click="regenSeed">
+                                    <v-icon>mdi-cached</v-icon>
+                                </v-btn>
 
+                            </v-col>
+                            <v-col cols="12" sm="auto"> <span class="font-weight-bold">Email</span>
+                                <vimu-text-field class="mb-4" v-model="email" :disabled="true || oauthProvider !== ''"
+                                    :hideDetails="true">
+                                    <v-tooltip bottom v-if="verified">
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-icon color="success" v-bind="attrs" v-on="on">
+                                                mdi-email-check-outline
+                                            </v-icon>
+                                        </template>
+                                        <span v-if="oauthProvider === ''">Verified</span>
+                                        <span v-else>Managed by {{ oauthProvider }}</span>
+                                    </v-tooltip>
+                                    <v-tooltip bottom v-else>
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-icon color="error" v-bind="attrs" v-on="on">
+                                                mdi-email-remove-outline
+                                            </v-icon>
+                                        </template>
+                                        <span>Not verified</span>
+                                    </v-tooltip></vimu-text-field>
+                                <span class="font-weight-bold">Username</span>
+                                <vimu-text-field v-model="username" :hideDetails="true">
+                                </vimu-text-field>
+                            </v-col>
+                        </v-row>
+                    </v-form>
+                    <v-divider class="my-10"></v-divider>
+                    <h2>Email preferences <v-progress-circular indeterminate
+                            v-if="$fetchState.pending"></v-progress-circular></h2>
+                    <v-row v-if="!$fetchState.pending">
+                        <v-col cols="12" sm="6">
+                            <v-checkbox color="accent" v-model="localEmailSettings.share" @change="updateEmailSettings">
+                                <template v-slot:label>
+                                    <div>
+                                        <p class="black--text mb-1">New shared file</p>
+                                        <span style="font-size: 15px">Get notified when somone shares a file with
+                                            you</span>
+                                    </div>
+                                </template>
+                            </v-checkbox>
                         </v-col>
-                        <v-col cols="12" sm="auto"> <span class="font-weight-bold">Email</span>
-                            <vimu-text-field class="mb-4" v-model="email" :disabled="true || oauthProvider !== ''"
-                                :hideDetails="true">
-                                <v-tooltip bottom v-if="verified">
-                                    <template v-slot:activator="{ on, attrs }">
-                                        <v-icon color="success" v-bind="attrs" v-on="on">
-                                            mdi-email-check-outline
-                                        </v-icon>
-                                    </template>
-                                    <span v-if="oauthProvider === ''">Verified</span>
-                                    <span v-else>Managed by {{ oauthProvider }}</span>
-                                </v-tooltip>
-                                <v-tooltip bottom v-else>
-                                    <template v-slot:activator="{ on, attrs }">
-                                        <v-icon color="error" v-bind="attrs" v-on="on">
-                                            mdi-email-remove-outline
-                                        </v-icon>
-                                    </template>
-                                    <span>Not verified</span>
-                                </v-tooltip></vimu-text-field>
-                            <span class="font-weight-bold">Username</span>
-                            <vimu-text-field v-model="username" :hideDetails="true">
-                            </vimu-text-field>
+                        <v-col cols="12" sm="6">
+                            <v-checkbox color="accent" v-model="localEmailSettings.team" @change="updateEmailSettings">
+                                <template v-slot:label>
+                                    <div>
+                                        <p class="black--text mb-1">New Team</p>
+                                        <span style="font-size: 15px">Get notified when you are added to a team</span>
+                                    </div>
+                                </template>
+                            </v-checkbox>
+                        </v-col>
+                        <v-col cols="12" sm="6">
+                            <v-checkbox color="accent" v-model="localEmailSettings.changelog"
+                                @change="updateEmailSettings">
+                                <template v-slot:label>
+                                    <div>
+                                        <p class="black--text mb-1">Changelog</p>
+                                        <span style="font-size: 15px">Get updated on new features</span>
+                                    </div>
+                                </template>
+                            </v-checkbox>
+                        </v-col>
+                        <v-col cols="12" sm="6">
+                            <v-checkbox color="accent" v-model="localEmailSettings.marketing"
+                                @change="updateEmailSettings">
+                                <template v-slot:label>
+                                    <div>
+                                        <p class="black--text mb-1">Marketing</p>
+                                        <span style="font-size: 15px">Recieve our newsletter</span>
+                                    </div>
+                                </template>
+                            </v-checkbox>
                         </v-col>
                     </v-row>
-                </v-form>
-                <v-divider class="my-10"></v-divider>
-                <h2>Email preferences <v-progress-circular indeterminate v-if="$fetchState.pending"></v-progress-circular></h2>
-                <v-row v-if="!$fetchState.pending">
-                    <v-col cols="12" sm="6">
-                        <v-checkbox color="accent" v-model="localEmailSettings.share" @change="updateEmailSettings">
-                            <template v-slot:label>
-                                <div>
-                                    <p class="black--text mb-1">New shared file</p>
-                                    <span style="font-size: 15px">Get notified when somone shares a file with you</span>
-                                </div>
-                            </template>
-                        </v-checkbox>
-                    </v-col>
-                    <v-col cols="12" sm="6">
-                        <v-checkbox color="accent" v-model="localEmailSettings.team" @change="updateEmailSettings">
-                            <template v-slot:label>
-                                <div>
-                                    <p class="black--text mb-1">New Team</p>
-                                    <span style="font-size: 15px">Get notified when you are added to a team</span>
-                                </div>
-                            </template>
-                        </v-checkbox>
-                    </v-col>
-                    <v-col cols="12" sm="6">
-                        <v-checkbox color="accent" v-model="localEmailSettings.changelog" @change="updateEmailSettings">
-                            <template v-slot:label>
-                                <div>
-                                    <p class="black--text mb-1">Changelog</p>
-                                    <span style="font-size: 15px">Get updated on new features</span>
-                                </div>
-                            </template>
-                        </v-checkbox>
-                    </v-col>
-                    <v-col cols="12" sm="6">
-                        <v-checkbox color="accent" v-model="localEmailSettings.marketing" @change="updateEmailSettings">
-                            <template v-slot:label>
-                                <div>
-                                    <p class="black--text mb-1">Marketing</p>
-                                    <span style="font-size: 15px">Recieve our newsletter</span>
-                                </div>
-                            </template>
-                        </v-checkbox>
-                    </v-col>
-                </v-row>
-                <v-divider class="my-10"></v-divider>
-                <h2>Danger zone</h2>
-                <div class="py-8">
-                    <vimu-btn :danger="true" @click="deleteConfirmDialog = true">Delete account</vimu-btn>
-                </div>
-            </v-container>
-            <account-navigation v-if="$vuetify.breakpoint.mdAndUp"></account-navigation>
+                    <v-divider class="my-10"></v-divider>
+                    <h2>Danger zone</h2>
+                    <div class="py-8">
+                        <vimu-btn :danger="true" @click="deleteConfirmDialog = true">Delete account</vimu-btn>
+                    </div>
+                </v-container>
+                <account-navigation v-if="$vuetify.breakpoint.mdAndUp"></account-navigation>
 
-        </div>
-        <account-delete-dialog v-model="deleteConfirmDialog" title="Are you sure?"
-            text="You are about to permanently delete this score" action="Delete" @confirm="deleteAccount">
-        </account-delete-dialog>
+            </div>
+            <account-delete-dialog v-model="deleteConfirmDialog" title="Are you sure?"
+                text="You are about to permanently delete this score" action="Delete" @confirm="deleteAccount">
+            </account-delete-dialog>
+        </v-container>
     </v-sheet>
 </template>
   
@@ -158,7 +165,7 @@ export default class AccountPageGeneral extends Vue {
         if (result.length) {
             this.oauthProvider = result[0].provider;
         }
-        await settingsStore.getEmailSettings();        
+        await settingsStore.getEmailSettings();
 
         this.localEmailSettings = JSON.parse(JSON.stringify(settingsStore.emailSettings));
 
@@ -241,7 +248,7 @@ export default class AccountPageGeneral extends Vue {
     async updateEmailSettings() {
         const updatedEmailSettings = await settingsStore.updateEmailSettings(this.localEmailSettings);
 
-        if(updatedEmailSettings !== null) {
+        if (updatedEmailSettings !== null) {
             this.localEmailSettings = updatedEmailSettings;
         }
     }

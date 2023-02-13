@@ -50,9 +50,18 @@
             <div class="d-flex align-center mx-4">
                 <span class="navigation-heading">Teams</span>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" icon><v-icon size="20">mdi-plus</v-icon></v-btn>
+                <v-btn color="primary" icon to="/dashboard/teams/create"><v-icon size="20">mdi-plus</v-icon></v-btn>
             </div>
-            <div class="mx-4 my-2" style="line-height: 1rem">
+            <template v-if="teams.length > 0">
+                <v-list-item @click="goToTeam(team)" v-for="team in teams" :key="team.id">
+                        <team-avatar class="ma-1" :team="team" :size="20"></team-avatar>
+                    <v-list-item-title class="favorite-title">
+                        <span class="ml-4">{{ team.name }}</span>
+                    </v-list-item-title>
+
+                </v-list-item>
+            </template>
+            <div class="mx-4 my-2" style="line-height: 1rem" v-else-if="teams.length == 0 && !$fetchState.pending">
                 <span class="empty-text">Your teams appear here</span>
             </div>
         </div>
@@ -63,12 +72,15 @@
 <script lang="ts">
 import { Vue, Component, Prop } from "nuxt-property-decorator";
 import { File } from "~/models/file";
-import { fileStore } from "~/store";
+import { Team } from "~/models/team";
+import { fileStore, teamStore } from "~/store";
 import Logo from "../vimu/illustrations/logo.vue";
+import TeamAvatar from "./team/team_avatar.vue";
 
 @Component({
     components: {
-        Logo
+        Logo,
+        TeamAvatar
     }
 })
 export default class DashboardNavigation extends Vue {
@@ -78,8 +90,18 @@ export default class DashboardNavigation extends Vue {
         return fileStore.favorites;
     }
 
+    get teams(): Team[] {
+        return teamStore.teams;
+    }
+
     async fetch() {
         await fileStore.listFavorites();
+        await teamStore.list();
+    }
+
+    goToTeam(team: Team) {
+        teamStore.setTeam(team);
+        this.$router.push('/dashboard/teams/' + team.id);
     }
 }
 </script>

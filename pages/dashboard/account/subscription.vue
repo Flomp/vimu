@@ -1,48 +1,50 @@
 <template>
     <v-sheet class="page">
-        <h1 class="vimu-title ml-8 mt-2">Account</h1>
-        <account-navigation v-if="$vuetify.breakpoint.smAndDown" :sticky="false"></account-navigation>
-        <div class="d-flex">
-            <v-container class="px-12">
-                <h2 class="mt-6">Active plan</h2>
-                <client-only>
-                    <div class="my-8">
-                        <subscription-card-pro v-if="subscribed"></subscription-card-pro>
-                        <subscription-card-default v-else></subscription-card-default>
+        <v-container class="pt-0">
+            <h1 class="vimu-title ml-8 mt-2">Account</h1>
+            <account-navigation v-if="$vuetify.breakpoint.smAndDown" :sticky="false"></account-navigation>
+            <div class="d-flex">
+                <v-container class="px-12">
+                    <h2 class="mt-4">Active plan</h2>
+                    <client-only>
+                        <div class="my-8">
+                            <subscription-card-pro v-if="subscribed"></subscription-card-pro>
+                            <subscription-card-default v-else></subscription-card-default>
+                        </div>
+                    </client-only>
+                    <h2 class="my-6">Invoices</h2>
+                    <v-simple-table v-if="invoices && invoices.length">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Status
+                                </th>
+                                <th>
+                                    Invoice No.
+                                </th>
+                                <th>Date</th>
+                                <th>Total</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="i in invoices" :key="i.id">
+                                <td><v-icon>{{ invoiceIcon(i.status) }}</v-icon></td>
+                                <td>{{ i.number }}</td>
+                                <td>{{ formatDate(i.created) }}</td>
+                                <td>{{ formatNumber(i.total) }}</td>
+                                <td><vimu-btn :href="i.hosted_invoice_url">View</vimu-btn></td>
+                            </tr>
+                        </tbody>
+                    </v-simple-table>
+                    <div class="d-flex align-center justify-center" style="height: 100px" v-else>
+                        <span class="vimu-text" v-if="!$fetchState.pending">Nothing here yet</span>
+                        <v-progress-circular indeterminate v-else></v-progress-circular>
                     </div>
-                </client-only>
-                <h2 class="my-6">Invoices</h2>
-                <v-simple-table v-if="invoices && invoices.length">
-                    <thead>
-                        <tr>
-                            <th>
-                                Status
-                            </th>
-                            <th>
-                                Invoice No.
-                            </th>
-                            <th>Date</th>
-                            <th>Total</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="i in invoices" :key="i.id">
-                            <td><v-icon>{{ invoiceIcon(i.status) }}</v-icon></td>
-                            <td>{{ i.number }}</td>
-                            <td>{{ formatDate(i.created) }}</td>
-                            <td>{{ formatNumber(i.total) }}</td>
-                            <td><vimu-btn :href="i.hosted_invoice_url">View</vimu-btn></td>
-                        </tr>
-                    </tbody>
-                </v-simple-table>
-                <div class="d-flex align-center justify-center" style="height: 100px" v-else>
-                    <span class="vimu-text" v-if="!$fetchState.pending">Nothing here yet</span>
-                    <v-progress-circular indeterminate v-else></v-progress-circular>
-                </div>
-            </v-container>
-            <account-navigation v-if="$vuetify.breakpoint.mdAndUp"></account-navigation>
-        </div>
+                </v-container>
+                <account-navigation v-if="$vuetify.breakpoint.mdAndUp"></account-navigation>
+            </div>
+        </v-container>
     </v-sheet>
 </template>
 

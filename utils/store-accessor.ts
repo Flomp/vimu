@@ -5,6 +5,7 @@ import { getModule } from 'vuex-module-decorators';
 import auth from '~/store/auth';
 import file from '~/store/file';
 import score from '~/store/score';
+import team from '~/store/team';
 
 import engine from '~/store/engine';
 import log from '~/store/log';
@@ -20,6 +21,7 @@ import subscription from '~/store/subscription';
 let authStore: auth;
 let fileStore: file;
 let scoreStore: score;
+let teamStore: team;
 
 let engineStore: engine;
 let logStore: log;
@@ -45,6 +47,7 @@ function initialiseStores(store: Store<any>): void {
     authStore = getModule(auth, store)
     fileStore = getModule(file, store)
     scoreStore = getModule(score, store)
+    teamStore = getModule(team, store)
 
     engineStore = getModule(engine, store)
     logStore = getModule(log, store)
@@ -65,6 +68,7 @@ export {
     authStore,
     fileStore,
     scoreStore,
+    teamStore,
     engineStore,
     logStore,
     notificationStore,

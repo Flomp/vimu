@@ -7,6 +7,7 @@ const auth = ({ $pb, route, redirect }: Context & { $pb: PocketBase }) => {
     '/dashboard/files/my',
     '/dashboard/files/shared',
     '/dashboard/scores',
+    '/dashboard/teams',
   ]
 
   const loggedIn = $pb.authStore.isValid;
