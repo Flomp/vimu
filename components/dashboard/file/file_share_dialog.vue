@@ -106,7 +106,7 @@ export default class FileShareDialog extends Vue {
                 return;
             }
             if(this.file.owner == user.id) {
-                notificationStore.sendNotification({ title: 'You own this file', color: 'error' })
+                notificationStore.sendNotification({ title: 'Cannot share file with author', color: 'error' })
                 return;
             }
             const share = await $pb.collection('file_share').create<FileShare>({ permission: this.selectedShareOption, user: user.id })

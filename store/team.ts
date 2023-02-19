@@ -109,6 +109,18 @@ export default class TeamStore extends VuexModule {
     }
 
     @Action
+    async updateMember(member: TeamMember): Promise<TeamMember | null> {
+        try {
+            const updatedTeamMember: TeamMember = await $pb.collection('team_members').update(member.id, member)
+
+            return updatedTeamMember;
+        } catch (error) {
+            notificationStore.sendNotification({ title: 'Error updating team member', color: 'error' })
+            return null
+        }
+    }
+
+    @Action
     async deleteMember(member: TeamMember): Promise<boolean> {
         try {
             const success = await $pb.collection('team_members').delete(member.id)
@@ -117,5 +129,25 @@ export default class TeamStore extends VuexModule {
             notificationStore.sendNotification({ title: 'Error deleting team member', color: 'error' })
             return false;
         }
+    }
+
+    @Action
+    async acceptInvite(id: string): Promise<TeamMember | null> {
+        try {
+            const updatedTeamMember: TeamMember = await $pb.collection('team_members').update(id, { status: "active" })
+
+            return updatedTeamMember;
+        } catch (error) {
+            notificationStore.sendNotification({ title: 'Error accepting invite', color: 'error' })
+            return null
+        }
+    }
+
+    get me() : TeamMember | null {
+        const member = this.team?.expand["team_members(team)"]?.filter(m => m.user == $pb.authStore.model?.id);
+        if (member && member.length == 1) {
+            return member[0]
+        }
+        return null;
     }
 }

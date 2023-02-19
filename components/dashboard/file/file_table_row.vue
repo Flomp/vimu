@@ -1,7 +1,7 @@
 <template>
     <tr @click="open" class="hover-table-row">
         <td v-if="!readonly">
-            <v-btn color="primary" icon @click="favoriteButton" v-if="!shared">
+            <v-btn color="primary" icon @click="favoriteButton">
                 <v-icon>{{ favoriteIcon }}</v-icon>
             </v-btn>
         </td>
@@ -14,7 +14,7 @@
         <td v-if="!$vuetify.breakpoint.mobile">
             {{ createdTimestamp }}
         </td>
-        <td> <file-share-menu :file="file" :shared="shared"></file-share-menu>
+        <td> <file-share-menu :file="file" :shared="!owned"></file-share-menu>
         </td>
         <td v-if="!readonly">
             <file-context-menu @share="share" @remove="remove" @rename="rename" @favorite="favoriteMenu"
@@ -27,6 +27,7 @@
 <script lang="ts">
 import { Vue, Component, Prop, Emit } from "nuxt-property-decorator";
 import { File } from "~/models/file";
+import { $pb } from "~/store";
 import getRelativeTime from "~/utils/date";
 import FileContextMenu from "./file_context_menu.vue";
 import FileShareMenu from "./file_share_menu.vue";
@@ -43,7 +44,11 @@ export default class FileTableRow extends Vue {
     @Prop() readonly!: boolean;
 
     get favoriteIcon() {
-        return this.file.favorite ? 'mdi-star' : 'mdi-star-outline'
+        return this.file.expand["file_favorites(file)"]?.length ? 'mdi-star' : 'mdi-star-outline'
+    }
+
+    get owned() {
+        return this.file.owner == $pb.authStore.model?.id;
     }
 
     editedTimestamp = getRelativeTime(this.file.updated)

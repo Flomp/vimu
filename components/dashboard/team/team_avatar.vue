@@ -1,6 +1,6 @@
 <template>
     <div class="team-avatar" :style="`height: ${size}px; width: ${size}px`">
-        <img :src="src" :width="size" :height="size"/>
+        <img :src="src" :width="size" :height="size" style="object-fit: contain;"/>
     </div>
 </template>
 

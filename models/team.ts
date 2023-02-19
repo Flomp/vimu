@@ -7,7 +7,7 @@ interface Team {
     icon?: string;
     expand: {
         owner: User,
-        'team_members(team)': TeamMember[]
+        'team_members(team)'?: TeamMember[]
     }
 }
 

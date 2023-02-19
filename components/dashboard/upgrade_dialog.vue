@@ -7,14 +7,14 @@
             <v-card-text>
                 <v-row>
                     <v-col class="d-flex flex-column justify-center upgrade-dialog-text">
-                        <div v-if="limitReached">
+                        <div v-if="reason == 'limit'">
                             <p>You have reached your {{ item }} limit. With your current subscription you can create a
                                 maximum of 2 {{ item }}s.</p>
                             <p>With <b>vimu Pro</b> you can create an unlimited number of {{ item }}s and have
                                 access to various other features. Check out our <nuxt-link to="/pricing">pricing
                                     page</nuxt-link> to learn more.</p>
                         </div>
-                        <div v-else>
+                        <div v-else-if="reason == 'share'">
                             <p>
                                 File sharing is not included in your current subscription.
                             </p>
@@ -22,9 +22,17 @@
                                 advantages. Check out our <nuxt-link to="/pricing">pricing
                                     page</nuxt-link> to learn more.</p>
                         </div>
+                        <div v-else-if="reason == 'team'">
+                            <p>
+                                Creating teams is not included in your current subscription.
+                            </p>
+                            <p>With <b>vimu Pro</b> you have access to all collaboration features and many more
+                                advantages. Check out our <nuxt-link to="/pricing">pricing
+                                    page</nuxt-link> to learn more.</p>
+                        </div>
                     </v-col>
                     <v-col class="text-center">
-                        <bunny-royal :width="200"></bunny-royal>
+                        <bunny-money :width="200"></bunny-money>
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -40,20 +48,22 @@
 
 <script lang="ts">
 import { Vue, Component, VModel, Prop } from "nuxt-property-decorator";
+import BunnyMoney from "../vimu/illustrations/bunny_money.vue";
 import BunnyRoyal from "../vimu/illustrations/bunny_royal.vue";
 import VimuBtn from "../vimu/vimu_button.vue";
 
 @Component({
     components: {
         BunnyRoyal,
-        VimuBtn
+        VimuBtn,
+        BunnyMoney
     }
 })
 export default class UpgradeDialog extends Vue {
     @VModel() dialog!: boolean;
 
     @Prop() item!: string;
-    @Prop({ default: true }) limitReached!: boolean;
+    @Prop({ default: "limit" }) reason!: "limit" | "share" | "team";
 }
 </script>
 

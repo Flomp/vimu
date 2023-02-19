@@ -45,7 +45,7 @@ export default class FileStore extends VuexModule {
     @MutationAction({ mutate: ['files', 'maxPage'] })
     async list(data: { page: number, filter: string, sort: string, perPage?: number }) {
         try {
-            const response = await $pb.collection('files').getList(undefined, undefined, { sort: data.sort, filter: data.filter, expand: 'file_data(file),collaborators.user,owner' })
+            const response = await $pb.collection('files').getList(undefined, undefined, { sort: data.sort, filter: data.filter, expand: 'file_data(file),collaborators.user,owner,file_favorites(file)' })
             response.items = rename(response.items, 'file_data(file)', 'data')
             if (data.page == 1) {
                 return { files: response.items, maxPage: response.totalPages }
@@ -60,8 +60,9 @@ export default class FileStore extends VuexModule {
     @MutationAction({ mutate: ['favorites'] })
     async listFavorites() {
         try {
-            const response = await $pb.collection('files').getFullList<File>(undefined, { sort: 'name', filter: 'favorite=true', '$autoCancel': false })
-            return { favorites: response }
+            const response = await $pb.collection('file_favorites').getFullList(undefined, { expand: 'file', '$autoCancel': false })
+
+            return { favorites: response.filter(r => r.expand.file !== undefined).map(r => r.expand.file) }
         } catch {
             return { favorites: this.favorites }
         }
@@ -73,7 +74,7 @@ export default class FileStore extends VuexModule {
             if (Object.keys(example_files).includes(id)) {
                 return { file: example_files[id] }
             }
-            let response = await $pb.collection('files').getOne<File>(id, { expand: 'file_data(file),collaborators.user,owner' })
+            let response = await $pb.collection('files').getOne<File>(id, { expand: 'file_data(file),collaborators.user,owner,file_favorites(file)' })
             response = rename(response, 'file_data(file)', 'data')
             fileStore.updateClient({ id: id, updatedFile: response })
             return { file: response }
@@ -83,11 +84,11 @@ export default class FileStore extends VuexModule {
     }
 
     @Action
-    async create(data: { template?: File, name?: string }): Promise<File | null> {
+    async create(data: { template?: File, name?: string, team?: string }): Promise<File | null> {
         try {
             const name = data.name ?? generateName();
             const json = data.template !== undefined ? data.template!.expand.data.json : '{"id":"vimu@0.1.0","nodes":{"1":{"id":1,"data":{},"inputs":{"in_0":{"connections":[{"node":24,"output":"out_0","data":{}}]}},"outputs":{},"position":[156,-1],"name":"output"},"24":{"id":24,"data":{},"inputs":{},"outputs":{"out_0":{"connections":[{"node":1,"input":"in_0","data":{}}]}},"position":[-119.5,-41],"name":"source_score"}}}'
-            const file: File = await $pb.collection('files').create<File>({ name: name, owner: $pb.authStore.model!.id })
+            const file: File = await $pb.collection('files').create<File>({ name: name, owner: $pb.authStore.model!.id, team: data.team })
             const fileData: FileData = await $pb.collection('file_data').create<FileData>({ json: json, file: file.id })
 
             return file;
@@ -113,11 +114,42 @@ export default class FileStore extends VuexModule {
     }
 
     @Action
-    async update(data: { id: string, name?: string, favorite?: boolean, public?: boolean, collaborators?: string[] }): Promise<File | null> {
+    async update(data: { id: string, name?: string, public?: boolean, collaborators?: string[] }): Promise<File | null> {
         try {
-            let updatedFile: File = await $pb.collection('files').update(data.id, { 'name': data.name, 'favorite': data.favorite, 'collaborators': data.collaborators, 'public': data.public }, { expand: 'file_data(file),collaborators.user,owner' })
+            let updatedFile: File = await $pb.collection('files').update(data.id, { 'name': data.name, 'collaborators': data.collaborators, 'public': data.public }, { expand: 'file_data(file),collaborators.user,owner,file_favorites(file)' })
             updatedFile = rename(updatedFile, 'file_data(file)', 'data')
             fileStore.updateClient({ id: data.id, updatedFile })
+            return updatedFile;
+        } catch (error) {
+            notificationStore.sendNotification({ title: 'Error updating file', color: 'error' })
+            return null;
+        }
+    }
+
+    @Action
+    async favoriteFile(file: File): Promise<File | null> {
+        try {
+            let response = await $pb.collection('file_favorites').create({ 'file': file.id, 'user': $pb.authStore.model?.id })
+            let updatedFile = await $pb.collection('files').getOne<File>(file.id, { expand: 'file_data(file),collaborators.user,owner,file_favorites(file)' })
+            updatedFile = rename(updatedFile, 'file_data(file)', 'data')
+            fileStore.updateClient({ id: file.id, updatedFile })
+
+            return updatedFile;
+        } catch (error) {
+            notificationStore.sendNotification({ title: 'Error updating file', color: 'error' })
+            return null;
+        }
+    }
+
+    @Action
+    async unfavoriteFile(file: File): Promise<File | null> {
+        try {
+            await $pb.collection('file_favorites').delete(file.expand['file_favorites(file)']![0].id);
+
+            let updatedFile = await $pb.collection('files').getOne<File>(file.id, { expand: 'file_data(file),collaborators.user,owner,file_favorites(file)' })
+            updatedFile = rename(updatedFile, 'file_data(file)', 'data')
+            fileStore.updateClient({ id: file.id, updatedFile })
+
             return updatedFile;
         } catch (error) {
             notificationStore.sendNotification({ title: 'Error updating file', color: 'error' })
@@ -142,12 +174,15 @@ export default class FileStore extends VuexModule {
         const fileIndex = this.files.findIndex((s) => s.id == data.id)
         const isCurrentFile = this.file?.id == data.updatedFile?.id;
         if (data.updatedFile !== undefined) {
+            if (fileIndex !== -1) {
+                const oldFile = this.files[fileIndex];
+                data.updatedFile.expand.permission = oldFile.expand.permission;
+                Vue.set(this.files, fileIndex, data.updatedFile)
+            }
             if (isCurrentFile) {
                 this.file = data.updatedFile;
             }
-            if (fileIndex !== -1) {
-                Vue.set(this.files, fileIndex, data.updatedFile)
-            }
+
         } else {
             if (isCurrentFile) {
                 this.file = null;
@@ -197,17 +232,7 @@ export default class FileStore extends VuexModule {
         if (!this.file) {
             return false;
         }
-        if (this.file.owner === $pb.authStore.model?.id) {
-            return false;
-        }
-        for (const fileShare of this.file.expand.collaborators ?? []) {
-            if (fileShare.user === $pb.authStore.model?.id) {
-                return fileShare.permission == FilePermission.view;
-            }
-        }
-        if (this.file.public) {
-            return true;
-        }
-        return true
+
+        return this.file.expand.permission.value == FilePermission.view
     }
 }

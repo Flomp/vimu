@@ -44,7 +44,7 @@ export default class FileContextMenu extends Vue {
     @Prop() shared!: boolean;
 
     get favoriteText() {
-        return this.file.favorite ? 'Remove from favorites' : 'Add to favorites'
+        return this.file.expand["file_favorites(file)"]?.length ? 'Remove from favorites' : 'Add to favorites'
     }
 
     @Emit()

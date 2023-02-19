@@ -10,10 +10,12 @@
         <v-col class="fill-height">
             <vimu-flipper :flipped="showSignup">
                 <template v-slot:front>
-                    <login-form @toggle="showSignup = true" :loading="loginLoading" @submit="loginSubmit" @oauth="oauth"></login-form>
+                    <login-form @toggle="showSignup = true" :loading="loginLoading" @submit="loginSubmit"
+                        @oauth="oauth"></login-form>
                 </template>
                 <template v-slot:back>
-                    <signup-form @toggle="showSignup = false" :loading="signupLoading" @submit="signupSubmit" @oauth="oauth">
+                    <signup-form @toggle="showSignup = false" :loading="signupLoading" @submit="signupSubmit"
+                        @oauth="oauth">
                     </signup-form>
                 </template>
             </vimu-flipper>
@@ -62,11 +64,11 @@ export default class LoginPage extends Vue {
 
     redirectUrl = "https://vimu.app/oauth"
 
-    created() {        
+    created() {
         this.showSignup = this.$route.params.login != "login"
     }
 
-    validate({params}: Context) {
+    validate({ params }: Context) {
         return params.login === "login" || params.login === "signup";
     }
 
@@ -75,7 +77,8 @@ export default class LoginPage extends Vue {
         const success = await authStore.signup(data);
 
         if (success) {
-            this.$router.push(this.$route.query.r as string ?? '/dashboard/files/my')
+            const {r: _, ...query} = this.$route.query;
+            this.$router.push({ path: this.$route.query.r as string ?? '/dashboard/files/my', query: { ...query } })
         }
         this.signupLoading = false;
     }
@@ -85,16 +88,17 @@ export default class LoginPage extends Vue {
 
         const success: boolean = await authStore.login(data)
         if (success) {
-            this.$router.push(this.$route.query.r as string ?? '/dashboard/files/my')
+            const {r: _, ...query} = this.$route.query;
+            this.$router.push({ path: this.$route.query.r as string ?? '/dashboard/files/my', query: { ...query } })
         }
         this.loginLoading = false;
     }
 
-    async oauth() {       
+    async oauth() {
         const methods = await $pb.collection('users').listAuthMethods()
         const provider = methods.authProviders[0];
         localStorage.setItem('provider', JSON.stringify(provider));
-        window.location.href = provider.authUrl+this.redirectUrl;
+        window.location.href = provider.authUrl + this.redirectUrl;
     }
 }
 </script>

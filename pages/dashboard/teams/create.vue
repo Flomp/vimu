@@ -26,7 +26,7 @@
                     <v-spacer></v-spacer>
                     <vimu-btn @click="currentStep = 2" :x-large="true">Continue</vimu-btn>
                 </div>
-                <team-member-table :team="team" @remove="handleRemove"></team-member-table>
+                <team-member-table :team="team" @remove="handleRemove" @update="updateMember"></team-member-table>
             </div>
             <div v-else-if="currentStep == 2 && team != null">
                 <v-row>
@@ -51,8 +51,7 @@
                     <v-col>
                         <div class="d-flex">
                             <vimu-btn class="mr-4" :x-large="true" @click="currentStep = 1">Back</vimu-btn>
-                            <vimu-btn :to="`/dashboard/team/${team.id}`" :x-large="true"
-                                :primary="true">Finish</vimu-btn>
+                            <vimu-btn :to="`/dashboard/teams/${team.id}`" :x-large="true" :primary="true">Finish</vimu-btn>
                         </div>
                         <team-member-table :team="team" :readonly="true"></team-member-table>
                     </v-col>
@@ -135,8 +134,13 @@ export default class CreateTeamPage extends Vue {
                 notificationStore.sendNotification({ title: 'User could not be found', color: 'error' })
                 return;
             }
-
             const user = users[0];
+
+            if (this.team?.expand["team_members(team)"]?.some(m => m.user === user.id)) {
+                notificationStore.sendNotification({ title: 'Already a team member', color: 'error' })
+                return;
+            }
+
             const teamMember = await teamStore.addMember({ user: user, team: this.team!, permission: this.selectedInviteOption as ("view" | "edit") });
             if (teamMember != null) {
                 const members: TeamMember[] = JSON.parse(JSON.stringify(this.team?.expand['team_members(team)']));
@@ -150,6 +154,16 @@ export default class CreateTeamPage extends Vue {
         } finally {
             this.addLoading = false;
         }
+    }
+
+    async updateMember(data: { permission: "view" | "edit", member: TeamMember }) {
+        const memberClone = JSON.parse(JSON.stringify(data.member));
+        memberClone.permission = data.permission
+        const success = await teamStore.updateMember(memberClone);
+        if (success) {
+            await teamStore.get(this.team!.id);
+        }
+        this.teamMemberToBeRemoved = null;
     }
 
     handleRemove(member: TeamMember) {

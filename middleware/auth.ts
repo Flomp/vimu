@@ -14,7 +14,7 @@ const auth = ({ $pb, route, redirect }: Context & { $pb: PocketBase }) => {
   if (!loggedIn) {
     for (const r of protectedRoutes) {
       if (route.path.startsWith(r)) {
-        redirect(302, '/login', {r: route.path})
+        redirect(302, '/login', {r: route.path, ...route.query})
         return false;
       }
     }

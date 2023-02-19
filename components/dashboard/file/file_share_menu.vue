@@ -20,7 +20,7 @@
             </file-share-card>
         </v-list>
     </v-menu>
-    <v-menu open-on-hover bottom offset-y content-class="vimu-menu elevation-0" v-else-if="shared">
+    <v-menu nudge-bottom="4" open-on-hover bottom offset-y content-class="vimu-menu elevation-0" v-else-if="shared">
         <template v-slot:activator="{ on, attrs }">
             <div v-bind="attrs" v-on="on">
                 <vimu-avatar :seed="file.expand.owner.avatar" size="36" v-if="shared"></vimu-avatar>
@@ -31,7 +31,7 @@
         <v-list dense>
             <v-list-item>
                 <v-list-item-content>
-                    <v-list-item-title>Shared by</v-list-item-title>
+                    <v-list-item-title>Author</v-list-item-title>
                     <v-list-item-subtitle>{{ file.expand.owner.username }}</v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>
@@ -47,9 +47,8 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from "nuxt-property-decorator";
-import { File, FileShare } from "~/models/file";
-import { $pb } from "~/store";
+import { Component, Prop, Vue } from "nuxt-property-decorator";
+import { File, FilePermission } from "~/models/file";
 import FileShareCard from "./file_share_card.vue";
 
 @Component({
@@ -61,8 +60,8 @@ export default class FileShareMenu extends Vue {
     @Prop() file!: File;
     @Prop() shared!: boolean;
 
-    get sharePermission() {
-        return this.file.expand.collaborators?.find((c) => c.expand?.user.id == $pb.authStore.model?.id)?.permission ?? "?"
+    get sharePermission(): FilePermission {        
+        return this.file.expand.permission.value
     }
 
 }

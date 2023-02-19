@@ -50,11 +50,12 @@
             <div class="d-flex align-center mx-4">
                 <span class="navigation-heading">Teams</span>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" icon to="/dashboard/teams/create"><v-icon size="20">mdi-plus</v-icon></v-btn>
+                <v-btn color="primary" icon @click="checkSubscriptionAndNavigate"><v-icon
+                        size="20">mdi-plus</v-icon></v-btn>
             </div>
             <template v-if="teams.length > 0">
                 <v-list-item @click="goToTeam(team)" v-for="team in teams" :key="team.id">
-                        <team-avatar class="ma-1" :team="team" :size="20"></team-avatar>
+                    <team-avatar class="ma-1" :team="team" :size="20"></team-avatar>
                     <v-list-item-title class="favorite-title">
                         <span class="ml-4">{{ team.name }}</span>
                     </v-list-item-title>
@@ -66,25 +67,30 @@
             </div>
         </div>
         <v-divider v-if="!showLogo"></v-divider>
+        <upgrade-dialog v-model="showUpgradeDialog" reason="team"></upgrade-dialog>
     </v-list>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from "nuxt-property-decorator";
+import { Component, Prop, Vue } from "nuxt-property-decorator";
 import { File } from "~/models/file";
 import { Team } from "~/models/team";
-import { fileStore, teamStore } from "~/store";
+import { fileStore, subscriptionStore, teamStore } from "~/store";
 import Logo from "../vimu/illustrations/logo.vue";
 import TeamAvatar from "./team/team_avatar.vue";
+import UpgradeDialog from "./upgrade_dialog.vue";
 
 @Component({
     components: {
         Logo,
-        TeamAvatar
+        TeamAvatar,
+        UpgradeDialog
     }
 })
 export default class DashboardNavigation extends Vue {
     @Prop({ default: true }) readonly showLogo!: boolean;
+
+    showUpgradeDialog: boolean = false;
 
     get favorites(): File[] {
         return fileStore.favorites;
@@ -102,6 +108,14 @@ export default class DashboardNavigation extends Vue {
     goToTeam(team: Team) {
         teamStore.setTeam(team);
         this.$router.push('/dashboard/teams/' + team.id);
+    }
+
+    checkSubscriptionAndNavigate() {
+        if (!subscriptionStore.subscribed) {
+            this.showUpgradeDialog = true;
+        } else {
+            this.$router.push('/dashboard/teams/create')
+        }
     }
 }
 </script>

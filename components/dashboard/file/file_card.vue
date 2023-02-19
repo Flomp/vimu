@@ -15,7 +15,7 @@
         </div>
         <div class="d-flex justify-space-between align-center pt-3">
             <span class="file-card-timestamp">Edited {{ editTimestamp }}</span>
-            <file-share-menu :file="file" :shared="shared"></file-share-menu>
+            <file-share-menu :file="file" :shared="!owned"></file-share-menu>
         </div>
     </div>
 </template>
@@ -25,6 +25,7 @@ import { Component, Emit, Prop, Vue } from "nuxt-property-decorator";
 import FileContextMenu from "~/components/dashboard/file/file_context_menu.vue";
 import VimuAvatar from "~/components/vimu/vimu_avatar.vue";
 import { File, FilePermission } from "~/models/file";
+import { $pb } from "~/store";
 import getRelativeTime from "~/utils/date";
 import FileShareCard from "./file_share_card.vue";
 import FileShareMenu from "./file_share_menu.vue";
@@ -46,8 +47,12 @@ export default class FileCard extends Vue {
 
     checkTimeInterval!: NodeJS.Timeout;
 
+    get owned() {
+        return this.file.owner == $pb.authStore.model?.id;
+    }
+
     get favoriteIcon() {
-        return this.file.favorite ? 'mdi-star' : 'mdi-star-outline'
+        return this.file.expand["file_favorites(file)"]?.length ? 'mdi-star' : 'mdi-star-outline'
     }
 
     get permissionIcon() {

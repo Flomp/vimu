@@ -67,8 +67,14 @@ export default class TeamInviteDialog extends Vue {
 
         const user = users[0];
 
+        if (this.team.expand["team_members(team)"]?.some(m => m.user === user.id)) {
+            notificationStore.sendNotification({ title: 'Already a team member', color: 'error' })
+            this.inviteLoading = false;
+            return;
+        }
+
         const teamMember = await teamStore.addMember({ user: user, team: this.team!, permission: this.selectedInviteOption as ("view" | "edit") });
-        if(teamMember) {
+        if (teamMember) {
             await teamStore.get(this.team.id);
         }
         this.inviteLoading = false;
@@ -77,6 +83,4 @@ export default class TeamInviteDialog extends Vue {
 }
 </script>
 
-<style>
-
-</style>
+<style></style>
