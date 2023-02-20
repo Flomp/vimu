@@ -28,7 +28,7 @@ A file can be added to your favorites to allow for quicker access. You can eithe
 
 To remove a file from your favorites click the <i class="v-icon mdi mdi-star theme--light"></i> icon in front of the file or open the file's action menu and select "Remove from favorites".
 
-## Sharing
+## Sharing  <span class="v-chip theme--light v-size--default primary"><span class="v-chip__content">PRO</span></span>
 
 <framed-gif path="/gifs/share_file.gif"></framed-gif>
 

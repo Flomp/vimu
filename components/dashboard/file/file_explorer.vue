@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-row class="align-center justify-space-between my-5">
-            <v-col cols="12" md="auto">
+            <v-col cols="12" md="auto" v-if="!shared">
                 <vimu-btn class="mt-3 mt-sm-0" :primary="true" :large="true" @click="createFile()" :disabled="createLoading"
                     :loading="createLoading">New file
                 </vimu-btn>
@@ -18,6 +18,7 @@
                     </v-list>
                 </v-menu>
             </v-col>
+            <v-spacer style="height: 68px" v-else></v-spacer>
             <v-col cols="auto">
                 <div class="d-flex align-center">
                     <vimu-select class="mr-3" v-model="sort" :items="sortOptions" :hide-details="true" :dense="true"

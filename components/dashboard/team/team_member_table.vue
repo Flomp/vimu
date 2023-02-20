@@ -22,7 +22,7 @@
                 </td>
                 <td></td>
             </tr>
-            <tr v-for="member in team.expand['team_members(team)']" :key="member.id">
+            <tr v-for="member in localTeam.expand['team_members(team)']" :key="member.id">
                 <td :class="{ 'inactive-row': member.status == 'pending' }">
                     <vimu-avatar :seed="member.expand.user.avatar" :size="32" class="mr-4"></vimu-avatar>
                     {{ member.expand.user.username }}
@@ -32,7 +32,7 @@
                 </td>
                 <td>
                     <span v-if="readonly">can {{ member.permission }}</span>
-                    <vimu-select :items="inviteOptions" :hide-details="true" :dense="true" v-model="selectedInviteOption"
+                    <vimu-select :items="inviteOptions" :hide-details="true" :dense="true" v-model="member.permission"
                         style="max-width: 140px" @change="update($event, member)" v-else>
                     </vimu-select>
                 </td>
@@ -60,12 +60,20 @@ export default class TeamMemberTable extends Vue {
     @Prop() team!: Team;
     @Prop() readonly!: boolean;
 
+    localTeam: Team = JSON.parse(JSON.stringify(this.team));
+
     inviteOptions = [
         { text: "can view", value: "view" },
         { text: "can edit", value: "edit" },
     ]
 
     selectedInviteOption = this.inviteOptions[0].value;
+
+
+    @Watch("team")
+    onTeamChange(value: Team) {
+        this.localTeam = JSON.parse(JSON.stringify(value));
+    }
 
     @Emit()
     remove(member: TeamMember) {

@@ -18,6 +18,7 @@
         <doc-nav-link to="/docs/dashboard/files">Files</doc-nav-link>
         <doc-nav-link to="/docs/dashboard/shared">Shared Files</doc-nav-link>
         <doc-nav-link to="/docs/dashboard/scores">Scores</doc-nav-link>
+        <doc-nav-link to="/docs/dashboard/teams">Teams</doc-nav-link>
       </template>
     </doc-nav-link>
     <doc-nav-link to="/docs/editor" :main="true">

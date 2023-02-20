@@ -59,9 +59,8 @@
 </template>
 
 <script lang="ts">
-import { memberExpression } from "@babel/types";
 import { Context } from "@nuxt/types";
-import { Vue, Component } from "nuxt-property-decorator";
+import { Component, Vue } from "nuxt-property-decorator";
 import ConfirmDialog from "~/components/dashboard/confirm_dialog.vue";
 import FileExplorer from "~/components/dashboard/file/file_explorer.vue";
 import FileRenameDialog from "~/components/dashboard/file/file_rename_dialog.vue";
