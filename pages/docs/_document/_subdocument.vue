@@ -30,6 +30,7 @@ export default class DocumentationPage extends Vue {
     async asyncData({ $content, route, error }: Context) {
         try {
             const page = await $content(route.path).fetch<IContentDocument>();
+            
             return { page }
         } catch (e) {
             error({ statusCode: 404, message: 'Not found' })

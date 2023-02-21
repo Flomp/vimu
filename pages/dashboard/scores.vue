@@ -310,6 +310,7 @@ export default class ScoresPage extends Vue {
     }
 
     async checkAndCreateScore(data: { score: Score, file: File | Blob, update: boolean }) {
+        this.createLoading = true;
         const scoreLimitReached = await this.checkScoreSubscription();
         if(scoreLimitReached) {
             return;

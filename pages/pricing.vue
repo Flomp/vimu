@@ -64,11 +64,11 @@ export default class PricingPage extends Vue {
     faqItems = [
         {
             "title": "Which plan is right for me?",
-            "text": "If you are just trying out vimu, the free plan will be enough. You will have access to all features of the editor, but there will be some limits to the amount of files and scores you can create. If you want to get more serious, consider purchasing a subscription to gain access to all vimu features."
+            "text": "If you are just trying out vimu, the free plan will be enough. You will have access to all features of the editor, but there will be some limits to the number of files and scores you can create. If you want to get more serious, consider purchasing a subscription to gain access to all vimu features."
         },
         {
             "title": "It's open source, why should I pay?",
-            "text": "You are more then welcome to install vimu on your own server. We provide extensive documentation to help you with the process. However, it costs money every month to provide our hosted version of vimu for free. By subscribing you help us to further develop the editor to create the best possible experience for all users and keep the service running."
+            "text": "You are more than welcome to install vimu on your own server. We provide extensive documentation to help you with the process. However, it costs money every month to provide our hosted version of vimu for free. By subscribing, you help us further develop the editor to create the best possible experience for all users and keep the service running."
         },
         {
             "title": "Can I upgrade my plan later on?",
@@ -76,7 +76,7 @@ export default class PricingPage extends Vue {
         },
         {
             "title": "How do I cancel my subscription?",
-            "text": "You can cancel your subscription in your account settings under 'Subscription'. Please feel free to contact us if you have any questions regarding your subscription."
+            "text": "You can cancel your subscription in your account settings under \"Subscription\". Please feel free to contact us if you have any questions regarding your subscription."
         },
         {
             "title": "What payment options are available?",

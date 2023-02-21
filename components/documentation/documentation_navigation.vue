@@ -39,6 +39,13 @@
         <doc-nav-link to="/docs/account/subscription">Subscription</doc-nav-link>
       </template>
     </doc-nav-link>
+    <doc-nav-link to="/docs/nodes" :main="true">
+      <template v-slot:default> Nodes</template>
+      <template v-slot:sub-items>
+        <doc-nav-link to="/docs/nodes/source_score">source_score</doc-nav-link>
+        <doc-nav-link to="/docs/nodes/source_tinynotation">source_tinynotation</doc-nav-link>
+      </template>
+    </doc-nav-link>
   </div>
 
 </template>

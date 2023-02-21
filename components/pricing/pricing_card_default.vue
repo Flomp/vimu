@@ -5,7 +5,7 @@
       <v-spacer></v-spacer>
       <v-chip color="primary" v-if="active">Current plan</v-chip>
     </div>
-    <p class="pricing-description">Ideal for occasional users with simple use cases</p>
+    <p class="pricing-description">For occasional users with simple use cases</p>
     <p><span class="price">0€</span><span class="vimu-subtitle">/month</span></p>
     <v-divider class="mb-4"></v-divider>
     <div class="pb-4">

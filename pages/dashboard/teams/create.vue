@@ -31,7 +31,7 @@
             <div v-else-if="currentStep == 2 && team != null">
                 <v-row>
                     <v-col class="mr-12" cols="auto" style="max-width: 256px">
-                        <v-hover>
+                        <v-hover style="max-width: 128px">
                             <template v-slot:default="{ hover }">
                                 <div style="position:relative; border-radius: 10%;">
                                     <team-avatar :team="team" :size="128"></team-avatar>
@@ -143,10 +143,10 @@ export default class CreateTeamPage extends Vue {
 
             const teamMember = await teamStore.addMember({ user: user, team: this.team!, permission: this.selectedInviteOption as ("view" | "edit") });
             if (teamMember != null) {
-                const members: TeamMember[] = JSON.parse(JSON.stringify(this.team?.expand['team_members(team)']));
+                const newTeam: Team = JSON.parse(JSON.stringify(this.team));
+                newTeam.expand["team_members(team)"]?.push(teamMember);
 
-                members.push(teamMember);
-                Vue.set(this.team!, "expand", { owner: this.team?.expand.owner, 'team_members(team)': members });
+                this.team = newTeam;
             }
 
         } catch {
@@ -198,6 +198,7 @@ export default class CreateTeamPage extends Vue {
             const updatedTeam = await teamStore.updateAvatar({ team: this.team, avatar: files[0] })
             if (updatedTeam !== null) {
                 this.team.icon = updatedTeam.icon;
+                teamStore.list();
             }
         }
     }

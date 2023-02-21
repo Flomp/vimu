@@ -1,7 +1,7 @@
 <template>
     <v-sheet class="page" v-if="team">
         <v-container>
-            <div class="d-flex align-center">
+            <div class="d-flex align-center mt-6">
                 <team-avatar :team="team" :size="128"></team-avatar>
                 <h1 class="vimu-title ml-8">{{ team.name }}</h1>
                 <v-spacer></v-spacer>

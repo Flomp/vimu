@@ -29,7 +29,7 @@ To add a source_tinynotation node select "Source"->"Tinynotation" from the <nuxt
 
 <framed-gif path="/gifs/add_tinynotation_node.gif"></framed-gif>
 
-This will just be a quick introduction to tinynotation. For a full writeup of all the functions please check the source_tinynotation <nuxt-link to="/docs/nodes/source#tinynotation">node documentation</nuxt-link>. 
+This will just be a quick introduction to tinynotation. For a full writeup of all the functions please check the source_tinynotation <nuxt-link to="/docs/nodes/source_tinynotation">node documentation</nuxt-link>. 
 
 In general, tinynotation represents music notes as characters corresponding to the note's pitch. 
 So the tinynotation string "c d e f g" corresponds to this melody:
