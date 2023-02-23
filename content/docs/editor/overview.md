@@ -6,7 +6,7 @@ The editor is your main workbench. Here you build, create, observe the output of
 
 The editor consists of four view panels by default. You can resize each panel by clicking the border between two panels and dragging your mouse.
 ### Node panel
-On the very left, you find the Node Panel. It will be your main workspace. Here you can add nodes and connect them to analyse the score in the way you want.
+On the very left, you find the Node Panel. It will be your main workspace. Here you can add nodes and connect them to analyze the score in the way you want.
 ### Output panel
 In the middle, the Output Panel is located. The final result of the output node will be displayed here. It can either be a score or a plot.
 ### Plot panel

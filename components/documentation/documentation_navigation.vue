@@ -44,6 +44,13 @@
       <template v-slot:sub-items>
         <doc-nav-link to="/docs/nodes/source_score">source_score</doc-nav-link>
         <doc-nav-link to="/docs/nodes/source_tinynotation">source_tinynotation</doc-nav-link>
+        <doc-nav-link to="/docs/nodes/analysis_key">analysis_key</doc-nav-link>
+        <doc-nav-link to="/docs/nodes/analysis_ambitus">analysis_ambitus</doc-nav-link>
+        <doc-nav-link to="/docs/nodes/analysis_roman_numeral">analysis_roman_numeral</doc-nav-link>
+        <doc-nav-link to="/docs/nodes/figured_bass_realize">figured_bass_realize</doc-nav-link>
+        <doc-nav-link to="/docs/nodes/detect_modulation">detect_modulation</doc-nav-link>
+        <doc-nav-link to="/docs/nodes/detect_parallels">detect_parallels</doc-nav-link>
+        <doc-nav-link to="/docs/nodes/detect_voice_crossings">detect_voice_crossings</doc-nav-link>
       </template>
     </doc-nav-link>
   </div>

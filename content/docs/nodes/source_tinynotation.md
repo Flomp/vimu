@@ -8,15 +8,20 @@ This node takes no inputs.
 
 ## Controls
 
-1. Text field to input tinynotation
+| Name | Type | Description |
+|:---|:---|:---|
+| tinynotation | Text field (tinynotation) | tinynotation input field |
 
 ## Output
 
-The melody input in the control text field.
+| Name | Description |
+|:---|:---|
+| Output | The melody input in the control text field |
+
 
 ## Remarks
 
-This node expects its input to be in a specific format called "tinynotation". It builds on the definition made by <a href="https://web.mit.edu/music21/doc/usersGuide/usersGuide_16_tinyNotation.html">music21</a> and extends it with some additional functionality.
+This node's control expects its input to be in a specific format called "tinynotation". It builds on the definition made by <a href="https://web.mit.edu/music21/doc/usersGuide/usersGuide_16_tinyNotation.html">music21</a> and extends it with some additional functionality.
 
 ### Pitch
 Pitch is denoted with the letters A-G.
@@ -64,7 +69,7 @@ Example:<br>
 <framed-gif path="/imgs/tinynotation/example_5.svg"></framed-gif>
 
 ### Rests
-Rests are denoted by "r". Rhythm works analogously to notes.
+Rests are denoted by "r". Duration works analogously to notes.
 
 Example:<br>
 `c r8. d16 r2`

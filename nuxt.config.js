@@ -9,7 +9,7 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'vimu is the modern way to analyse your music. It provides a rich toolbox for researchers, students and enthusiasts.' },
+      { hid: 'description', name: 'description', content: 'vimu is the modern way to analyze your music. It provides a rich toolbox for researchers, students and enthusiasts.' },
       { name: 'format-detection', content: 'telephone=no' }
     ],
     htmlAttrs: { lang: 'en' },
@@ -91,9 +91,13 @@ export default {
 
   content: {
     markdown: {
+      liveEdit: false,
       remarkAutolinkHeadings: {
         behavior: 'wrap',
         linkProperties: { ariaHidden: 'true', tabIndex: -1, class: 'content-heading-link' },
+      },
+      prism: { 
+        theme: 'prism-themes/themes/prism-material-dark.css' 
       }
     }
   },

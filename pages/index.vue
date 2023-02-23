@@ -5,7 +5,7 @@
         <section>
             <div class="text-center" style="padding-top: 64px;">
 
-                <h1 class="vimu-title">Drag, Connect, Analyse</h1>
+                <h1 class="vimu-title">Drag, Connect, Analyze</h1>
 
                 <div class="d-flex showcase">
                     <video class="elevation-4" style="border-radius: 10px;" width="50%" autoplay muted loop

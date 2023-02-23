@@ -12,9 +12,9 @@ export default class SearchPartComponent extends Rete.Component {
   }
 
   async builder(node: Node) {
-    var in0 = new Rete.Input("in_0", "Part", sockets.part);
-    var in1 = new Rete.Input("in_1", "Stream", sockets.stream);
-    var out0 = new Rete.Output("out_0", "Stream", sockets.stream);
+    var in0 = new Rete.Input("in_0", "Needle", sockets.stream);
+    var in1 = new Rete.Input("in_1", "Haystack", sockets.stream);
+    var out0 = new Rete.Output("out_0", "Output", sockets.stream);
 
     node
       .addControl(new SearchPartControl(this.editor, "data", true))

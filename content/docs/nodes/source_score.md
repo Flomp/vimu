@@ -8,8 +8,13 @@ This node takes no inputs.
 
 ## Controls
 
-This node has no controls.
+| Name | Type | Description |
+|:---|:---|:---|
+| Browse | Button | Opens the score library browser |
 
 ## Output
 
-An arbitrary score selected from the library.
+| Name | Description |
+|:---|:---|
+| Output | An arbitrary score selected from the score library |
+

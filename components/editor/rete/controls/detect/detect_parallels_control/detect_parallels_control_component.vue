@@ -1,8 +1,14 @@
 <template>
   <div>
+    <v-checkbox hide-details label="Open Parallels" v-model="open" @change="update"></v-checkbox>
     <div class="d-flex align-center mt-2">
       <span>Color:</span>
-      <menu-color-picker v-model="color" @update="update"></menu-color-picker>
+      <menu-color-picker v-model="openColor" @update="update"></menu-color-picker>
+    </div>
+    <v-checkbox hide-details label="Hidden Parallels" v-model="hidden" @change="update"></v-checkbox>
+    <div class="d-flex align-center mt-2">
+      <span>Color:</span>
+      <menu-color-picker v-model="hiddenColor" @update="update"></menu-color-picker>
     </div>
   </div>
 </template>
@@ -24,16 +30,36 @@ export default class DetectParallelsControlComponent extends Vue {
   @Prop() getData!: Function;
   @Prop() putData!: Function;
 
-  color: string = "#ff0000"
+  openColor: string = "#ff0000"
+  hiddenColor: string = "#00ff00"
+
+  open: boolean = true;
+  hidden: boolean = true;
 
   mounted() {
-    this.putData("color", this.color);
+    if (this.getData("open_color") !== undefined) {
+      this.openColor = this.getData("open_color")
+    }
+    if (this.getData("open") !== undefined) {
+      this.open = this.getData("open")
+    }
+    if (this.getData("hidden_color") !== undefined) {
+      this.hiddenColor = this.getData("hidden_color")
+    }
+    if (this.getData("hidden") !== undefined) {
+      this.hidden = this.getData("hidden")
+    }
+    this.putData("open_color", this.openColor);
+    this.putData("open", this.hidden);
+    this.putData("hidden_color", this.hiddenColor);
+    this.putData("hidden", this.hidden);
   }
 
-  update() {   
-    if (this.ikey) {
-      this.putData("color", this.color);
-    }
+  update() {
+    this.putData("open_color", this.openColor);
+    this.putData("open", this.open);
+    this.putData("hidden_color", this.hiddenColor);
+    this.putData("hidden", this.hidden);
     this.emitter.trigger("process");
   }
 

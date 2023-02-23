@@ -20,7 +20,7 @@ Tinynotation can also be used to write figured bass lines. To do so, suffix any 
 
 <framed-gif path="/imgs/tinynotation_fb.png"></framed-gif>
 
-For our case we are going to use the following sequence: "D A_75#3 B- F_6 G_6 AA_75#3 D". A nice d-minor cadence. Input it into your tinynotation node a notice that a realized figured bass line will appear in the Output Panel.
+For our case we are going to use the following sequence: "D A_75#3 B- F_6 G_6 AA_75#3 D". A nice d-minor cadence. Input it into your tinynotation node and notice that a realized figured bass line will appear in the Output Panel.
 
 ## Roman Numeral Analysis
 

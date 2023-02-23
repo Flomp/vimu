@@ -96,6 +96,8 @@ export default class Editor extends Vue {
   isRightDragging: boolean = false;
   isUpperDragging: boolean = false;
 
+  nodeWasTranslated: boolean = false;
+
   get loggedIn() {
     return authStore.loggedIn;
   }
@@ -305,8 +307,6 @@ export default class Editor extends Vue {
     editor.on(
       [
         "process",
-        // "nodecreated",
-        // "noderemoved",
         "connectioncreated",
         "connectionremoved",
       ],
@@ -317,25 +317,36 @@ export default class Editor extends Vue {
         console.log(JSON.stringify(editor.toJSON()));
 
         await engineStore.process(editor.toJSON());
-      }
-    );
-
-    editor.on(
-      [
-        "process",
-        "nodecreated",
-        "noderemoved",
-        "nodedragged",
-        "connectioncreated",
-        "connectionremoved",
-      ],
-      async (source) => {
         if (fileStore.file != null && !fileStore.readonly && !Object.keys(example_files).includes(fileStore.file.id) && !this.editor?.silent) {
-          editor.trigger('addhistory' as any, editor.toJSON());         
-          fileStore.updateData({ id: fileStore.file.expand.data.id, json: JSON.stringify(editor.toJSON()) })
+          await fileStore.updateData({ id: fileStore.file.expand.data.id, json: JSON.stringify(editor.toJSON()) })
         }
       }
     );
+
+    editor.on('translatenode', (node) => {
+      this.nodeWasTranslated = true;
+    })
+
+    editor.on(
+      [
+        "nodecreated",
+        "noderemoved",
+      ],
+      async (source) => {
+        if (fileStore.file != null && !fileStore.readonly && !Object.keys(example_files).includes(fileStore.file.id) && !this.editor?.silent) {
+          editor.trigger('addhistory' as any, editor.toJSON());
+          await fileStore.updateData({ id: fileStore.file.expand.data.id, json: JSON.stringify(editor.toJSON()) })
+        }
+      }
+    );
+
+    editor.on("nodedragged", async () => {
+      if (this.nodeWasTranslated === true && fileStore.file != null && !fileStore.readonly && !Object.keys(example_files).includes(fileStore.file.id) && !this.editor?.silent) {
+        editor.trigger('addhistory' as any, editor.toJSON());
+        await fileStore.updateData({ id: fileStore.file.expand.data.id, json: JSON.stringify(editor.toJSON()) })
+      }
+      this.nodeWasTranslated = false;
+    })
 
     editor.on("zoom", ({ source }) => {
       return source !== "dblclick";
@@ -348,14 +359,14 @@ export default class Editor extends Vue {
       }
       await editor.fromJSON(JSON.parse(JSON.stringify(data)));
       await engineStore.process(editor.toJSON());
-      if (updateBackend && fileStore.file != null) {
+      if (updateBackend && fileStore.file != null && !Object.keys(example_files).includes(fileStore.file.id) && !this.editor?.silent) {
         fileStore.updateData({ id: fileStore.file.expand.data.id, json: JSON.stringify(editor.toJSON()) })
       }
     });
 
     this.editor = editor;
 
-    if(this.$route.params.id == "example-plots") {
+    if (this.$route.params.id == "example-plots") {
       const settings = JSON.parse(JSON.stringify(settingsStore.settings)) as EditorSettings;
       settings.plot = true;
       settingsStore.changeSettings(settings);
@@ -417,7 +428,7 @@ export default class Editor extends Vue {
     this.isRightDragging = false;
     this.isUpperDragging = false;
     this.setCursor("auto")
-    
+
   }
 
   persistPanelSizes() {

@@ -13,7 +13,7 @@ export default class AnalysisKeyComponent extends Rete.Component {
 
   async builder(node: Node) {
     var in0 = new Rete.Input("in_0", "Stream", sockets.stream);
-    var out0 = new Rete.Output("out_0", "Key", sockets.key);
+    var out0 = new Rete.Output("out_0", "Stream", sockets.stream);
 
     node
       .addControl(new AnalysisKeyControl(this.editor, "key", true))

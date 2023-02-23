@@ -34,19 +34,19 @@
       height="1" style="width: 100%;" @input="skip"></v-slider>
 
     <div style="height: calc(100% - 36px);
-        overflow-y: scroll;
-        background-color: white;
-      ">
+          overflow-y: scroll;
+          background-color: white;
+        ">
       <div :class="{ 'd-none': showNothingSelected }" id="osmdContainer"></div>
       <div v-if="showNothingSelected" class="
-          grey--text
-          fill-height
-          d-flex
-          flex-column
-          justify-center
-          align-center
-          text-overline
-        ">
+            grey--text
+            fill-height
+            d-flex
+            flex-column
+            justify-center
+            align-center
+            text-overline
+          ">
         <span>No Data</span>
       </div>
     </div>
@@ -176,7 +176,7 @@ export default class OSMDPanel extends Vue {
       drawMeasureNumbers: settingsStore.settings.display_show_measure_numbers,
       drawPartAbbreviations: settingsStore.settings.display_show_part_names,
       drawPartNames: settingsStore.settings.display_show_part_names,
-      followCursor:  settingsStore.settings.display_follow_cursor,
+      followCursor: settingsStore.settings.display_follow_cursor,
       cursorsOptions: [
         {
           type: CursorType.Standard,
