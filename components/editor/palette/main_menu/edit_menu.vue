@@ -84,20 +84,15 @@ export default class EditMenu extends Vue {
       const activeElement = document.activeElement as HTMLInputElement;
       if (activeElement?.tagName == "INPUT" && ["number", "text"].includes(activeElement.type)) {
         return;
-      }
+      }     
       if (e.code == "Backspace") {
         this.delete()
-      } else if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.repeat) {
+      } else if ((e.ctrlKey || e.metaKey) && !e.repeat) {
         switch (e.key) {
           case 'z': this.undo(); break;
           case 'c': this.copy(); break;
           case 'v': this.paste(); break;
-
-          default:
-        }
-      } else if ((e.ctrlKey || e.metaKey) && e.shiftKey && !e.repeat) {
-        switch (e.key) {
-          case 'z': this.redo(); break;
+          case 'Z': this.redo(); break;
           default:
         }
       }
@@ -151,7 +146,7 @@ export default class EditMenu extends Vue {
     this.editor?.addNode(pasteCopy);
   }
 
-  undo() {
+  undo() {    
     this.editor?.trigger("undo" as any);
   }
 

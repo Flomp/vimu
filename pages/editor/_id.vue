@@ -97,6 +97,7 @@ export default class Editor extends Vue {
   isUpperDragging: boolean = false;
 
   nodeWasTranslated: boolean = false;
+  removingNode: boolean = false;
 
   get loggedIn() {
     return authStore.loggedIn;
@@ -308,7 +309,6 @@ export default class Editor extends Vue {
       [
         "process",
         "connectioncreated",
-        "connectionremoved",
       ],
       async () => {
         if (editor.silent) {
@@ -316,10 +316,54 @@ export default class Editor extends Vue {
         }
         console.log(JSON.stringify(editor.toJSON()));
 
-        await engineStore.process(editor.toJSON());
-        if (fileStore.file != null && !fileStore.readonly && !Object.keys(example_files).includes(fileStore.file.id) && !this.editor?.silent) {
-          await fileStore.updateData({ id: fileStore.file.expand.data.id, json: JSON.stringify(editor.toJSON()) })
+        engineStore.process(editor.toJSON());
+        await this.updateFileData();
+      }
+    );
+
+    editor.on(
+      [
+        "connectionremoved"
+      ],
+      async () => {
+        if (editor.silent || this.removingNode) {
+          return
         }
+        console.log(JSON.stringify(editor.toJSON()));
+
+        engineStore.process(editor.toJSON());
+        await this.updateFileData();
+      }
+    );
+
+
+    editor.on("noderemove", () => {
+      this.removingNode = true;
+    })
+
+    editor.on(
+      [
+        "noderemoved"
+      ],
+      async () => {
+        this.removingNode = false;
+
+        if (editor.silent) {
+          return
+        }
+        console.log(JSON.stringify(editor.toJSON()));
+
+        engineStore.process(editor.toJSON());
+        await this.updateFileData();
+      }
+    );
+
+    editor.on(
+      [
+        "nodecreated",
+      ],
+      async (source) => {
+        await this.updateFileData();
       }
     );
 
@@ -327,30 +371,12 @@ export default class Editor extends Vue {
       this.nodeWasTranslated = true;
     })
 
-    editor.on(
-      [
-        "nodecreated",
-        "noderemoved",
-      ],
-      async (source) => {
-        if (fileStore.file != null && !fileStore.readonly && !Object.keys(example_files).includes(fileStore.file.id) && !this.editor?.silent) {
-          editor.trigger('addhistory' as any, editor.toJSON());
-          await fileStore.updateData({ id: fileStore.file.expand.data.id, json: JSON.stringify(editor.toJSON()) })
-        }
-      }
-    );
-
     editor.on("nodedragged", async () => {
-      if (this.nodeWasTranslated === true && fileStore.file != null && !fileStore.readonly && !Object.keys(example_files).includes(fileStore.file.id) && !this.editor?.silent) {
-        editor.trigger('addhistory' as any, editor.toJSON());
-        await fileStore.updateData({ id: fileStore.file.expand.data.id, json: JSON.stringify(editor.toJSON()) })
+      if (this.nodeWasTranslated === true) {
+        await this.updateFileData();
       }
       this.nodeWasTranslated = false;
     })
-
-    editor.on("zoom", ({ source }) => {
-      return source !== "dblclick";
-    });
 
     editor.bind('setdata');
     editor.on('setdata' as any, async ({ data, updateBackend }: { data: Data, updateBackend: boolean }) => {
@@ -358,10 +384,14 @@ export default class Editor extends Vue {
         return;
       }
       await editor.fromJSON(JSON.parse(JSON.stringify(data)));
-      await engineStore.process(editor.toJSON());
-      if (updateBackend && fileStore.file != null && !Object.keys(example_files).includes(fileStore.file.id) && !this.editor?.silent) {
-        fileStore.updateData({ id: fileStore.file.expand.data.id, json: JSON.stringify(editor.toJSON()) })
+      engineStore.process(editor.toJSON());
+      if (updateBackend) {
+        await this.updateFileData(false);
       }
+    });
+
+    editor.on("zoom", ({ source }) => {
+      return source !== "dblclick";
     });
 
     this.editor = editor;
@@ -383,6 +413,16 @@ export default class Editor extends Vue {
     }
 
     osmdStore.setNeedsUpdate(true);
+  }
+
+  async updateFileData(addHistory: boolean = true) {
+    if (fileStore.file != null && !Object.keys(example_files).includes(fileStore.file.id) && !this.editor?.silent) {
+      const editorJson = this.editor?.toJSON();
+      if (addHistory) {
+        this.editor?.trigger('addhistory' as any, editorJson);
+      }
+      fileStore.updateData({ id: fileStore.file.expand.data.id, json: JSON.stringify(editorJson) })
+    }
   }
 
   async loadData(): Promise<Data | null> {

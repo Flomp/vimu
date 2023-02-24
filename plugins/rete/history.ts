@@ -25,6 +25,8 @@ class History {
         const action = this.produced[this.produced.length - 2];
         this._do({ from: this.produced, to: this.reserved });
 
+        console.log(this.produced);
+        
         return action
     }
 
@@ -36,7 +38,8 @@ class History {
     redo() {
         const action = this.reserved[this.reserved.length - 1];
         this._do({ from: this.reserved, to: this.produced });
-
+        
+        console.log(this.reserved);
         return action
     }
 }
@@ -57,7 +60,7 @@ function install(editor: NodeEditor) {
         editor.trigger('setdata' as any, {data: data, updateBackend: true})
     }
 
-    editor.on('undo' as any, async () => {
+    editor.on('undo' as any, async () => {       
         const data = history.undo();        
         await update(data);
     });
