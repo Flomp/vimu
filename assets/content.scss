@@ -2,6 +2,7 @@
     h1 {
         margin-bottom: 36px;
         margin-top: 36px;
+        word-wrap: break-word;
     }
 
     h2 {
@@ -58,5 +59,10 @@
 
     code {
         padding: 0;
+    }
+
+    .filename {
+        font-size: 0.75rem;
+        color: grey;
     }
 }

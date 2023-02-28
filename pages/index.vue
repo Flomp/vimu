@@ -53,7 +53,7 @@
                 </v-row>
                 <v-row class="content-row">
                     <v-col>
-                        <vimu-article title="100% Open Source" callToAction="How to install">
+                        <vimu-article title="100% Open Source" callToAction="How to install" to="/docs/self-hosting/introduction">
                             We believe that software should be free for everyone. Thus <b>vimu</b> is fully open source.
                             If you do not want to use our hosted service read the docs and learn how to get <b>vimu</b>
                             up and

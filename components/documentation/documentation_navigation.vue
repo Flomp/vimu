@@ -53,8 +53,14 @@
         <doc-nav-link to="/docs/nodes/detect_voice_crossings">detect_voice_crossings</doc-nav-link>
       </template>
     </doc-nav-link>
+    <doc-nav-link to="/docs/self-hosting" :main="true">
+      <template v-slot:default> Self-Hosting</template>
+      <template v-slot:sub-items>
+        <doc-nav-link to="/docs/self-hosting/introduction">Introduction</doc-nav-link>
+        <doc-nav-link to="/docs/self-hosting/installation">Installation</doc-nav-link>
+      </template>
+    </doc-nav-link>
   </div>
-
 </template>
 
 <script lang="ts">
@@ -70,6 +76,4 @@ export default class DocumentationNavigation extends Vue {
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

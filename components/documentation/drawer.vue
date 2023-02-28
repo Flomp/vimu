@@ -28,6 +28,6 @@ export default class DocsDrawer extends Vue {
     padding: 20px;
     min-width: 0;
     flex: 0 0 256px;
-
+    margin-top: 75px;
 }
 </style>
