@@ -1,6 +1,6 @@
 <template>
   <v-text-field
-    label="Half steps"
+    label="Semitones"
     v-model="steps"
     @input="change"
     type="number"

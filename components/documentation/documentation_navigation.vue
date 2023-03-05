@@ -44,13 +44,27 @@
       <template v-slot:sub-items>
         <doc-nav-link to="/docs/nodes/source_score">source_score</doc-nav-link>
         <doc-nav-link to="/docs/nodes/source_tinynotation">source_tinynotation</doc-nav-link>
-        <doc-nav-link to="/docs/nodes/analysis_key">analysis_key</doc-nav-link>
         <doc-nav-link to="/docs/nodes/analysis_ambitus">analysis_ambitus</doc-nav-link>
+        <doc-nav-link to="/docs/nodes/analysis_key">analysis_key</doc-nav-link>
         <doc-nav-link to="/docs/nodes/analysis_roman_numeral">analysis_roman_numeral</doc-nav-link>
         <doc-nav-link to="/docs/nodes/figured_bass_realize">figured_bass_realize</doc-nav-link>
         <doc-nav-link to="/docs/nodes/detect_modulation">detect_modulation</doc-nav-link>
         <doc-nav-link to="/docs/nodes/detect_parallels">detect_parallels</doc-nav-link>
         <doc-nav-link to="/docs/nodes/detect_voice_crossings">detect_voice_crossings</doc-nav-link>
+        <doc-nav-link to="/docs/nodes/plot_dynamics">plot_dynamics</doc-nav-link>
+        <doc-nav-link to="/docs/nodes/plot_histogram">plot_histogram</doc-nav-link>
+        <doc-nav-link to="/docs/nodes/plot_piano_roll">plot_piano_roll</doc-nav-link>
+        <doc-nav-link to="/docs/nodes/plot_scatter">plot_scatter</doc-nav-link>
+        <doc-nav-link to="/docs/nodes/plot_scatter_weighted">plot_scatter_weighted</doc-nav-link>
+        <doc-nav-link to="/docs/nodes/search_lyrics">search_lyrics</doc-nav-link>
+        <doc-nav-link to="/docs/nodes/search_part">search_part</doc-nav-link>
+        <doc-nav-link to="/docs/nodes/select_measures">select_measures</doc-nav-link>
+        <doc-nav-link to="/docs/nodes/select_notes">select_notes</doc-nav-link>
+        <doc-nav-link to="/docs/nodes/select_parts">select_parts</doc-nav-link>
+        <doc-nav-link to="/docs/nodes/transform_append">transform_append</doc-nav-link>
+        <doc-nav-link to="/docs/nodes/transform_chordify">transform_chordify</doc-nav-link>
+        <doc-nav-link to="/docs/nodes/transform_stack">transform_stack</doc-nav-link>
+        <doc-nav-link to="/docs/nodes/transform_transpose">transform_transpose</doc-nav-link>
       </template>
     </doc-nav-link>
     <doc-nav-link to="/docs/self-hosting" :main="true">

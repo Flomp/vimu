@@ -26,8 +26,8 @@ const editorMenuItems: MenuItem[] = [
         icon: "mdi-google-analytics",
         children:
             [
-                { name: "Key", key: "analysis_key" },
                 { name: "Ambitus", key: "analysis_ambitus" },
+                { name: "Key", key: "analysis_key" },
                 { name: "Roman numeral", key: "analysis_roman_numeral" }
             ]
     },
@@ -54,9 +54,9 @@ const editorMenuItems: MenuItem[] = [
         icon: "mdi-chart-line",
         children:
             [
-                { name: "Piano roll", key: "plot_piano_roll" },
                 { name: "Dynamics Plot", key: "plot_dynamics" },
                 { name: "Histogram", key: "plot_histogram" },
+                { name: "Piano roll", key: "plot_piano_roll" },
                 { name: "Scatter Plot", key: "plot_scatter" },
                 { name: "Weighted Scatter Plot", key: "plot_scatter_weighted" },
 
@@ -67,8 +67,8 @@ const editorMenuItems: MenuItem[] = [
         icon: "mdi-magnify",
         children:
             [
+                { name: "Lyrics", key: "search_lyrics" },
                 { name: "Part", key: "search_part" },
-                { name: "Lyrics", key: "search_lyrics" }
             ]
     },
     {
@@ -77,8 +77,8 @@ const editorMenuItems: MenuItem[] = [
         children:
             [
                 { name: "Measures", key: "select_measures" },
-                { name: "Parts", key: "select_parts" },
                 { name: "Notes", key: "select_notes" },
+                { name: "Parts", key: "select_parts" },
             ]
     },
     {
@@ -87,8 +87,8 @@ const editorMenuItems: MenuItem[] = [
         children:
             [
                 { name: "Append", key: "transform_append" },
-                { name: "Stack", key: "transform_stack" },
                 { name: "Chordify", key: "transform_chordify" },
+                { name: "Stack", key: "transform_stack" },
                 { name: "Transpose", key: "transform_transpose" },
             ],
     },

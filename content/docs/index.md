@@ -7,8 +7,8 @@ This was the motivation to create **vimu**. It builds in large parts on the exis
 
 ## Applications
 At its core **vimu** is a tool that allows you to transform and analyze music scores. Here are three examples of what you can do with **vimu**:
-* Transpose a score - This is a very basic functionality. Transpose every note in a score up or down an arbitrary number of half steps.
+* Transpose a score - This is a very basic functionality. Transpose every note in a score up or down an arbitrary number of semitones.
 * Search for melody/rhythm - **vimu** is capable of finding any melodic or rhythmic patterns in a score across all voices. You can even search for complex chords.
 * Detect modulation - **vimu** employs a statistical model named <a href="https://github.com/napulen/AugmentedNet">AugmentedNet</a> to detect key changes in a music score. Given the sequence of notes in the score, it predicts the most likely key to produce the observed sequence.
 
-Of course, these examples only scratch the surface of what you can do with **vimu**. To get a complete overview you can visit the <a href="/docs/nodes">Nodes</a> section.
+Of course, these examples only scratch the surface of what you can do with **vimu**. To get a better overview you can visit the <nuxt-link to="/docs/tutorials">Tutorials section</nuxt-link> or visit the <nuxt-link to="/docs/nodes">Nodes section</nuxt-link> to read about all available nodes.
