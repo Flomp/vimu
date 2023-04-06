@@ -2,7 +2,16 @@
   <div class="fill-height" style="position: relative;">
     <div class="d-flex align-center flex-row vimu-editor-header px-3">
       <h5>Output</h5>
+      <v-divider class="ml-3" vertical></v-divider>
+      <v-btn :disabled="showNothingSelected" light icon @click="zoomOut">
+        <v-icon>mdi-magnify-minus-outline</v-icon>
+      </v-btn>
+      <v-btn :disabled="showNothingSelected" light icon @click="zoomIn">
+        <v-icon>mdi-magnify-plus-outline</v-icon>
+      </v-btn>
+      <v-divider vertical></v-divider>
       <player-settings-dialog @save="setOptions"></player-settings-dialog>
+
       <v-spacer></v-spacer>
       <div>
         <v-btn @click="playOrPause" :disabled="playDisabled || showNothingSelected" light icon>
@@ -34,19 +43,19 @@
       height="1" style="width: 100%;" @input="skip"></v-slider>
 
     <div style="height: calc(100% - 36px);
-          overflow-y: scroll;
-          background-color: white;
-        ">
-      <div :class="{ 'd-none': showNothingSelected }" id="osmdContainer"></div>
+                    overflow-y: scroll;
+                    background-color: white;
+                  ">
+      <div :class="{ 'd-none': showNothingSelected }" id="osmdContainer" :style="'scale:' + zoom"></div>
       <div v-if="showNothingSelected" class="
-            grey--text
-            fill-height
-            d-flex
-            flex-column
-            justify-center
-            align-center
-            text-overline
-          ">
+                      grey--text
+                      fill-height
+                      d-flex
+                      flex-column
+                      justify-center
+                      align-center
+                      text-overline
+                    ">
         <span>No Data</span>
       </div>
     </div>
@@ -90,6 +99,8 @@ export default class OSMDPanel extends Vue {
 
   currentIterationStep = 0;
   maxIterationStep = 0;
+
+  zoom = 1.0;
 
   get needsUpdate(): boolean {
     return osmdStore.needsUpdate;
@@ -289,6 +300,20 @@ export default class OSMDPanel extends Vue {
     settings.score = false;
     settingsStore.updateEditorSettings(settings);
   }
+
+  zoomIn() {
+    if (this.zoom >= 2.5) {
+      return;
+    }
+    this.zoom += 0.5
+  }
+
+  zoomOut() {
+    if (this.zoom <= 1) {
+      return;
+    }
+    this.zoom -= 0.5
+  }
 }
 </script>
 
@@ -301,5 +326,9 @@ export default class OSMDPanel extends Vue {
 
 ::v-deep .v-slider__thumb {
   z-index: 2;
+}
+
+#osmdContainer {
+  transform-origin: top left;
 }
 </style>
