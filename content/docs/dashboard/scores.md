@@ -1,3 +1,9 @@
+---
+title: Dashboard - Scores
+description: Next to files, scores are the other integral part that makes vimu work. A score is a piece of sheet music that has been enriched with additional meta information to make searching for it easier. Scores normally are the initial input for your analysis in a file.
+---
+
+
 # Scores
 
 Next to <nuxt-link to="/docs/dashboard/files">files</nuxt-link>, scores are the other integral part that makes **vimu** work. A score is a piece of sheet music that has been enriched with additional meta information to make searching for it easier. Scores normally are the initial input for your analysis in a file.

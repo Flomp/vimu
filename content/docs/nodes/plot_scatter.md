@@ -1,3 +1,8 @@
+---
+title: Nodes - plot_scatter
+description: This node plots two user-chosen metrics - like pitch and octave - against each other and creates a scatter plot from it.
+---
+
 # plot_scatter
 
 This node plots two user-chosen metrics - like pitch and octave - against each other and creates a scatter plot from it. For a list of all possible metrics, see the <nuxt-link to="/docs/nodes/plot_scatter#controls">Controls section</nuxt-link>.

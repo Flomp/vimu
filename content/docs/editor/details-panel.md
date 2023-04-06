@@ -1,3 +1,8 @@
+---
+title: Editor - Details Panel
+description: The Details Panel offers additional insights for the node that is currently selected in the Node Panel.
+---
+
 # Details Panel
 
 The Details Panel offers additional insights for the node that is currently selected in the <nuxt-link to="/docs/editor/node-panel#select">Node Panel</nuxt-link>.

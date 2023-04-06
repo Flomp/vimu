@@ -1,3 +1,8 @@
+---
+title: Nodes - plot_dynamics
+description: This node plots a user-chosen metric - like pitch - against its absolute frequency in the input.
+---
+
 # plot_histogram
 
 This node plots a user-chosen metric - like pitch - against its absolute frequency in the input. For a list of all possible metrics, see the <nuxt-link to="/docs/nodes/plot_histogram#controls">Controls section</nuxt-link>.

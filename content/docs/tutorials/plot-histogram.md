@@ -1,3 +1,8 @@
+---
+title: Tutorials - Plot Histogram
+description: Select a part from the full score, Learn about the Plot Panel, Plot a pitch histogram
+---
+
 # Tutorial: Plot Histogram
 
 In this tutorial, you will 

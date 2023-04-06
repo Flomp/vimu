@@ -1,3 +1,8 @@
+---
+title: Account - General
+description: Accounts are how a user interacts with vimu. Accounts currently are linked to one email or one Google account. Every account has a unique username that is generated upon creation. To open the account settings click your avatar in the top right corner and select "Account".
+---
+
 # General
 
 Accounts are how a user interacts with **vimu**.

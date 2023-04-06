@@ -1,3 +1,8 @@
+---
+title: Tutorials - Get started
+description: Create your first file, Get a first glance at the editor, Transpose a score up a semi-tone, Save your results
+---
+
 # Tutorial: Get started
 In this quickstart tutorial, you will 
 1. Create your first file

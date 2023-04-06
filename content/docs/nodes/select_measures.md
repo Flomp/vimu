@@ -1,3 +1,8 @@
+---
+title: Nodes - select_measures
+description: This node lets the user select measures from the input. An (inclusive) lower and upper measure bound can be specified.
+---
+
 # select_measures
 
 This node lets the user select measures from the input. An (inclusive) lower and upper measure bound can be specified. The measures within the bounded range will be selected from the input. In scores with an upbeat, the lower bound for the first bar is 0. 

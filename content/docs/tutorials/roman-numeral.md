@@ -1,3 +1,8 @@
+---
+title: Tutorials - Roman Numeral Analysis
+description: Learn how to realize a figured bass line, Perform an automated roman numeral analysis
+---
+
 # Roman Numeral Analysis
 
 In this tutorial, you will 

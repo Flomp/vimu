@@ -1,6 +1,11 @@
+---
+title: Nodes - detect_parallels
+description: This node detects parallels between parts in the given input score. There must be at least two parts present in the input. Parallels refer to both fifths and octaves.
+---
+
 # detect_parallels
 
-This node detects parallels between parts in the given input score.  There must be at least two parts present in the input. Parallels refer to both fifths and octaves. With the node controls you can select to detect just open or hidden parallels or both. Detected parallels will be marked with a user-defined color in the output score.
+This node detects parallels between parts in the given input score. There must be at least two parts present in the input. Parallels refer to both fifths and octaves. With the node controls you can select to detect just open or hidden parallels or both. Detected parallels will be marked with a user-defined color in the output score.
 
 ## Input
 

@@ -1,3 +1,8 @@
+---
+title: Editor - Overview
+description: The editor is your main workbench. Here you build, create, observe the output of your analysis, and much more. To get here create a new file or open an existing one.
+---
+
 # Overview
 
 <framed-gif path="/imgs/editor.png"></framed-gif>

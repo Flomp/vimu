@@ -1,3 +1,7 @@
+---
+title: Nodes - select_notes
+description: This node lets the user select note ranges from the input. An (inclusive) lower and upper bound can be specified.
+---
 # select_notes
 
 This node lets the user select note ranges from the input. An (inclusive) lower and upper bound can be specified. The notes within the specified range will be selected for every part in the score.

@@ -1,3 +1,8 @@
+---
+title: Self hosting - Installation
+description: You can install and run vimu on any operating system that can run a Docker CLI or has python, NodeJS, and go installed. You can use vimu on your local machine or a cloud provider of your choice. You can either install it bare-metal or use Docker.
+---
+
 # Installation
 
 You can install and run **vimu** on any operating system that can run a Docker CLI or has ```python```, ```NodeJS```, and ```go``` installed. You can use **vimu** on your local machine or a cloud provider of your choice. You can either install it bare-metal or use Docker.

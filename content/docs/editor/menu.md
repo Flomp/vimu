@@ -1,3 +1,8 @@
+---
+title: Editor - Menu
+description: The menu is located at the top of the Node Panel as the first item of the Node Palette. Three submenus allow for quick access to all functions of the editor.
+---
+
 # Menu
 
 The menu is located at the top of the <nuxt-link to="/docs/editor/node-panel">Node Panel</nuxt-link> as the first item of the <nuxt-link to="/docs/editor/node-panel#node-palette">Node Palette</nuxt-link>. Three submenus allow for quick access to all functions of the editor.

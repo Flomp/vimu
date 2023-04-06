@@ -1,3 +1,8 @@
+---
+title: Tutorials - Search for melody
+description: Learn how to use the search_part node, Get a short introduction into tinynotation, Search for a melody in a Bach chorale
+---
+
 # Tutorial: Search for melody
 In this tutorial, you will 
 1. Learn how to use the search_part node

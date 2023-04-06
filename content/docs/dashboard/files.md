@@ -1,3 +1,8 @@
+---
+title: Dashboard - Files
+description: Each analysis of a score is stored in a vimu file. If you are logged in, all your files can be found in the "My files" section of the dashboard.
+---
+
 # Files
 
 Each analysis of a score is stored in a **vimu** file. If you are logged in, all your files can be found in the "My files" section of the <nuxt-link to="/dashboard/files/my">dashboard</nuxt-link>.

@@ -1,3 +1,9 @@
+---
+title: Dashboard - Shared Files
+description: Files that have been shared with you will be listed in this section of the dashboard.
+---
+
+
 # Shared Files
 
 <nuxt-link to="/docs/dashboard/files">Files</nuxt-link> that have been <nuxt-link to="/docs/dashboard/files#sharing">shared</nuxt-link> with you will be listed in this section of the dashboard.

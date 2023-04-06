@@ -1,3 +1,8 @@
+---
+title: Nodes - detect_modulation
+description: This node detects modulations in the given input score. It uses AugmentedNet to automatically find modulation sites. Note that this is a statistical process that may yield varying results.
+---
+
 # detect_modulation
 
 This node detects modulations in the given input score. It uses <a href="https://github.com/napulen/AugmentedNet">AugmentedNet</a> to automatically find modulation sites. Note that this is a statistical process that may yield varying results.

@@ -1,3 +1,8 @@
+---
+title: Editor - Node Panel
+description: The Node Panel allows you to create, move and connect nodes that you need for your analysis. 
+---
+
 # Node Panel
 
 The Node Panel allows you to create, move and connect nodes that you need for your analysis. 

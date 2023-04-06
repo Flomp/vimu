@@ -1,3 +1,8 @@
+---
+title: Nodes - source_score
+description: This node lets you choose a score either from your own or the public library. It outputs this score and serves as input to subsequent nodes.
+---
+
 # source_score
 
 This node lets you choose a score either from your own or the public library. It outputs this score and serves as input to subsequent nodes.

@@ -1,3 +1,8 @@
+---
+title: Nodes - search_lyrics
+description: This node searches for lyrics in a score or part. The search encompasses all parts and stanzas of a score.
+---
+
 # search_lyrics
 
 This node searches for lyrics in a score or part. The search encompasses all parts and stanzas of a score. Notes whose lyrics are part of a match with the query will be colored in the color defined by the user.

@@ -1,3 +1,8 @@
+---
+title: Self hosting - Introduction
+description: This section of the documentation will explain how you can get vimu up and running on your own system. Please note that this guide assumes a fair amount of technical knowledge regarding JavaScript, Python, and Docker.
+---
+
 # Introduction
 
 This section of the documentation will explain how you can get **vimu** up and running on your own system. Please note that this guide assumes a fair amount of technical knowledge regarding JavaScript, Python, and Docker.

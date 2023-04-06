@@ -1,3 +1,8 @@
+---
+title: Nodes - plot_piano_roll
+description: This node plots its input in a piano roll representation. More formally it plots time calculated in measures against pitch where a bar in the plot represents the onset and end of a note in the score. 
+---
+
 # plot_piano_roll
 
 This node plots its input in a piano roll representation. More formally it plots time calculated in measures against pitch where a bar in the plot represents the onset and end of a note in the score. 

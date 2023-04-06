@@ -1,3 +1,8 @@
+---
+title: Nodes - transform_transpose
+description: This node transposes the input up or down a user-specified amount of semitones. Positive numbers represent an upwards transposition and negative numbers a downward transposition.
+---
+
 # transform_transpose
 
 This node transposes the input up or down a user-specified amount of semitones. Positive numbers represent an upwards transposition and negative numbers a downward transposition.

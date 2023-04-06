@@ -1,3 +1,8 @@
+---
+title: Editor - Output Panel
+description: The Output Panel displays the final output of your analysis. Whatever the input to your output node will be displayed here.
+---
+
 # Output Panel
 
 The Output Panel displays the final output of your analysis. Whatever the input to your output node will be displayed here.

@@ -1,3 +1,8 @@
+---
+title: Nodes - plot_dynamics
+description: This node plots time calculated in measures against parts present in the score.
+---
+
 # plot_dynamics
 
 This node plots time calculated in measures against parts present in the score. A bar in the plot represents activity in the respective part of the score. Bar height correlates with dynamics where a greater height constitutes a louder dynamic.

@@ -98,7 +98,7 @@ export default {
       },
       prism: { 
         theme: 'prism-themes/themes/prism-material-dark.css' 
-      }
+      },
     }
   },
 

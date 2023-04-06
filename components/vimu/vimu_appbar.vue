@@ -6,6 +6,7 @@
           <Logo :width=128 />
         </nuxt-link>
       </div>
+      <slot></slot>
       <div class="d-flex align-center justify-space-between" v-if="$vuetify.breakpoint.mdAndUp">
         <div class="d-flex align-center" style="margin-right: 64px">
           <v-list-item class="font-weight-bold mx-5 vimu-appbar-menu-item" to="/docs">Documentation</v-list-item>
@@ -33,7 +34,8 @@
 
       <div v-if="showMenu">
         <div class="d-flex flex-column vimu-appbar-menu">
-          <v-list-item class="font-weight-bold mx-4 mb-2 px-5 vimu-appbar-menu-item" to="/docs">Documentation</v-list-item>
+          <v-list-item class="font-weight-bold mx-4 mb-2 px-5 vimu-appbar-menu-item"
+            to="/docs">Documentation</v-list-item>
           <documentation-navigation class="ml-10" v-if="showDocNav"></documentation-navigation>
           <v-list-item class="font-weight-bold mx-4 mb-2 px-5 vimu-appbar-menu-item" to="/pricing">Pricing</v-list-item>
         </div>
@@ -57,7 +59,7 @@ import VimuProfileMenu from "./vimu_profile_menu.vue";
     Logo,
     VimuBtn,
     VimuProfileMenu,
-    DocumentationNavigation
+    DocumentationNavigation,
   }
 })
 export default class VimuAppBar extends Vue {
@@ -79,7 +81,7 @@ export default class VimuAppBar extends Vue {
     return this.showMenu ? "mdi-menu-up" : "mdi-menu-down"
   }
 
-  get subscribed() {   
+  get subscribed() {
     return subscriptionStore.subscribed;
   }
 
@@ -92,7 +94,7 @@ export default class VimuAppBar extends Vue {
   width: clamp(200px, 100%, 1576px);
   background-color: white;
   z-index: 10;
-  
+
 }
 
 .vimu-appbar-menu {

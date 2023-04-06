@@ -1,6 +1,12 @@
+---
+title: Account - Subscription
+description: vimu offers different subscription tiers. By default, you are using the free Basic plan. To compare the different plans visit the pricing page. On this page, you can both upgrade to a paid subscription model or cancel your subscription once it's active.
+---
+
+
 # Subscription
 
-**vimu** offers different subscription tiers. By default, you are using the free Basic plan. To compare the different plans visit the <nuxt-link to="/pricing">pricing page</nuxt-link>. On this page you can both upgrade to a paid subscription model or cancel your subscription once it's active.
+**vimu** offers different subscription tiers. By default, you are using the free Basic plan. To compare the different plans visit the <nuxt-link to="/pricing">pricing page</nuxt-link>. On this page, you can both upgrade to a paid subscription model or cancel your subscription once it's active.
 
 ## Upgrade to vimu Pro
 

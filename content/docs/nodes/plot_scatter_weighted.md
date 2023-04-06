@@ -1,3 +1,8 @@
+---
+title: Nodes - plot_scatter_weighted
+description: This node plots two user-chosen metrics - like pitch and octave - against each other and creates a weighted scatter plot from it.
+---
+
 # plot_scatter_weighted
 
 This node plots two user-chosen metrics - like pitch and octave - against each other and creates a weighted scatter plot from it. It works analogously to the <nuxt-link to="/docs/nodes/plot_scatter">plot_scatter</nuxt-link> node but takes frequency into account. The size of a dot in the plot correlates with its number of occurrences. A label to the right of the dot denotes the absolute frequency. For a list of all possible metrics, see the <nuxt-link to="/docs/nodes/plot_scatter_weighted#controls">Controls section</nuxt-link>.

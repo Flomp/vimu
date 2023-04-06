@@ -1,3 +1,8 @@
+---
+title: Nodes - source_tinynotation
+description: This node lets you input a melody in tinynotation format (see below). It outputs this melody and serves as input to subsequent nodes.
+---
+
 # source_tinynotation
 
 This node lets you input a melody in tinynotation format (see below). It outputs this melody and serves as input to subsequent nodes.

@@ -1,3 +1,8 @@
+---
+title: Editor - Plot Panel
+description: In the Plot Panel you can see all the resulting plots from the plot nodes in your file.
+---
+
 # Plot Panel
 
 In the Plot Panel you can see all the resulting plots from the <nuxt-link to="/docs/nodes">plot nodes</nuxt-link> in your file.

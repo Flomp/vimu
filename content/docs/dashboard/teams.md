@@ -1,3 +1,9 @@
+---
+title: Dashboard - Teams
+description: Teams in vimu provide the possibility to access files across multiple users without having to explicitly share each file. All members of a team will automatically gain access to all files assigned to this team. Depending on a member's permission they will be able to edit or view these files.
+---
+
+
 # Teams
 
 Teams in **vimu** provide the possibility to access files across multiple users without having to explicitly share each file. All members of a team will automatically gain access to all files assigned to this team. Depending on a member's permission they will be able to edit or view these files.

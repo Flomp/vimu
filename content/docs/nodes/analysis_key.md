@@ -1,3 +1,8 @@
+---
+title: Nodes - analysis_key
+description: This node lets you analyze the key of its input as a whole. It outputs a scale representing the key with the key signature as the lyric of the first note.
+---
+
 # analysis_key
 
 This node lets you analyze the key of its input as a whole. It outputs a scale representing the key with the key signature as the lyric of the first note.

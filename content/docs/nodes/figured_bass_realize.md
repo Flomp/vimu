@@ -1,3 +1,8 @@
+---
+title: Nodes - figured_bass_realize
+description: This node realizes a figured bass line that is passed to it as an input.
+---
+
 # figured_bass_realize
 
 This node realizes a figured bass line that is passed to it as an input. As there are oftentimes multiple solutions for a given figured bass line it lets you generate a new solution by clicking the "New Solution" button. Furthermore, it provides multiple controls to alter the ruleset with which the figured bass line is realized. To see a more in-depth example visit the <nuxt-link to="/docs/tutorials/roman-numeral#tinynotation-and-figured-bass">tutorial</nuxt-link> on roman numeral analysis.
