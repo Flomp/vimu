@@ -1,5 +1,5 @@
 ---
-title: Nodes - plot_dynamics
+title: Nodes - plot_histogram
 description: This node plots a user-chosen metric - like pitch - against its absolute frequency in the input.
 ---
 
