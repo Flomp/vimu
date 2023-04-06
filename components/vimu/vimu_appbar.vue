@@ -6,7 +6,7 @@
           <Logo :width=128 />
         </nuxt-link>
       </div>
-      <slot></slot>
+      <slot name="search" v-if="$vuetify.breakpoint.mdAndUp"></slot>
       <div class="d-flex align-center justify-space-between" v-if="$vuetify.breakpoint.mdAndUp">
         <div class="d-flex align-center" style="margin-right: 64px">
           <v-list-item class="font-weight-bold mx-5 vimu-appbar-menu-item" to="/docs">Documentation</v-list-item>
@@ -34,6 +34,13 @@
 
       <div v-if="showMenu">
         <div class="d-flex flex-column vimu-appbar-menu">
+          <v-list-item>
+            <v-list-item-content>
+              <slot name="search"></slot>
+
+            </v-list-item-content>
+          </v-list-item>
+
           <v-list-item class="font-weight-bold mx-4 mb-2 px-5 vimu-appbar-menu-item"
             to="/docs">Documentation</v-list-item>
           <documentation-navigation class="ml-10" v-if="showDocNav"></documentation-navigation>

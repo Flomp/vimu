@@ -86,6 +86,6 @@ export default class VimuAutocomplete<T> extends Vue {
     border-radius: 10px !important;
     background-color: white;
     box-shadow: none !important;
-    top: 70px !important;
+    margin-top: 4px;
 }
 </style>
