@@ -36,9 +36,8 @@
             </div>
             <client-only>
                 <score-list :scores="scores" :loading="listLoading || nextPageLoading" :initialLoading="listLoading"
-                    :nextPageLoading="nextPageLoading" @create="createFile" @edit="openEditDialog"
-                    :searching="searching" :view-type="viewType" @remove="showDeleteConfirm" @click="setDrawerScore"
-                    @upload="checkAndCreateScore"
+                    :nextPageLoading="nextPageLoading" @create="createFile" @edit="openEditDialog" :searching="searching"
+                    :view-type="viewType" @remove="showDeleteConfirm" @click="setDrawerScore" @upload="checkAndCreateScore"
                     @next="nextPage">
                 </score-list>
             </client-only>
@@ -55,7 +54,6 @@
 </template>
 
 <script lang="ts">
-import { query } from "express";
 import { Component, Vue, Watch } from "nuxt-property-decorator";
 import { VBtn, VContainer, VIcon, VSheet, VSpacer } from "vuetify/lib";
 import ConfirmDialog from "~/components/dashboard/confirm_dialog.vue";
@@ -69,9 +67,9 @@ import VimuBtn from "~/components/vimu/vimu_button.vue";
 import VimuSearchbar from "~/components/vimu/vimu_searchbar.vue";
 import VimuTabs from "~/components/vimu/vimu_tabs.vue";
 import VimuTextField from "~/components/vimu/vimu_text_field.vue";
-import { Score, ScoreFilter } from "~/models/score";
+import { Score, ScoreFilter, empty_score } from "~/models/score";
 import { ViewType } from "~/models/view";
-import { $pb, fileStore, scoreStore, subscriptionStore } from "~/store";
+import { $pb, fileStore, notificationStore, scoreStore, subscriptionStore } from "~/store";
 
 @Component({
     head: {
@@ -309,13 +307,24 @@ export default class ScoresPage extends Vue {
         this.createLoading = false;
     }
 
-    async checkAndCreateScore(data: { score: Score, file: File | Blob, update: boolean }) {
+    async checkAndCreateScore(data: { file: File }) {
         this.createLoading = true;
-        const scoreLimitReached = await this.checkScoreSubscription();
-        if(scoreLimitReached) {
+
+        const meta = await scoreStore.getMeta(data.file);
+
+        if (meta === null) {
+            notificationStore.sendNotification({ title: "Invalid file format", color: "error" })
             return;
         }
-        await this.createScore(data);
+
+        const score: Score = Object.assign({}, empty_score)
+        score.name = data.file.name.replace(/\.[^/.]+$/, "");
+        score.expand.meta = meta;
+        const scoreLimitReached = await this.checkScoreSubscription();
+        if (scoreLimitReached) {
+            return;
+        }
+        await this.createScore({ score: score, file: data.file, update: false });
     }
 
     async removeScore() {
@@ -327,6 +336,4 @@ export default class ScoresPage extends Vue {
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

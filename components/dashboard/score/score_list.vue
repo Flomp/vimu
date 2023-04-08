@@ -58,11 +58,10 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Emit, Ref } from "nuxt-property-decorator";
+import { Component, Emit, Prop, Ref, Vue } from "nuxt-property-decorator";
 import BunnyWanted from "~/components/vimu/illustrations/bunny_wanted.vue";
-import { empty_score, Score } from "~/models/score";
+import { Score } from "~/models/score";
 import { ViewType } from "~/models/view";
-import { notificationStore, scoreStore } from "~/store";
 import SearchEmptyState from "../search_empty_state.vue";
 import ScoreCard from "./score_card.vue";
 import ScoreTableRow from "./score_table_row.vue";
@@ -121,19 +120,7 @@ export default class ScoreList extends Vue {
                 return;
             }
 
-            const meta = await scoreStore.getMeta(file);
-
-            if (meta === null) {
-                notificationStore.sendNotification({ title: "Invalid file format", color: "error" })
-                return;
-            }
-
-            const score: Score = Object.assign({}, empty_score)
-            score.name = file.name.replace(/\.[^/.]+$/, "");
-            score.expand.meta = meta;
-
-
-            this.upload({ score: score, file: file })
+            this.upload({ file: file })
 
         }
     }
@@ -166,8 +153,8 @@ export default class ScoreList extends Vue {
 
 
     @Emit()
-    upload(data: { score: Score, file: File | Blob }) {
-        return { ...data, update: false };
+    upload(data: { file: File | Blob  }) {
+        return data;
     }
 
 }
