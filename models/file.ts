@@ -13,7 +13,7 @@ interface File {
     created: string;
     expand: {
         collaborators?: FileShare[]
-        permission: { value: FilePermission }
+        permission?: { value: FilePermission }
         data: FileData,
         owner: User
         "file_favorites(file)"?: {id: string, file: string, user: string }[]

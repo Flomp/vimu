@@ -61,7 +61,7 @@ export default class FileShareMenu extends Vue {
     @Prop() shared!: boolean;
 
     get sharePermission(): FilePermission {        
-        return this.file.expand.permission.value
+        return this.file.expand.permission?.value ?? FilePermission.view
     }
 
 }

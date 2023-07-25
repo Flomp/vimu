@@ -233,6 +233,6 @@ export default class FileStore extends VuexModule {
             return false;
         }
 
-        return this.file.expand.permission.value == FilePermission.view
+        return this.file.expand.permission?.value == FilePermission.view
     }
 }
