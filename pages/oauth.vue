@@ -21,6 +21,8 @@ import { authStore } from "~/store";
 })
 export default class OAuthPage extends Vue {
     async fetch() {
+        const redirectUrl = 'https://vimu.app/oauth';
+
         const params = this.$route.query;
 
         const provider = JSON.parse(localStorage.getItem('provider') ?? "")
@@ -29,7 +31,7 @@ export default class OAuthPage extends Vue {
             throw "State parameters don't match.";
         }
 
-        const success: boolean = await authStore.oauth(provider);
+        const success: boolean = await authStore.oauth({ provider: provider, code: params.code as string, redirectUrl: redirectUrl });
         if (success) {
             this.$router.push(authStore.redirectPath)
         }
