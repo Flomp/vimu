@@ -96,6 +96,9 @@ export default class LoginPage extends Vue {
 
     async oauth() {
         const methods = await $pb.collection('users').listAuthMethods()
+        if(methods.authProviders.length == 0) {
+            return;
+        }
         const provider = methods.authProviders[0];
         localStorage.setItem('provider', JSON.stringify(provider));
         window.location.href = provider.authUrl + this.redirectUrl;

@@ -67,11 +67,11 @@ export default class AuthStore extends VuexModule {
         try {
             const userData = await $pb?.collection('users').authWithPassword(data.email, data.password);
             const sub = await subscriptionStore.getSubscription();
-            if(sub != null) {
+            if (sub != null) {
                 subscriptionStore.setSubscription(sub);
             }
             const settings = await settingsStore.getEditorSettings();
-            if(settings != null) {
+            if (settings != null) {
                 settingsStore.changeSettings(settings);
             }
         } catch (error: any) {
@@ -86,17 +86,9 @@ export default class AuthStore extends VuexModule {
     }
 
     @Action({ rawError: true })
-    async oauth(data: { provider: AuthProviderInfo, code: string, redirectUrl: string }) {
+    async oauth(provider: AuthProviderInfo) {
         try {
-            await $pb.collection('users').authWithOAuth2(
-                data.provider.name,
-                data.code,
-                data.provider.codeVerifier,
-                data.redirectUrl,
-                {
-                    avatar: generateSeed(),
-                    emailVisibility: false,
-                }
+            await $pb.collection('users').authWithOAuth2({ provider: provider.name }
             )
         } catch (error: any) {
             notificationStore.sendNotification({ title: 'Something went wrong during authentication', color: 'error' })
