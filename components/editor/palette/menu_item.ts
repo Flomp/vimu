@@ -13,7 +13,7 @@ interface MenuItem {
 
 const editorMenuItems: MenuItem[] = [
     {
-        name: "Source", 
+        name: "Source",
         icon: "mdi-music-note",
         children:
             [
@@ -22,7 +22,7 @@ const editorMenuItems: MenuItem[] = [
             ]
     },
     {
-        name: "Analysis", 
+        name: "Analysis",
         icon: "mdi-google-analytics",
         children:
             [
@@ -63,7 +63,7 @@ const editorMenuItems: MenuItem[] = [
             ],
     },
     {
-        name: "Search", 
+        name: "Search",
         icon: "mdi-magnify",
         children:
             [
