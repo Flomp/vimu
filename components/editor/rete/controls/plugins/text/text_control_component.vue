@@ -1,6 +1,6 @@
 <template>
   <vimu-text-field :label="attributes['label'].value" :prependIcon="icon" class="mr-6"
-    v-model="value" :timer="true" @update="update" style="max-width: 200px"></vimu-text-field>
+    v-model="value" :readonly="true" @update="update" style="max-width: 200px"></vimu-text-field>
 </template>
 
 <script lang="ts">

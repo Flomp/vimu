@@ -2,7 +2,7 @@
   <v-text-field class="vimu-text-field" v-model="model" :label="label" :type="type" :rules="rules"
     :hide-details="hideDetails" :prepend-inner-icon="prependInnerIcon" :prepend-icon="prependIcon"
     :placeholder="placeholder" :disabled="disabled" :validate-on-blur="validateOnBlur" outlined :clearable="clearable"
-    @input="input"><template v-slot:append>
+    @input="input" :dense="dense" :readonly="readonly"><template v-slot:append>
       <slot></slot>
     </template></v-text-field>
 </template>
@@ -24,6 +24,8 @@ export default class VimuTextField extends Vue {
   @Prop({ default: false }) readonly disabled!: boolean;
   @Prop({ default: true }) readonly validateOnBlur!: boolean;
   @Prop({ default: false }) readonly timer!: boolean;
+  @Prop({ default: false }) readonly dense!: boolean;
+  @Prop({ default: false }) readonly readonly!: boolean;
 
   typingTimer!: NodeJS.Timeout;
 
