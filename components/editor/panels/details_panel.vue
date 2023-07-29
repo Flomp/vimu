@@ -9,8 +9,8 @@
         <v-list-item-content>
           <v-list-item-title class="mb-2 text-caption"> Type </v-list-item-title>
           <div class="d-flex align-center justify-space-between"> <span class="font-weight-bold">{{ selectedNode.name
-}}</span>
-            <v-btn icon :to="'/docs/nodes/'+selectedNode.name" target="_blank"><v-icon>mdi-help-circle</v-icon></v-btn>
+          }}</span>
+            <v-btn icon :to="'/docs/nodes/' + selectedNode.name" target="_blank"><v-icon>mdi-help-circle</v-icon></v-btn>
           </div>
         </v-list-item-content>
       </v-list-item>
@@ -84,7 +84,7 @@ export default class DetailsPanel extends Vue {
     return this.selectedNode?.data.data ?? "No data";
   }
 
-  get inputs() {   
+  get inputs() {
     return this.selectedNode?.inputs.values();
   }
 
@@ -110,6 +110,4 @@ export default class DetailsPanel extends Vue {
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

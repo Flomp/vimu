@@ -1,11 +1,9 @@
 import { sockets } from "~/components/editor/rete/sockets/sockets";
 
-type SocketKeys = keyof typeof sockets;
-type SocketValues = typeof sockets[SocketKeys];
-
 interface PluginSocket {
     key: string;
     name: string;
+    type: keyof typeof sockets;
 }
 
 interface PluginInput extends PluginSocket {
@@ -26,19 +24,19 @@ interface PluginControl {
     key: string;
     name: string;
     type: string;
-    atrributes: Record<string, PluginControlAttribute>;
+    attributes: Record<string, PluginControlAttribute>;
 }
 
 class PluginTextField implements PluginControl {
     constructor(key: string, name: string, label: string) {
         this.key = key;
         this.name = name;
-        this.atrributes["label"].value = label;
+        this.attributes["label"].value = label;
     }
     key: string;
     name: string;
     type: string = "text";
-    atrributes: Record<string, PluginControlAttribute> = {
+    attributes: Record<string, PluginControlAttribute> = {
         "label": {
             name: "Label",
             value: "",
@@ -68,16 +66,10 @@ const empty_plugin: Plugin = <Plugin>{
     name: "plugin_node",
     description: "",
     inputs: [
-        {
-            key: "in_0",
-            name: "Stream",
-        }
+
     ],
     outputs: [
-        {
-            key: "out_0",
-            name: "Stream",
-        }
+
     ],
     controls: []
 }

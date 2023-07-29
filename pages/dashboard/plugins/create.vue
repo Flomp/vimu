@@ -1,18 +1,19 @@
 <template>
     <v-sheet class="page fill-height">
-        <div id="plugin-grid">
+        <div id="plugin-grid" @mouseup="endDrag" @mousemove="onDrag">
             <div class="pa-6">
                 <plugin-sidebar v-model="sidebarSelectedItem" :plugin="plugin" @element-click="sidebarElementClick"
                     @add-input="addInput" @add-output="addOutput"></plugin-sidebar>
             </div>
-            <div style="position:relative">
+            <div id="editor" style="position:relative">
                 <component-palette class="palette py-2" @menu-click="menuClick"></component-palette>
                 <div id="plugin-rete" class="pa-0 pixel-grid">
                 </div>
             </div>
-            <div class="blue-grey darken-4">
+            <div class="vertical-dragbar" @mousedown="startLeftDrag"></div>
+            <div id="code" class="blue-grey darken-4">
                 <client-only>
-                    <plugin-code-editor></plugin-code-editor>
+                    <plugin-code-editor v-model="content" ref="codeEditor" :readonlyLines="[3, 4]"></plugin-code-editor>
                 </client-only>
             </div>
             <div class="pa-6">
@@ -23,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from "nuxt-property-decorator";
+import { Component, Ref, Vue, Watch } from "nuxt-property-decorator";
 import Rete, { Node, NodeEditor } from "rete";
 import ConnectionPlugin from "rete-connection-plugin";
 import Vuetify from "vuetify";
@@ -36,6 +37,7 @@ import PluginComponent from "~/components/editor/rete/components/plugins/plugin_
 import TextControl from "~/components/editor/rete/controls/plugins/text/text_control";
 import { sockets } from "~/components/editor/rete/sockets/sockets";
 import { Plugin, PluginControl, PluginInput, PluginOutput, PluginSocket, PluginTextField, empty_plugin } from "~/models/plugin";
+import { countNewLinesBeforeQueryTerm } from "~/utils/string";
 
 @Component({
     layout: 'editor',
@@ -48,6 +50,9 @@ import { Plugin, PluginControl, PluginInput, PluginOutput, PluginSocket, PluginT
 })
 export default class CreatePluginPage extends Vue {
 
+    @Ref()
+    codeEditor!: PluginCodeEditor;
+
     pluginNode!: Node;
     editor!: NodeEditor;
 
@@ -57,7 +62,19 @@ export default class CreatePluginPage extends Vue {
 
     sidebarSelectedItem: number = -1;
 
-    content: string = "";
+    content: string = `from music21 import *
+
+class PluginRepository(Repository):
+    def process(self, node: EngineNode, input_data: WorkerInputs, output_data: WorkerOutputs):
+
+        if in_0_data is not None:
+            new_output_data = in_0_data
+
+            for key in node.outputs.keys():
+                output_data[key] = new_output_data`;
+
+    isLeftDragging: boolean = false;
+
 
     get pluginWatcher() {
         return JSON.parse(JSON.stringify(this.plugin))
@@ -128,53 +145,66 @@ export default class CreatePluginPage extends Vue {
 
         })
 
-        this.renderPlugin();
+        this.addInput();
+        this.addOutput();
         this.editor = editor;
 
         document.addEventListener('keydown', e => {
-
+            const activeDOMElement = document.activeElement as HTMLInputElement;
+            if (activeDOMElement?.tagName == "INPUT" && ["number", "text"].includes(activeDOMElement.type)) {
+                return;
+            }
             if (e.code == "Backspace") {
                 this.delete()
             }
         });
     }
 
-    renderPlugin() {
-        this.plugin.inputs.forEach((pluginInput, i) => {
-            const input = new Rete.Input(pluginInput.key, pluginInput.name, sockets.stream);
-            this.pluginNode.addInput(input)
-        })
-        this.plugin.outputs.forEach((pluginOutput, i) => {
-            const output = new Rete.Output(pluginOutput.key, pluginOutput.name, sockets.stream);
-            this.pluginNode.addOutput(output)
-        })
+    setCursor(cursor: CSSStyleDeclaration["cursor"]) {
+        let page = document.getElementById("plugin-grid");
+        page!.style.cursor = cursor;
     }
 
-    menuClick(item: MenuItem) {
-        switch (item.key) {
-            case "text_field":
-                const key = "control_" + this.plugin.controls.length
-                const pluginTextField = new PluginTextField(key, "TextField", "");
-                this.plugin.controls.push(pluginTextField)
-                break;
+    startLeftDrag() {
+        this.isLeftDragging = true;
 
-            default:
-                break;
+        this.setCursor("ew-resize");
+    }
+
+    endDrag() {
+        if (this.isLeftDragging) {
+            this.setCursor("auto");
+            this.editor!.view.resize();
         }
-        this.pluginNode.update();
-
+        this.isLeftDragging = false;
     }
 
-    addInput() {
-        const key = "in_" + this.plugin.inputs.length;
-        const pluginInput = <PluginInput>{ key: key, name: "Stream" }
-        this.plugin.inputs.push(pluginInput);
-    }
+    onDrag(event: MouseEvent) {
+        if (this.isLeftDragging) {
 
-    addOutput() {
-        const key = "out_" + this.plugin.outputs.length;
-        const pluginOutput = <PluginOutput>{ key: key, name: "Stream" }
-        this.plugin.outputs.push(pluginOutput);
+            let page = document.getElementById("plugin-grid");
+            let editor = document.getElementById("editor");
+            let code = document.getElementById("code");
+
+            const dragbarWidth = 2;
+
+            const leftColWidth = event.clientX - 220;
+            const rightColWidth = code?.clientWidth ?? 0;
+
+            const cols = [
+                220,
+                leftColWidth,
+                dragbarWidth,
+                page!.clientWidth - 220 - 250 - leftColWidth - dragbarWidth,
+                250
+            ];
+
+            let newColDefn = cols.map(c => c.toString() + "px").join(" ");
+
+            page!.style.gridTemplateColumns = newColDefn;
+
+            event.preventDefault()
+        }
     }
 
     sidebarElementClick(data: { element: PluginControl | PluginSocket, index: number }) {
@@ -225,6 +255,40 @@ export default class CreatePluginPage extends Vue {
         }
     }
 
+    addInput() {
+        const index = this.plugin.inputs.length;
+        const key = "in_" + index;
+        const pluginInput = <PluginInput>{ key: key, name: `Stream`, type: "stream" }
+        this.plugin.inputs.push(pluginInput);
+
+        const insertionPoint = countNewLinesBeforeQueryTerm(this.content, "class PluginRepository")
+        this.codeEditor.insertLine(`        ${key}_data = input_data.get('${key}')`, insertionPoint + 2, 0)
+    }
+
+    addOutput() {
+        const key = "out_" + this.plugin.outputs.length;
+        const pluginOutput = <PluginOutput>{ key: key, name: "Stream", type: "stream" }
+        this.plugin.outputs.push(pluginOutput);
+    }
+
+    menuClick(item: MenuItem) {
+        const key = "control_" + this.plugin.controls.length
+
+        switch (item.key) {
+            case "text_field":
+                const pluginTextField = new PluginTextField(key, "TextField", "");
+                this.plugin.controls.push(pluginTextField)
+                break;
+
+            default:
+                break;
+        }
+        const insertionPoint = countNewLinesBeforeQueryTerm(this.content, "class PluginRepository")
+        this.codeEditor.insertLine(`        ${key}_data = node.data.get('${key}')`, insertionPoint + 2, 0)
+        this.pluginNode.update();
+
+    }
+
     delete() {
         if (this.activeElement == null) {
             return;
@@ -233,10 +297,13 @@ export default class CreatePluginPage extends Vue {
         const key = this.activeElement.key;
         if (key.startsWith("in")) {
             this.plugin.inputs = this.plugin.inputs.filter(i => i.key != key);
+            this.codeEditor.updateContent(this.content.replace(`        ${key}_data = input_data.get('${key}')\n`, ""))
+
         } else if (key.startsWith("out")) {
             this.plugin.outputs = this.plugin.outputs.filter(i => i.key != key);
         } else if (key.startsWith("control")) {
             this.plugin.controls = this.plugin.controls.filter(i => i.key != key);
+            this.codeEditor.updateContent(this.content.replace(`        ${key}_data = node.data.get('${key}')\n`, ""))
         }
 
         this.activeElement = null;
@@ -246,18 +313,49 @@ export default class CreatePluginPage extends Vue {
     onPluginChanged(newPlugin: Plugin, oldPlugin: Plugin) {
         this.pluginNode.name = this.plugin.name
 
-        const newInputs = newPlugin.inputs.filter(x => !oldPlugin.inputs.map(y => y.key).includes(x.key));
+        let newInputs: PluginSocket[] = []
+        for (const input of newPlugin.inputs) {
+            if (!oldPlugin.inputs.map(y => y.key).includes(input.key)) {
+                newInputs.push(input);
+            } else {
+                const pluginInput = this.pluginNode.inputs.get(input.key);
+                if (!pluginInput) {
+                    return;
+                }
+                if (pluginInput.socket.name != sockets[input.type].name) {
+                    pluginInput.socket = sockets[input.type]
+                }
+                if (pluginInput.name != input.name) {
+                    pluginInput.name = input.name;
+                }
+            }
+        }
         const deletedInputs = oldPlugin.inputs.filter(x => !newPlugin.inputs.map(y => y.key).includes(x.key));
 
-        const newOutputs = newPlugin.outputs.filter(x => !oldPlugin.outputs.map(y => y.key).includes(x.key));
+        let newOutputs: PluginSocket[] = []
+        for (const output of newPlugin.outputs) {
+            if (!oldPlugin.outputs.map(y => y.key).includes(output.key)) {
+                newOutputs.push(output);
+            } else {
+                const pluginOutput = this.pluginNode.outputs.get(output.key);
+                if (!pluginOutput) {
+                    return;
+                }
+                if (pluginOutput.socket.name != sockets[output.type].name) {
+                    pluginOutput.socket = sockets[output.type]
+                }
+                if (pluginOutput.name != output.name) {
+                    pluginOutput.name = output.name;
+                }
+            }
+        }
         const deletedOutputs = oldPlugin.outputs.filter(x => !newPlugin.outputs.map(y => y.key).includes(x.key));
 
-        const newControls = newPlugin.controls.filter(x => !oldPlugin.controls.map(y => y.key).includes(x.key));
+        const newControls = this.plugin.controls.filter(x => !oldPlugin.controls.map(y => y.key).includes(x.key));
         const deletedControls = oldPlugin.controls.filter(x => !newPlugin.controls.map(y => y.key).includes(x.key));
 
-
         newInputs.forEach(x => {
-            const input = new Rete.Input(x.key, x.name, sockets.stream);
+            const input = new Rete.Input(x.key, x.name, sockets[x.type]);
             this.pluginNode.addInput(input);
         })
         deletedInputs.forEach(x => {
@@ -265,17 +363,17 @@ export default class CreatePluginPage extends Vue {
         });
 
         newOutputs.forEach(x => {
-            const output = new Rete.Output(x.key, x.name, sockets.stream);
+            const output = new Rete.Output(x.key, x.name, sockets[x.type]);
             this.pluginNode.addOutput(output);
         })
         deletedOutputs.forEach(x => {
             this.pluginNode.removeOutput(this.pluginNode.outputs.get(x.key)!);
         });
 
-        newControls.forEach(x => {
+        newControls.forEach((x) => {
             switch (x.type) {
                 case "text":
-                    this.pluginNode.addControl(new TextControl(this.editor, x.key, false, x.atrributes))
+                    this.pluginNode.addControl(new TextControl(this.editor, x.key, false, x.attributes))
                     break;
 
                 default:
@@ -296,12 +394,18 @@ export default class CreatePluginPage extends Vue {
     display: grid;
     width: 100%;
     height: 100%;
-    grid-template-columns: 220px 1fr 1fr 250px;
+    grid-template-columns: 220px 1fr 2px 1fr 250px;
 
 }
 
 #plugin-rete {
     height: 100% !important;
+}
+
+.vertical-dragbar {
+    cursor: ew-resize;
+    background-color: #e0e0e0;
+    z-index: 1
 }
 
 .v-text-field--outlined>.v-input__control>.selected-component {

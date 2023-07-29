@@ -2,6 +2,14 @@ function capFirst(string: string) {
 	return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+function countNewLinesBeforeQueryTerm(multiLineString: string, queryTerm: string) {
+	const index = multiLineString.indexOf(queryTerm);
+	const substringBeforeQuery = multiLineString.substring(0, index);
+	const newLinesCount = (substringBeforeQuery.match(/\n/g) || []).length;
+
+	return newLinesCount;
+}
+
 function getRandomInt(min: number, max: number) {
 	return Math.floor(Math.random() * (max - min)) + min;
 }
@@ -28,5 +36,6 @@ function generateName() {
 
 export {
 	generateName,
-	generateSeed
+	generateSeed,
+	countNewLinesBeforeQueryTerm
 }

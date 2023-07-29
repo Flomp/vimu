@@ -8,7 +8,7 @@
                 </div>
                 <v-list-item v-for="input, i in plugin.inputs" :key="'in_' + i" link @click="elementClick(input, i)">
                     <v-list-item-title class=" drawer-title">
-                        {{ input.name }}
+                        <span class="grey--text">{{ input.key }}: </span> {{ input.name }}
                     </v-list-item-title>
                 </v-list-item>
                 <div class="d-flex justify-space-between align-center mb-2 ">
@@ -17,14 +17,14 @@
                 </div>
                 <v-list-item v-for="output, i in plugin.outputs" :key="'out_' + i" link @click="elementClick(output, i)">
                     <v-list-item-title class="drawer-title">
-                        {{ output.name }}
+                        <span class="grey--text">{{ output.key }}: </span> {{ output.name }}
                     </v-list-item-title>
                 </v-list-item>
                 <h5 class="mt-4 mb-2 black--text">Controls</h5>
                 <v-list-item v-for="control, i in plugin.controls" :key="'control_' + i" link
                     @click="elementClick(control, i)">
                     <v-list-item-title class="drawer-title">
-                        {{ control.name }}
+                        <span class="grey--text">{{ control.key }}: </span> {{ control.name }}
                     </v-list-item-title>
                 </v-list-item>
             </v-list-item-group>
