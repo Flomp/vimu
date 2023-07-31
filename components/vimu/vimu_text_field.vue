@@ -2,7 +2,7 @@
   <v-text-field class="vimu-text-field" v-model="model" :label="label" :type="type" :rules="rules"
     :hide-details="hideDetails" :prepend-inner-icon="prependInnerIcon" :prepend-icon="prependIcon"
     :placeholder="placeholder" :disabled="disabled" :validate-on-blur="validateOnBlur" outlined :clearable="clearable"
-    @input="input" :dense="dense" :readonly="readonly"><template v-slot:append>
+    @input="input" @blur="blur" :dense="dense" :readonly="readonly"><template v-slot:append>
       <slot></slot>
     </template></v-text-field>
 </template>
@@ -33,7 +33,7 @@ export default class VimuTextField extends Vue {
     return this.timer ? this.onType(q) : this.update(q)
   }
 
-  onType(q: string) {    
+  onType(q: string) {
     clearTimeout(this.typingTimer);
     if (q) {
       this.typingTimer = setTimeout(() => {
@@ -43,8 +43,13 @@ export default class VimuTextField extends Vue {
   }
 
   @Emit()
-  update(q: string) {   
+  update(q: string) {
     return q;
+  }
+
+  @Emit()
+  blur(event: Event) {
+    return event;
   }
 
 }
@@ -53,9 +58,5 @@ export default class VimuTextField extends Vue {
 <style>
 .vimu-text-field fieldset {
   border: 2px solid currentColor !important;
-}
-
-.vimu-text-field .v-input__append-inner {
-  /* margin-top: 10px !important */
 }
 </style>

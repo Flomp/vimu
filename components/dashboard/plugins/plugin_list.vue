@@ -1,22 +1,23 @@
 <template>
     <div v-infinite-scroll="next" infinite-scroll-disabled="loading" infinite-scroll-immediate-check="false"
         infinite-scroll-distance="10">
-        <div v-if="files.length && !initialLoading">
+        <div v-if="plugins.length && !initialLoading">
             <v-row v-if="viewType == 'tiles'">
                 <template>
-                    <v-col :cols="cols" :sm="sm" :md="md" :lg="lg" v-for="file in files" :key="file.id">
-                        <file-card :file="file" :shared="shared" @share="share" @remove="remove" @rename="rename"
-                            @favorite="favorite" @duplicate="duplicate" @open="open" @open-in-new-tab="openInNewTab">
-                        </file-card>
+                    <v-col :cols="cols" :sm="sm" :md="md" :lg="lg" v-for="plugin in plugins" :key="plugin.id">
+                        <plugin-card :plugin="plugin" :readonly="readonly" @click="open" @edit="edit"
+                            @remove="remove"></plugin-card>
                     </v-col>
                 </template>
             </v-row>
             <v-simple-table v-else>
                 <thead>
                     <tr>
-                        <th v-if="!readonly"></th>
                         <th>
-                            File name
+                            Name
+                        </th>
+                        <th v-if="!$vuetify.breakpoint.mobile">
+                            Description
                         </th>
                         <th v-if="!$vuetify.breakpoint.mobile">
                             Last modified
@@ -25,15 +26,13 @@
                             Created
                         </th>
                         <th></th>
-                        <th v-if="!readonly"></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <file-table-row v-for="file in files" :key="file.id" :file="file" :readonly="readonly" :shared="shared" @share="share"
-                        @remove="remove" @rename="rename" @favorite="favorite" @duplicate="duplicate" @open="open"
-                        @open-in-new-tab="openInNewTab">
+                    <plugin-table-row v-for="plugin in plugins" :key="plugin.id" :plugin="plugin" :readonly="readonly"
+                        @click="open" @edit="edit" @remove="remove">
 
-                    </file-table-row>
+                    </plugin-table-row>
                 </tbody>
             </v-simple-table>
             <div class="d-flex justify-center mt-8" v-if="nextPageLoading">
@@ -41,13 +40,13 @@
             </div>
         </div>
         <div class="fill-width d-flex flex-column justify-center align-center mt-12"
-            v-else-if="!files.length && !initialLoading && !searching">
+            v-else-if="!plugins.length && !initialLoading && !searching">
             <bunny-wanted :width="150" />
-            <span class="vimu-card-title mt-5">There are no files here</span>
-            <span class="vimu-text text-center" v-if="!readonly">Not sure how to start? <br />Have a look at the <nuxt-link
-                    :to="docsLink">documentation</nuxt-link>!</span>
+            <span class="vimu-card-title mt-5">There are no plugins here</span>
+            <span class="vimu-text text-center">Not sure how to start? <br />Have a look at the <nuxt-link
+                    to="/">documentation</nuxt-link>!</span>
         </div>
-        <search-empty-state class="mt-12" v-else-if="!files.length && !initialLoading && searching">
+        <search-empty-state class="mt-12" v-else-if="!plugins.length && !initialLoading && searching">
         </search-empty-state>
         <v-row v-else>
             <v-col :cols="cols" :sm="sm" :md="md" :lg="lg" v-for="i in 4" :key="i">
@@ -56,33 +55,32 @@
         </v-row>
     </div>
 </template>
+
 <script lang="ts">
-import { Vue, Component, Prop, Emit } from "nuxt-property-decorator";
+import { Component, Emit, Prop, Vue } from "nuxt-property-decorator";
 import BunnyWanted from "~/components/vimu/illustrations/bunny_wanted.vue";
-import { File } from "~/models/file";
+import { Plugin } from "~/models/plugin";
 import { ViewType } from "~/models/view";
 import SearchEmptyState from "../search_empty_state.vue";
-import FileCard from "./file_card.vue";
-import FileTableRow from "./file_table_row.vue";
+import PluginTableRow from "./plugin_table_row.vue";
+import PluginCard from "./plugin_card.vue";
 
 @Component({
     components: {
-        FileCard,
         BunnyWanted,
         SearchEmptyState,
-        FileTableRow
+        PluginTableRow,
+        PluginCard
     }
 })
-export default class FileList extends Vue {
+export default class PluginList extends Vue {
+    @Prop() readonly plugins!: Plugin[];
 
-    @Prop() readonly files!: File[];
     @Prop() readonly initialLoading!: boolean;
     @Prop() readonly nextPageLoading!: boolean;
     @Prop() readonly loading!: boolean;
-    @Prop() readonly shared!: boolean;
-    @Prop() readonly searching!: boolean;
     @Prop() readonly readonly!: boolean;
-
+    @Prop() readonly searching!: boolean;
     @Prop({ default: ViewType.tiles }) readonly viewType!: ViewType;
 
     @Prop({ default: 12 }) readonly cols!: number;
@@ -90,53 +88,32 @@ export default class FileList extends Vue {
     @Prop({ default: 4 }) readonly md!: number;
     @Prop({ default: 3 }) readonly lg!: number;
 
-    get docsLink() {
-        return this.shared ? "/docs/dashboard/shared" : "/docs/dashboard/files"
+
+    @Emit()
+    open(score: Plugin): any {
+        return score;
     }
 
     @Emit()
-    share(file: File) {
-        return file;
+    create(score: Plugin) {
+        return score;
     }
 
     @Emit()
-    rename(file: File) {
-        return file;
+    edit(score: Plugin) {
+        return score;
     }
 
     @Emit()
-    remove(file: File) {
-        return file;
+    remove(score: Plugin) {
+        return score;
     }
 
     @Emit()
-    favorite(file: File) {
-        return file;
-    }
-
-    @Emit()
-    duplicate(file: File) {
-        return file;
-    }
-
-    @Emit()
-    open(file: File) {
-        return file;
-    }
-
-    @Emit()
-    openInNewTab(file: File) {
-        return file;
-    }
-
-    @Emit()
-    next() {
+    next(): void {
         return;
     }
-
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

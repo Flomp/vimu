@@ -1,4 +1,6 @@
 import { sockets } from "~/components/editor/rete/sockets/sockets";
+import { User } from "./user";
+import { generateName } from "~/utils/string";
 
 interface PluginSocket {
     key: string;
@@ -54,24 +56,44 @@ class PluginTextField implements PluginControl {
 
 type PluginControlType<T extends PluginControl> = T;
 
-interface Plugin {
-    name: string,
-    description: string,
+interface PluginConfig {
     inputs: PluginInput[]
     outputs: PluginOutput[]
     controls: PluginControlType<PluginControl>[]
 }
 
-const empty_plugin: Plugin = <Plugin>{
-    name: "plugin_node",
-    description: "",
-    inputs: [
-
-    ],
-    outputs: [
-
-    ],
-    controls: []
+interface Plugin {
+    id: string;
+    name: string
+    description: string
+    config: PluginConfig;
+    code: string;
+    public: boolean;
+    owner: string;
+    expand: {
+        owner: User
+    };
+    updated: string;
+    created: string;
 }
 
-export { Plugin, PluginSocket, PluginInput, PluginOutput, PluginControlAttribute, PluginControl, PluginTextField, empty_plugin }
+const empty_plugin_config: PluginConfig = (() => <PluginConfig>{
+    inputs: [
+        {
+            key: "in_0",
+            name: "Stream",
+            type: "stream"
+        }
+    ],
+    outputs: [
+        {
+            key: "out_0",
+            name: "Stream",
+            type: "stream"
+        }
+    ],
+    controls: []
+})()
+
+
+export { Plugin, PluginConfig, PluginSocket, PluginInput, PluginOutput, PluginControlAttribute, PluginControl, PluginTextField, empty_plugin_config }

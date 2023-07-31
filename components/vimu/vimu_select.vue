@@ -1,5 +1,6 @@
 <template>
-  <v-select class="vimu-select" :items="items" v-model="model" :hide-details="hideDetails" :dense="dense" outlined @change="change">
+  <v-select class="vimu-select" :items="items" v-model="model" :hide-details="hideDetails" :dense="dense" outlined
+    @change="change" @blur="blur">
   </v-select>
 </template>
 
@@ -16,6 +17,11 @@ export default class VimuSelect extends Vue {
   @Emit()
   change(value: any) {
     return value;
+  }
+
+  @Emit()
+  blur(event: Event) {
+    return event;
   }
 }
 </script>

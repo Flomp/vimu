@@ -3,21 +3,25 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, VModel, Watch } from "nuxt-property-decorator";
+import { Vue, Component, Prop, VModel, Watch, Emit } from "nuxt-property-decorator";
 
 @Component({
 })
 export default class PluginCodeEditor extends Vue {
-
-    @Prop()
-    readonlyLines!: number[];
-
     @VModel()
     content!: string;
+    @Prop()
+    readonlyLines!: number[];
+    @Prop()
+    timer!: boolean;
+
 
     ace!: any;
 
     codeEditor!: any;
+
+    typingTimer!: NodeJS.Timeout;
+
 
     mounted() {
         this.ace = require("ace-builds");
@@ -38,23 +42,39 @@ export default class PluginCodeEditor extends Vue {
 
         this.updateContent(this.content)
 
-        this.codeEditor.on('change', (content: string) => {
-            this.content = this.codeEditor.getValue();
+        this.codeEditor.on('change', (event: Event) => {
+            const currentCode = this.codeEditor.getValue();
+            this.content = currentCode;
+            
+            this.timer ? this.onType(currentCode) : this.update(currentCode)
         });
 
-        this.makeLinesReadonly(this.readonlyLines)
+        if (this.readonlyLines?.length) {
+            this.makeLinesReadonly(this.readonlyLines)
+        }
+    }
+
+    onType(v: string) {
+        clearTimeout(this.typingTimer);
+        if (v) {
+            this.typingTimer = setTimeout(() => {
+                this.update(v);
+            }, 1000);
+        }
+    }
+
+
+    updateContent(newText: string) {
+        this.codeEditor.setValue(newText)
+        this.codeEditor.clearSelection()
+    }
+
+    @Emit()
+    update(v: string) {        
+        return v;
     }
 
     insertLine(text: string, row: number, column: number) {
-        var session = this.codeEditor.getSession()
-
-        session.insert({
-            row: row,
-            column: column
-        }, text + "\n")
-    }
-
-    deleteLine(text: string, row: number, column: number) {
         var session = this.codeEditor.getSession()
 
         session.insert({
@@ -170,10 +190,6 @@ export default class PluginCodeEditor extends Vue {
         this.setReadonly(this.codeEditor, readonly_ranges);
     }
 
-    updateContent(newText: string) {
-        this.codeEditor.setValue(newText)
-        this.codeEditor.clearSelection()
-    }
 
 }
 </script>

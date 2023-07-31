@@ -2,7 +2,7 @@
   <v-textarea class="vimu-text-area" v-model="model" :label="label" :type="type" :rules="rules"
     :hide-details="hideDetails" :prepend-inner-icon="prependInnerIcon" :prepend-icon="prependIcon"
     :placeholder="placeholder" :disabled="disabled" :validate-on-blur="validateOnBlur" outlined :clearable="clearable"
-    @input="input"><template v-slot:append>
+    @input="input" @blur="blur"><template v-slot:append>
       <slot></slot>
     </template></v-textarea>
 </template>
@@ -31,7 +31,7 @@ export default class VimuTextarea extends Vue {
     return this.timer ? this.onType(q) : this.update(q)
   }
 
-  onType(q: string) {    
+  onType(q: string) {
     clearTimeout(this.typingTimer);
     if (q) {
       this.typingTimer = setTimeout(() => {
@@ -41,8 +41,13 @@ export default class VimuTextarea extends Vue {
   }
 
   @Emit()
-  update(q: string) {   
+  update(q: string) {
     return q;
+  }
+
+  @Emit()
+  blur(event: Event) {
+    return event;
   }
 
 }
@@ -53,7 +58,4 @@ export default class VimuTextarea extends Vue {
   border: 2px solid currentColor !important;
 }
 
-.vimu-text-area .v-input__append-inner {
-  /* margin-top: 10px !important */
-}
 </style>

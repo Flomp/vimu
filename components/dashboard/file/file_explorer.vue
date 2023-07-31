@@ -198,6 +198,7 @@ export default class FileExplorer extends Vue {
         }
         const newFile = await fileStore.create({ template: file, name: name, team: this.team });
         if (newFile === null) {
+            this.createLoading = false;
             return;
         }
         if (navigate) {

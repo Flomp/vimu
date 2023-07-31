@@ -6,6 +6,7 @@ import auth from '~/store/auth';
 import file from '~/store/file';
 import score from '~/store/score';
 import team from '~/store/team';
+import plugin from '~/store/plugin';
 
 import engine from '~/store/engine';
 import log from '~/store/log';
@@ -22,6 +23,7 @@ let authStore: auth;
 let fileStore: file;
 let scoreStore: score;
 let teamStore: team;
+let pluginStore: plugin;
 
 let engineStore: engine;
 let logStore: log;
@@ -57,6 +59,7 @@ function initialiseStores(store: Store<any>): void {
 
     stripeStore = getModule(stripe, store);
     subscriptionStore = getModule(subscription, store);
+    pluginStore = getModule(plugin, store);
 }
 
 export {
@@ -69,6 +72,7 @@ export {
     fileStore,
     scoreStore,
     teamStore,
+    pluginStore,
     engineStore,
     logStore,
     notificationStore,

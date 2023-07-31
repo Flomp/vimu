@@ -17,5 +17,6 @@ export const actions = {
 
 const initializer = (store: Store<any>) => initialiseStores(store)
 
+// export const strict = false
 export const plugins = [initializer]
 export * from '~/utils/store-accessor'
