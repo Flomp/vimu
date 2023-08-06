@@ -23,6 +23,7 @@ import { MenuItem } from "~/components/editor/palette/menu_item";
 import SubMenu from "~/components/editor/palette/sub_menu.vue";
 import { File } from "~/models/file";
 import { fileStore, notificationStore } from "~/store";
+import { download } from "~/utils/download";
 
 @Component({
   components: {
@@ -141,27 +142,12 @@ export default class FileMenu extends Vue {
     input.click();
   }
 
-  download(blob: Blob, extension: string, filename?: string) {
-    var url = URL.createObjectURL(blob);
-    var downloadLink = document.createElement("a");
-    downloadLink.href = url;
-    if (filename) {
-      downloadLink.download = `${filename}.${extension}`
-    } else {
-      const timestamp = new Date().getTime();
-      downloadLink.download = `vimu_export_${timestamp}.${extension}`;
-    }
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
-  }
-
   exportJSON() {
     const jsonData = JSON.stringify(fileStore.file?.expand.data.json);
     var jsonBlob = new Blob([jsonData], {
       type: "text/xml;charset=utf-8",
     });
-    this.download(jsonBlob, "json", fileStore.file?.name)
+    download(jsonBlob, "json", fileStore.file?.name)
   }
 
 }

@@ -1,7 +1,10 @@
+import { Node } from 'rete';
+import { Data } from 'rete/types/core/data';
 import Vue from 'vue';
 import { Action, Module, Mutation, MutationAction, VuexModule } from 'vuex-module-decorators';
+import { Log, LogLevel, strToLevel } from '~/models/log';
 import { Plugin, empty_plugin_config } from '~/models/plugin';
-import { $pb, notificationStore, pluginStore } from '~/utils/store-accessor';
+import { $axios, $pb, notificationStore, pluginStore } from '~/utils/store-accessor';
 import { generateName } from '~/utils/string';
 
 @Module({
@@ -13,10 +16,13 @@ export default class PluginStore extends VuexModule {
     plugins: Plugin[] = [];
     plugin: Plugin | null = null;
 
+    logs: Log[] = []
+
     maxPage: number = -1;
 
     @Mutation
     setPlugin(plugin: Plugin) {
+        this.logs = [];
         this.plugin = plugin;
     }
 
@@ -58,6 +64,37 @@ export default class PluginStore extends VuexModule {
             return;
         }
         this.plugin.config.controls[data.controlIndex].attributes[data.attributeKey].value = data.value;
+    }
+
+    @Mutation
+    appendLogs(logs: Log[]) {
+        this.logs.push(...logs);
+    }
+
+    @Mutation
+    clearLogs() {
+        this.logs = [];
+    }
+
+    @Action
+    async run(node: Node) {
+        if (!this.plugin) {
+            return;
+        }
+
+        const response = await $axios.post('plugin/test', { "plugin": this.plugin, "node": node })
+
+        let logs = []
+
+        for (const log of response!.data.data.logs) {
+            logs.push(<Log>{
+                date: new Date(log.date),
+                level: strToLevel(log.level),
+                text: log.text
+            })
+        }
+
+        pluginStore.appendLogs(logs);
     }
 
     @MutationAction({ mutate: ['plugins', 'maxPage'] })

@@ -1,6 +1,5 @@
 <template>
-  <vimu-text-field :label="attributes['label'].value" :prependIcon="icon" class="mr-6"
-    v-model="value" @update="update" style="max-width: 200px"></vimu-text-field>
+  <v-checkbox v-model="value" @change="update" :label="attributes['label'].value" :prependIcon="icon"></v-checkbox>
 </template>
 
 <script lang="ts">
@@ -9,7 +8,7 @@ import { NodeEditor } from "rete";
 import { PluginControlAttribute } from "~/models/plugin";
 
 @Component({})
-export default class TextControlComponent extends Vue {
+export default class BoolControlComponent extends Vue {
   @Prop() readonly!: boolean;
   @Prop() emitter!: NodeEditor;
   @Prop() ikey!: String;
@@ -31,7 +30,7 @@ export default class TextControlComponent extends Vue {
 
   update() {
     if (this.ikey) {
-      this.putData(this.ikey, this.value);
+      this.putData(this.ikey, this.value);      
     }
   }
 }

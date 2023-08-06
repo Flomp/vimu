@@ -51,7 +51,12 @@ export default class ComponentPalette extends Vue {
         {
             name: "Text Field",
             icon: "mdi-cursor-text",
-            key: "text_field"
+            key: "text"
+        },
+        {
+            name: "Checkbox",
+            icon: "mdi-checkbox-outline",
+            key: "bool"
         }
     ]
 
