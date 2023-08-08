@@ -102,7 +102,7 @@ export default class PluginStore extends VuexModule {
         try {
             const response = await $pb.collection('plugins').getList(
                 data.page, data.perPage,
-                { ...(data.sort ? { sort: data.sort } : {}), ...(data.filter ? { sort: data.filter } : {}) }
+                { ...(data.sort ? { sort: data.sort } : {}), ...(data.filter ? { filter: data.filter } : {}), expand: 'owner' }
             )
             if (data.page == 1) {
                 return { plugins: response.items, maxPage: response.totalPages }
@@ -117,7 +117,7 @@ export default class PluginStore extends VuexModule {
     @MutationAction({ mutate: ['plugin'] })
     async get(id: string) {
         try {
-            let response = await $pb.collection('plugins').getOne<Plugin>(id, { expand: 'owner', $autoCancel: false })            
+            let response = await $pb.collection('plugins').getOne<Plugin>(id, { expand: 'owner', $autoCancel: false })
             return { plugin: response }
         } catch (error) {
             return { plugin: null }
@@ -148,10 +148,13 @@ if in_0_data is not None:
     }
 
     @Action
-    async update(newPlugin: Plugin) {
+    async update(data: { plugin: Plugin, updateClient?: boolean }) {
         try {
-            pluginStore.setPlugin(newPlugin);
-            let response = await $pb.collection('plugins').update<Plugin>(newPlugin.id, newPlugin)
+            pluginStore.setPlugin(data.plugin);
+            const updatedPlugin = await $pb.collection('plugins').update<Plugin>(data.plugin.id, data.plugin)
+            if (data.updateClient) {
+                pluginStore.updateClient({ plugin: data.plugin, updatedPlugin: updatedPlugin })
+            }
         } catch (error) {
             return { plugin: null }
         }

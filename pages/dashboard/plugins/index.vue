@@ -14,6 +14,9 @@
                             :primary="true" :large="true" @click="createPlugin">New Plugin
                         </vimu-btn>
                     </v-col>
+                    <v-col class="ml-sm-12">
+                        <vimu-tabs v-model="activeTab" :tabs="tabs" @change="onTabChanged"></vimu-tabs>
+                    </v-col>
                     <v-spacer v-if="$vuetify.breakpoint.smAndUp"></v-spacer>
                     <v-col cols="auto">
                         <div class="d-flex align-center">
@@ -54,7 +57,7 @@ import PluginList from "~/components/dashboard/plugins/plugin_list.vue";
 import VimuBtn from "~/components/vimu/vimu_button.vue";
 import { Plugin } from "~/models/plugin";
 import { ViewType } from "~/models/view";
-import { pluginStore } from "~/store";
+import { $pb, pluginStore } from "~/store";
 
 
 @Component({
@@ -75,6 +78,12 @@ export default class PluginsPage extends Vue {
 
     viewNumber = 0;
     currentPage = 1;
+    activeTab = 0;
+
+    tabs = [
+        "My Plugins",
+        "Browse"
+    ]
 
     sortOptions = [
         { text: "Alphabetical", value: "name" },
@@ -85,7 +94,7 @@ export default class PluginsPage extends Vue {
 
     filters = {
         query: "",
-
+        tab: ""
     }
 
     deletingPlugin: Plugin | null = null;
@@ -105,11 +114,10 @@ export default class PluginsPage extends Vue {
     }
 
     get assembledFilter(): string {
-        let filter = "";
+        let filter = this.filters.tab;
         if (this.filters.query) {
             filter = this.filters.query;
         }
-
         return filter
     }
 
@@ -122,6 +130,16 @@ export default class PluginsPage extends Vue {
         if (process.client) {
             this.viewNumber = parseInt(localStorage.getItem('score-view-type') ?? '0');
         }
+    }
+
+    onTabChanged(tab: number) {
+        if (tab == 0) {
+            this.filters.tab = `owner="${$pb.authStore.model?.id}"`
+        } else if (tab == 1) {
+            this.filters.tab = "public=true";
+        }
+        this.currentPage = 1;
+        this.list(true);
     }
 
     async search(value?: string) {
@@ -184,8 +202,10 @@ export default class PluginsPage extends Vue {
 
     }
 
-    async publishPlugin() {
-
+    async publishPlugin(plugin: Plugin) {
+        const updatedPlugin: Plugin = JSON.parse(JSON.stringify(plugin))
+        updatedPlugin.public = !updatedPlugin.public
+        pluginStore.update({plugin: updatedPlugin, updateClient: true});
     }
 
     async removePlugin() {

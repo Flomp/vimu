@@ -9,7 +9,7 @@
             <span class="text-caption">Name</span>
             <vimu-text-field class="mt-1" v-model="name" :dense="true" @blur="update"></vimu-text-field>
             <span class="text-caption">Description</span>
-            <vimu-textarea v-model="description" @blur="update"></vimu-textarea>
+            <vimu-textarea v-model="description" @blur="update" :counter="400" :rules="descriptionRules"></vimu-textarea>
         </template>
         <template v-else-if="mode == 'inputs' || mode == 'outputs'">
             <span class="text-caption">Name</span>
@@ -53,6 +53,9 @@ export default class PluginProperties extends Vue {
 
     @Prop()
     currentIndex!: number;
+
+    descriptionRules = [(value: string) => value.length <= 400 || '',
+    ]
 
     socketTypes = Object.entries(sockets).map(([key, socket]) => ({
         text: socket.name,
@@ -115,10 +118,10 @@ export default class PluginProperties extends Vue {
     }
 
     update() {
-        if(pluginStore.plugin == null) {
+        if (pluginStore.plugin == null) {
             return;
         }
-        pluginStore.update(pluginStore.plugin);
+        pluginStore.update({plugin: pluginStore.plugin});
     }
 
 }

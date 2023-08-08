@@ -12,7 +12,8 @@
             </div>
             <div class="vertical-dragbar" @mousedown="startLeftDrag"></div>
             <div id="code" class="d-flex flex-column" style="background: #24292e;">
-                <code-palette class="palette-dark py-2 mb-2" :loading="runLoading" @save="exportCode" @run="run"></code-palette>
+                <code-palette class="palette-dark py-2 mb-2" :loading="runLoading" @save="exportCode"
+                    @run="run"></code-palette>
                 <client-only>
                     <plugin-code-editor :value="plugin.code" :timer="true" ref="codeEditor"
                         @update="saveCode"></plugin-code-editor>
@@ -154,11 +155,11 @@ export default class CreatePluginPage extends Vue {
         this.editor = editor;
 
         document.addEventListener('keydown', e => {
-            const activeDOMElement = document.activeElement as HTMLInputElement;
-            if (activeDOMElement?.tagName == "INPUT" && ["number", "text"].includes(activeDOMElement.type)) {
+            const activeDOMElement = document.activeElement as HTMLInputElement;            
+            if (activeDOMElement?.tagName == "TEXTAREA" || (activeDOMElement?.tagName == "INPUT" && ["number", "text"].includes(activeDOMElement.type))) {
                 return;
             }
-            if (e.code == "Backspace") {
+            if (e.code == "Backspace") {                
                 this.delete()
             }
         });
@@ -264,7 +265,7 @@ export default class CreatePluginPage extends Vue {
         const pluginInput = <PluginInput>{ key: key, name: `Stream`, type: "stream" }
         const newPlugin: Plugin = JSON.parse(JSON.stringify(this.plugin));
         newPlugin.config.inputs.push(pluginInput);
-        pluginStore.update(newPlugin);
+        pluginStore.update({plugin: newPlugin});
 
         this.codeEditor.insertLine(`${key}_data = input_data.get('${key}')`, 2, 0)
     }
@@ -274,7 +275,7 @@ export default class CreatePluginPage extends Vue {
         const pluginOutput = <PluginOutput>{ key: key, name: "Stream", type: "stream" }
         const newPlugin: Plugin = JSON.parse(JSON.stringify(this.plugin));
         newPlugin.config.outputs.push(pluginOutput);
-        pluginStore.update(newPlugin);
+        pluginStore.update({plugin: newPlugin});
     }
 
     menuClick(item: MenuItem) {
@@ -294,12 +295,12 @@ export default class CreatePluginPage extends Vue {
                 break;
         }
         this.codeEditor.insertLine(`${key}_data = node.data.get('${key}')`, 2, 0)
-        pluginStore.update(newPlugin);
+        pluginStore.update({plugin: newPlugin});
 
     }
 
     delete() {
-        if (!this.plugin) {
+        if (!this.plugin || !this.codeEditor) {
             return;
         }
 
@@ -316,7 +317,7 @@ export default class CreatePluginPage extends Vue {
             newPlugin.config.controls = newPlugin.config.controls.filter(i => i.key != key);
             this.codeEditor.updateContent(newPlugin.code.replace(`${key}_data = node.data.get('${key}')\n`, ""))
         }
-        pluginStore.update(newPlugin);
+        pluginStore.update({plugin: newPlugin});
 
         this.sidebarSelectedKey = "";
         this.propertiesMode = "plugin"
@@ -434,7 +435,7 @@ export default class CreatePluginPage extends Vue {
 
     saveCode(value: string) {
         pluginStore.setPluginCode(value);
-        pluginStore.update(pluginStore.plugin!);
+        pluginStore.update({plugin: pluginStore.plugin!});
     }
 }
 </script>

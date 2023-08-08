@@ -1,6 +1,6 @@
 <template>
     <div style="position: relative;">
-        <editor-palette class="palette py-2" @menu-click="createNode" @plugin="createPluginNode"></editor-palette>
+        <editor-palette class="palette py-2" @menu-click="createNode" @plugin="showPluginDialog"></editor-palette>
         <v-progress-linear absolute indeterminate color="black" height="2" v-if="apiLoading"></v-progress-linear>
         <div id="rete" @contextmenu="showContextMenu"></div>
         <v-snackbar outlined bottom left v-model="showSnackbar" :timeout="10000" min-width="0">
@@ -16,33 +16,33 @@
             </template>
         </v-snackbar>
         <welcome-dialog v-model="showWelcomeDialog" @done="disableTutorial"></welcome-dialog>
+        <plugin-dialog v-model="pluginDialog" @select="createPluginNode"></plugin-dialog>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, InjectReactive, Vue, Watch } from "nuxt-property-decorator";
-import Rete, { Component as rComponent, NodeEditor } from "rete";
 import { VBtn, VProgressLinear, VSnackbar } from "vuetify/lib";
 import ErrorBadge from "~/components/vimu/error_badge.vue";
 import { LogLevel } from "~/models/log";
+import { Plugin } from "~/models/plugin";
 import { EditorSettings } from "~/models/settings";
 import { engineStore, fileStore, logStore, settingsStore } from "~/store";
-import EditorPalette from "../palette/editor_palette.vue";
-import { editorMenuItems, MenuItem } from "../palette/menu_item";
-import SubMenu from "../palette/sub_menu.vue";
-import WelcomeDialog from "../welcome_dialog.vue";
-import { Plugin } from "~/models/plugin";
-import { sockets } from "../rete/sockets/sockets";
-import TextControl from "../rete/controls/plugins/text/text_control";
-import BoolControl from "../rete/controls/plugins/bool/bool_control";
 import { NodePluginEditor } from "~/utils/rete";
+import EditorPalette from "../palette/editor_palette.vue";
+import { MenuItem, editorMenuItems } from "../palette/menu_item";
+import SubMenu from "../palette/sub_menu.vue";
 import PluginComponent from "../rete/components/plugins/plugin_component";
+import WelcomeDialog from "../welcome_dialog.vue";
+import PluginDialog from "../rete/controls/plugins/plugin_dialog.vue";
+
 
 @Component({
     components: {
         SubMenu,
         EditorPalette,
-        WelcomeDialog
+        WelcomeDialog,
+        PluginDialog
     }
 })
 export default class EditorPanel extends Vue {
@@ -61,6 +61,7 @@ export default class EditorPanel extends Vue {
     showSnackbar: boolean = false;
 
     showWelcomeDialog: boolean = false;
+    pluginDialog: boolean = false;
 
     get readonly() {
         return fileStore.readonly
@@ -145,6 +146,10 @@ export default class EditorPanel extends Vue {
                 this.editor.connect(this.selectedNode.outputs.get('out_0')!, this.outputNode!.inputs.get('in_0')!);
             }
         });
+    }
+
+    showPluginDialog() {
+        this.pluginDialog = true;
     }
 
     showContextMenu(e: MouseEvent) {

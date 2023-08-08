@@ -6,7 +6,7 @@
                 <template>
                     <v-col :cols="cols" :sm="sm" :md="md" :lg="lg" v-for="plugin in plugins" :key="plugin.id">
                         <plugin-card :plugin="plugin" :readonly="readonly" @click="open" @edit="edit"
-                            @remove="remove"></plugin-card>
+                            @remove="remove" @publish="publish"></plugin-card>
                     </v-col>
                 </template>
             </v-row>
@@ -102,6 +102,11 @@ export default class PluginList extends Vue {
     @Emit()
     edit(score: Plugin) {
         return score;
+    }
+
+    @Emit()
+    publish(): void {
+        return;
     }
 
     @Emit()

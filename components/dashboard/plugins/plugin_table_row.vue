@@ -5,9 +5,19 @@
             <span>{{ plugin.name }}</span>
 
         </td>
-        <td class="text-body-2 grey--text text--darken-2" v-if="!$vuetify.breakpoint.mobile" style="max-width: 250px; white-space: pre-line;">
-            {{ plugin.description }}
-        </td>
+
+        <v-tooltip bottom max-width="250">
+            <template v-slot:activator="{ on, attrs }">
+                <td v-bind="attrs" v-on="on" class="text-body-2 grey--text text--darken-2"
+                    v-if="!$vuetify.breakpoint.mobile"
+                    style="max-width: 250px; white-space: nowrap; overflow:hidden; text-overflow: ellipsis;">
+                    <span> {{ plugin.description }}
+                    </span>
+                </td>
+            </template>
+            <span> {{ plugin.description }}
+            </span>
+        </v-tooltip>
         <td v-if="!$vuetify.breakpoint.mobile">
             {{ editedTimestamp }}
         </td>

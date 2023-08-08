@@ -4,16 +4,9 @@
             <span class="vimu-card-title score-card-title mr-1">
                 {{ plugin.name }}
             </span>
-            <v-tooltip bottom v-if="plugin.public && owned && !readonly">
-                <template v-slot:activator="{ on, attrs }">
-                    <v-icon v-bind="attrs" v-on="on">
-                        mdi-earth
-                    </v-icon>
-                </template>
-                <span>Public</span>
-            </v-tooltip>
+
             <v-spacer></v-spacer>
-            <plugin-context-menu @rename="rename" @publish="publish" @remove="remove"
+            <plugin-context-menu :public="plugin.public" @rename="rename" @publish="publish" @remove="remove"
                 v-if="owned && !readonly"></plugin-context-menu>
         </div>
         <div>
@@ -23,7 +16,16 @@
             </p>
         </div>
         <div class="d-flex justify-space-between align-center pt-3">
-            <span class="file-card-timestamp">Edited {{ editedTimestamp }}</span>
+            <span class="file-card-timestamp" v-if="!owned"><span class="grey--text">by
+                </span>{{ plugin.expand.owner.username }}</span>
+            <v-tooltip bottom v-if="plugin.public && owned && !readonly">
+                <template v-slot:activator="{ on, attrs }">
+                    <v-icon v-bind="attrs" v-on="on">
+                        mdi-earth
+                    </v-icon>
+                </template>
+                <span>Public</span>
+            </v-tooltip>
         </div>
     </div>
 </template>

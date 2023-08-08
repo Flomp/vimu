@@ -2,7 +2,7 @@
   <v-textarea class="vimu-text-area" v-model="model" :label="label" :type="type" :rules="rules"
     :hide-details="hideDetails" :prepend-inner-icon="prependInnerIcon" :prepend-icon="prependIcon"
     :placeholder="placeholder" :disabled="disabled" :validate-on-blur="validateOnBlur" outlined :clearable="clearable"
-    @input="input" @blur="blur"><template v-slot:append>
+    :counter="counter" @input="input" @blur="blur"><template v-slot:append>
       <slot></slot>
     </template></v-textarea>
 </template>
@@ -24,6 +24,7 @@ export default class VimuTextarea extends Vue {
   @Prop({ default: false }) readonly disabled!: boolean;
   @Prop({ default: true }) readonly validateOnBlur!: boolean;
   @Prop({ default: false }) readonly timer!: boolean;
+  @Prop() readonly counter!: number;
 
   typingTimer!: NodeJS.Timeout;
 
@@ -57,5 +58,4 @@ export default class VimuTextarea extends Vue {
 .vimu-text-area fieldset {
   border: 2px solid currentColor !important;
 }
-
 </style>
