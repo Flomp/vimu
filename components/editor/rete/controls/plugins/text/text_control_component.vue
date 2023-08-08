@@ -33,6 +33,7 @@ export default class TextControlComponent extends Vue {
     if (this.ikey) {
       this.putData(this.ikey, this.value);
     }
+    this.emitter.trigger("process");
   }
 }
 </script>

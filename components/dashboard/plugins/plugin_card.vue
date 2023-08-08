@@ -17,7 +17,8 @@
                 v-if="owned && !readonly"></plugin-context-menu>
         </div>
         <div>
-            <p class="text-body-2 grey--text text--darken-2" style="white-space: pre-line;">
+            <p class="text-body-2 grey--text text--darken-2"
+                style="white-space: pre-line; max-height: 200px; overflow:hidden">
                 {{ plugin.description }}
             </p>
         </div>

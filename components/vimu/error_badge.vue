@@ -14,11 +14,6 @@ import { Vue, Component, Prop } from "nuxt-property-decorator";
 @Component({})
 export default class ErrorBadge extends Vue {
     @Prop() error!: string;
-
-    mounted() {
-        console.log(this.error);
-
-    }
 }
 </script>
 

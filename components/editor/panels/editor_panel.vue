@@ -1,6 +1,6 @@
 <template>
     <div style="position: relative;">
-        <editor-palette class="palette py-2" @menu-click="createNode"></editor-palette>
+        <editor-palette class="palette py-2" @menu-click="createNode" @plugin="createPluginNode"></editor-palette>
         <v-progress-linear absolute indeterminate color="black" height="2" v-if="apiLoading"></v-progress-linear>
         <div id="rete" @contextmenu="showContextMenu"></div>
         <v-snackbar outlined bottom left v-model="showSnackbar" :timeout="10000" min-width="0">
@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import { Component, InjectReactive, Vue, Watch } from "nuxt-property-decorator";
-import { Component as rComponent, NodeEditor } from "rete";
+import Rete, { Component as rComponent, NodeEditor } from "rete";
 import { VBtn, VProgressLinear, VSnackbar } from "vuetify/lib";
 import ErrorBadge from "~/components/vimu/error_badge.vue";
 import { LogLevel } from "~/models/log";
@@ -31,6 +31,12 @@ import EditorPalette from "../palette/editor_palette.vue";
 import { editorMenuItems, MenuItem } from "../palette/menu_item";
 import SubMenu from "../palette/sub_menu.vue";
 import WelcomeDialog from "../welcome_dialog.vue";
+import { Plugin } from "~/models/plugin";
+import { sockets } from "../rete/sockets/sockets";
+import TextControl from "../rete/controls/plugins/text/text_control";
+import BoolControl from "../rete/controls/plugins/bool/bool_control";
+import { NodePluginEditor } from "~/utils/rete";
+import PluginComponent from "../rete/components/plugins/plugin_component";
 
 @Component({
     components: {
@@ -41,7 +47,7 @@ import WelcomeDialog from "../welcome_dialog.vue";
 })
 export default class EditorPanel extends Vue {
     @InjectReactive()
-    editor!: NodeEditor;
+    editor!: NodePluginEditor;
 
     showMenu = false;
     menuItems = editorMenuItems;
@@ -158,9 +164,7 @@ export default class EditorPanel extends Vue {
         if (item.key.startsWith('plot') && !settingsStore.settings.plot) {
             this.showSnackbar = true;
         }
-        const node = await (
-            this.editor?.components.get(item.key) as rComponent
-        ).createNode();
+        const node = await this.editor?.getComponent(item.key).createNode();
 
         node.position = [this.editorX, this.editorY];
 
@@ -170,6 +174,15 @@ export default class EditorPanel extends Vue {
             level: LogLevel.info,
             text: `Added new node ${item.key}`,
         });
+    }
+
+    async createPluginNode(plugin: Plugin) {
+        const component = await this.editor?.getComponent("plugin_node") as PluginComponent
+        let node = await component.createNode();
+        node = await component.buildPlugin(node, plugin);
+        this.editor.addNode(node);
+        node.name = plugin.name;
+
     }
 
     showPlotPanel() {

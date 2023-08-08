@@ -38,7 +38,7 @@ import PluginLogs from "~/components/dashboard/plugins/plugin_logs.vue";
 import PluginProperties from "~/components/dashboard/plugins/plugin_properties.vue";
 import PluginSidebar from "~/components/dashboard/plugins/plugin_sidebar.vue";
 import { MenuItem } from "~/components/editor/palette/menu_item";
-import PluginComponent from "~/components/editor/rete/components/plugins/plugin_component";
+import EmptyComponent from "~/components/editor/rete/components/plugins/empty_component";
 import TextControl from "~/components/editor/rete/controls/plugins/text/text_control";
 import BoolControl from "~/components/editor/rete/controls/plugins/bool/bool_control";
 import { sockets } from "~/components/editor/rete/sockets/sockets";
@@ -126,15 +126,15 @@ export default class CreatePluginPage extends Vue {
 
         (editor.view.area as any)._zoom.intensity = 0.03;
 
-        const pluginComponent = new PluginComponent(editor);
+        const emptyComponent = new EmptyComponent(editor);
 
-        editor.register(pluginComponent);
-        engine.register(pluginComponent);
+        editor.register(emptyComponent);
+        engine.register(emptyComponent);
 
         const pluginNodeWidth = 186
         const pluginNodeHeight = 144
 
-        this.pluginNode = await pluginComponent.createNode();
+        this.pluginNode = await emptyComponent.createNode();
         this.pluginNode.position = [w / 2 - pluginNodeWidth / 2 + 80, h / 2 - pluginNodeHeight / 2]
         editor.addNode(this.pluginNode);
 

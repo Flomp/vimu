@@ -63,17 +63,19 @@ import SourceTinynotationComponent from "~/components/editor/rete/components/sou
 import TransformChordifyComponent from "~/components/editor/rete/components/transform/transform_chordify_component";
 import TransformTransposeComponent from "~/components/editor/rete/components/transform/transform_transpose_component";
 
-import { $pb, authStore, engineStore, fileStore, osmdStore, settingsStore } from "~/store";
 import { Context } from "@nuxt/types";
 import { RecordSubscription } from "pocketbase";
+import { $pb, authStore, engineStore, fileStore, osmdStore, pluginStore, settingsStore } from "~/store";
 // @ts-ignore
 import { zoomAt } from "rete-area-plugin/src/zoom-at";
 import { Data } from "rete/types/core/data";
+import PluginComponent from "~/components/editor/rete/components/plugins/plugin_component";
 import SourceScoreComponent from "~/components/editor/rete/components/source/source_score_component";
-import { example_files, FileData } from "~/models/file";
 import TransformAppendComponent from "~/components/editor/rete/components/transform/transform_append_component";
 import TransformStackComponent from "~/components/editor/rete/components/transform/transform_stack_component";
+import { example_files, FileData } from "~/models/file";
 import { EditorSettings } from "~/models/settings";
+import { NodePluginEditor } from "~/utils/rete";
 
 @Component({
   head: {
@@ -117,6 +119,7 @@ export default class Editor extends Vue {
 
   async fetch() {
     await settingsStore.getEditorSettings()
+    await pluginStore.list({ page: 1 });
   }
 
   @Watch("showScore")
@@ -220,7 +223,7 @@ export default class Editor extends Vue {
 
   async initEditor() {
     const container = document.querySelector<HTMLElement>("#rete");
-    const editor = new Rete.NodeEditor("vimu@0.1.0", container!);
+    const editor = new NodePluginEditor("vimu@0.1.0", container!);
 
     const background = document.createElement("div");
     if (settingsStore.settings.pixel_grid) {
@@ -296,6 +299,7 @@ export default class Editor extends Vue {
       new PlotScatterComponent(editor),
       new PlotScatterWeightedComponent(editor),
       new PlotBarWeightedComponent(editor),
+      new PluginComponent(editor),
       out
 
     ];

@@ -42,6 +42,17 @@
                             </v-btn>
                         </template>
                     </sub-menu>
+                    <v-btn class="palette-button" text @click="plugin">
+                        <div class="pa-1 d-flex">
+                            <div>
+                                <v-icon color="primary">mdi-toy-brick-plus</v-icon>
+                                <br>
+                                <span class="palette-button-text">
+                                    Plugins
+                                </span>
+                            </div>
+                        </div>
+                    </v-btn>
                 </template>
             </div>
 
@@ -56,10 +67,11 @@ import { VBtn, VIcon } from "vuetify/lib";
 import VimuAvatar from "~/components/vimu/vimu_avatar.vue";
 import VimuBtn from "~/components/vimu/vimu_button.vue";
 import { User } from "~/models/user";
-import { fileStore } from "~/store";
+import { fileStore, pluginStore } from "~/store";
 import MainMenu from "./main_menu/main_menu.vue";
 import { editorMenuItems, MenuItem } from "./menu_item";
 import SubMenu from "./sub_menu.vue";
+import { Plugin } from "~/models/plugin";
 
 @Component({
     components: {
@@ -94,6 +106,12 @@ export default class EditorPalette extends Vue {
     @Emit()
     menuClick(item: MenuItem) {
         return item;
+    }
+
+    @Emit()
+    plugin(plugin: Plugin) {
+        //TODO: create plugin dialog
+        return pluginStore.plugins[0];
     }
 }
 </script>

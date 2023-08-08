@@ -98,9 +98,12 @@ export default class PluginStore extends VuexModule {
     }
 
     @MutationAction({ mutate: ['plugins', 'maxPage'] })
-    async list(data: { page: number, filter: string, sort: string, perPage?: number }) {
+    async list(data: { page: number, filter?: string, sort?: string, perPage?: number }) {
         try {
-            const response = await $pb.collection('plugins').getList(data.page, data.perPage, { sort: data.sort, filter: data.filter })
+            const response = await $pb.collection('plugins').getList(
+                data.page, data.perPage,
+                { ...(data.sort ? { sort: data.sort } : {}), ...(data.filter ? { sort: data.filter } : {}) }
+            )
             if (data.page == 1) {
                 return { plugins: response.items, maxPage: response.totalPages }
             } else {
@@ -114,7 +117,7 @@ export default class PluginStore extends VuexModule {
     @MutationAction({ mutate: ['plugin'] })
     async get(id: string) {
         try {
-            let response = await $pb.collection('plugins').getOne<Plugin>(id, { expand: 'owner', $autoCancel: false })
+            let response = await $pb.collection('plugins').getOne<Plugin>(id, { expand: 'owner', $autoCancel: false })            
             return { plugin: response }
         } catch (error) {
             return { plugin: null }
