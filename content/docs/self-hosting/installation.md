@@ -47,9 +47,6 @@ With a bare-metal installation, you can either export the variables directly on 
 |:---|:---|:---|:---|
 | APP_URL | The URL under which vimu will be available (e.g. https://vimu.app) | Yes | vimu, vimu-engine, vimu-pocketbase |
 | API_URL | The URL under which vimu-engine will be available (e.g. https://api.vimu.app) | Yes | vimu |
-| POCKETBASE_URL | The URL under which vimu-pocketbase will be available (e.g. https://pb.vimu.app) | Yes | vimu, vimu-engine |
-| POCKETBASE_ADMIN_EMAIL | Pocketbase admin user email. Used to log in to the pocketbase backend | Yes | vimu-engine |
-| POCKETBASE_ADMIN_PASSWORD | Pocketbase admin user password. Used to log in to the pocketbase backend | Yes | vimu-engine |
 | REDIS_URL | URL to a redis installation (e.g. redis://localhost:6379). Only needed if you want vimu-engine to cache results | No | vimu-engine |
 
 ## Install with Docker
