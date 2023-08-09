@@ -143,6 +143,8 @@ You need to have ```NodeJS>=16.15.1```, ```python>=3.10```, and ```go>=1.19.5```
 cd ./vimu
 # install dependencies
 npm install
+# neccessary for nodejs 17 and up
+export NODE_OPTIONS=--openssl-legacy-provider
 # build with nuxt
 npm run build
 # start vimu
@@ -166,9 +168,9 @@ cd ./vimu-pocketbase
 # install dependencies
 go mod download
 # build
-go build -o /vimu-pocketbase
+go build -o ./vimu-pocketbase
 # migrate database
-/vimu-pocketbase migrate
+./vimu-pocketbase migrate
 # start vimu-pocketbase
-/vimu-pocketbase serve --http=0.0.0.0:8090 --dir=/pb_data
+./vimu-pocketbase serve --http=0.0.0.0:8090 --dir=./pb_data
 ```
