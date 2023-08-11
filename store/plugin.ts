@@ -84,15 +84,20 @@ export default class PluginStore extends VuexModule {
 
         const response = await $axios.post('plugin/test', { "plugin": this.plugin, "node": node })
 
-        let logs = []
+        if(!response) {
+            return;
+        }
+        let logs: any = []
 
-        for (const log of response!.data.data.logs) {
+        for (const log of response.data.data.logs) {
             logs.push(<Log>{
                 date: new Date(log.date),
                 level: strToLevel(log.level),
                 text: log.text
             })
         }
+
+        
 
         pluginStore.appendLogs(logs);
     }
