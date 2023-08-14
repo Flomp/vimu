@@ -18,25 +18,41 @@ interface PluginOutput extends PluginSocket {
 interface PluginControlAttribute {
     name: string,
     value: any,
-    type: "string" | "bool"
+    type: "string" | "bool" | "number"
 }
 
-interface PluginControl {
-    key: string;
-    name: string;
-    type: "text" | "bool";
-    attributes: Record<string, PluginControlAttribute>;
-}
+type PluginControlType = "text" | "number" | "bool" | "select"
 
-class PluginTextField implements PluginControl {
-    constructor(key: string, name: string, label: string) {
+abstract class PluginControl {
+    constructor(key: string, name: string, type: PluginControlType) {
         this.key = key;
         this.name = name;
-        this.attributes["label"].value = label;
+        this.type = type;
     }
     key: string;
     name: string;
-    type: "text" | "bool" = "text";
+    type: PluginControlType;
+    abstract attributes: Record<string, PluginControlAttribute>;
+    static create: Function
+
+    private static pluginMap: Map<PluginControlType, typeof PluginControl> = new Map();
+
+    static registerControl(key: PluginControlType, constructor: typeof PluginControl) {
+        this.pluginMap.set(key, constructor);
+    }
+
+    static createControlInstance(map_key: PluginControlType, control_key: string): PluginControl | null {
+        const PluginConstructor = this.pluginMap.get(map_key);
+        if (PluginConstructor) {
+            return PluginConstructor.create(control_key);
+        }
+        return null;
+    }
+
+}
+
+
+class PluginTextField extends PluginControl {
     attributes: Record<string, PluginControlAttribute> = {
         "label": {
             name: "Label",
@@ -49,17 +65,42 @@ class PluginTextField implements PluginControl {
             type: "string"
         }
     }
+
+    static create: Function = (key: string) => {
+        return new PluginTextField(key, "TextField", "text");
+    }
 }
 
-class PluginCheckbox implements PluginControl {
-    constructor(key: string, name: string, label: string) {
-        this.key = key;
-        this.name = name;
-        this.attributes["label"].value = label;
+class PluginNumberInput extends PluginControl {
+    attributes: Record<string, PluginControlAttribute> = {
+        "min": {
+            name: "Min",
+            value: "",
+            type: "number"
+        },
+        "max": {
+            name: "Max",
+            value: "",
+            type: "number"
+        },
+        "label": {
+            name: "Label",
+            value: "",
+            type: "string"
+        },
+        "prependIcon": {
+            name: "Icon",
+            value: "",
+            type: "string"
+        },
     }
-    key: string;
-    name: string;
-    type: "text" | "bool" = "bool";
+
+    static create: Function = (key: string) => {
+        return new PluginNumberInput(key, "NumberInput", "number");
+    }
+}
+
+class PluginCheckbox extends PluginControl {
     attributes: Record<string, PluginControlAttribute> = {
         "label": {
             name: "Label",
@@ -72,14 +113,46 @@ class PluginCheckbox implements PluginControl {
             type: "string"
         }
     }
+
+    static create: Function = (key: string) => {
+        return new PluginCheckbox(key, "Checkbox", "bool");
+    }
 }
 
-type PluginControlType<T extends PluginControl> = T;
+class PluginSelect extends PluginControl {
+    attributes: Record<string, PluginControlAttribute> = {
+        "label": {
+            name: "Label",
+            value: "",
+            type: "string"
+        },
+        "items": {
+            name: "Items",
+            value: "Option1,Option2",
+            type: "string"
+        },
+        "prependIcon": {
+            name: "Icon",
+            value: "",
+            type: "string"
+        }
+    }
+
+    static create: Function = (key: string) => {
+        return new PluginSelect(key, "Select", "select");
+    }
+}
+
+PluginControl.registerControl("number", PluginNumberInput);
+PluginControl.registerControl("text", PluginTextField);
+PluginControl.registerControl("bool", PluginCheckbox);
+PluginControl.registerControl("select", PluginSelect);
+
 
 interface PluginConfig {
     inputs: PluginInput[]
     outputs: PluginOutput[]
-    controls: PluginControlType<PluginControl>[]
+    controls: PluginControl[]
 }
 
 interface Plugin {
@@ -116,4 +189,5 @@ const empty_plugin_config: PluginConfig = (() => <PluginConfig>{
 })()
 
 
-export { Plugin, PluginConfig, PluginControl, PluginControlAttribute, PluginInput, PluginOutput, PluginSocket, PluginTextField, PluginCheckbox, empty_plugin_config };
+export { Plugin, PluginCheckbox, PluginConfig, PluginControl, PluginControlAttribute, PluginInput, PluginOutput, PluginSocket, PluginTextField, empty_plugin_config };
+

@@ -1,9 +1,11 @@
 import Rete, { Input, Node, NodeEditor, Output } from "rete";
 import { NodeData, WorkerInputs, WorkerOutputs } from "rete/types/core/data";
-import { Plugin } from "~/models/plugin";
-import { sockets } from "../../sockets/sockets";
-import TextControl from "../../controls/plugins/text/text_control";
+import { Plugin, PluginControl } from "~/models/plugin";
 import BoolControl from "../../controls/plugins/bool/bool_control";
+import NumberInputControl from "../../controls/plugins/number_input/number_input_control";
+import TextInputControl from "../../controls/plugins/text_input/text_input_control";
+import { sockets } from "../../sockets/sockets";
+import SelectControl from "../../controls/plugins/select/select_control";
 
 export default class PluginComponent extends Rete.Component {
   editor!: NodeEditor;
@@ -24,22 +26,33 @@ export default class PluginComponent extends Rete.Component {
     })
 
     plugin.config.controls.forEach((x) => {
-      switch (x.type) {
-        case "text":
-          node.addControl(new TextControl(this.editor, x.key, false, x.attributes))
-          break;
-        case "bool":
-          node.addControl(new BoolControl(this.editor, x.key, false, x.attributes))
-          break;
-        default:
-          break;
-      }
+      this.buildControl(node, x)
     })
 
     node.data['plugin_id'] = plugin.id;
     node.data['code'] = plugin.code;
     node.name = "plugin_node";
     return node;
+  }
+
+  buildControl(node: Node, control: PluginControl) {
+
+    switch (control.type) {
+      case "text":
+        node.addControl(new TextInputControl(this.editor, control.key, false, control.attributes))
+        break;
+      case "number":
+        node.addControl(new NumberInputControl(this.editor, control.key, false, control.attributes))
+        break;
+      case "bool":
+        node.addControl(new BoolControl(this.editor, control.key, false, control.attributes))
+        break;
+      case "select":
+        node.addControl(new SelectControl(this.editor, control.key, false, control.attributes))
+        break;
+      default:
+        break;
+    }
   }
 
   async builder(node: Node) {

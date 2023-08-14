@@ -25,7 +25,9 @@
             <template v-for="attribute, key in controlAttributes">
                 <span class="text-caption">{{ attribute.name }}</span>
                 <vimu-text-field :value="attribute.value" :dense="true" @input="setAttributeValue($event, key)"
-                    v-if="attribute.type = 'string'" @blur="update"></vimu-text-field>
+                    @blur="update" v-if="attribute.type == 'string'"></vimu-text-field>
+                <vimu-text-field :value="attribute.value" :dense="true" @input="setAttributeValue($event, key)"
+                    @blur="update" type="number" :rules="[numberRule]" v-if="attribute.type == 'number'"></vimu-text-field>
             </template>
         </template>
     </div>
@@ -37,7 +39,6 @@ import { sockets } from "~/components/editor/rete/sockets/sockets";
 import VimuSelect from "~/components/vimu/vimu_select.vue";
 import VimuTextField from "~/components/vimu/vimu_text_field.vue";
 import VimuTextarea from "~/components/vimu/vimu_textarea.vue";
-import { PluginConfig, PluginControl, PluginControlAttribute, PluginSocket } from "~/models/plugin";
 import { pluginStore } from "~/store";
 
 @Component({
@@ -56,6 +57,11 @@ export default class PluginProperties extends Vue {
 
     descriptionRules = [(value: string) => value.length <= 400 || '',
     ]
+
+    numberRule(v: string) {
+        if (v === "" || !isNaN(parseFloat(v))) return true;
+        return "Not a number";
+    }
 
     socketTypes = Object.entries(sockets).map(([key, socket]) => ({
         text: socket.name,
@@ -113,15 +119,15 @@ export default class PluginProperties extends Vue {
         return pluginStore.plugin?.config.controls[this.currentIndex].attributes
     }
 
-    setAttributeValue(value: any, key: string) {
-        pluginStore.setPluginAttribute({ controlIndex: this.currentIndex, attributeKey: key, value: value });
+    setAttributeValue(value: any, key: string | number) {
+        pluginStore.setPluginAttribute({ controlIndex: this.currentIndex, attributeKey: key as string, value: value });
     }
 
     update() {
         if (pluginStore.plugin == null) {
             return;
         }
-        pluginStore.update({plugin: pluginStore.plugin});
+        pluginStore.update({ plugin: pluginStore.plugin });
     }
 
 }

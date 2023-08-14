@@ -25,18 +25,18 @@
             {{ createdTimestamp }}
         </td>
         <td>
-            <div class="d-flex align-center">
-                <v-tooltip bottom v-if="plugin.public && owned && !readonly">
-                    <template v-slot:activator="{ on, attrs }">
-                        <v-icon v-bind="attrs" v-on="on">
-                            mdi-earth
-                        </v-icon>
-                    </template>
-                    <span>Public</span>
-                </v-tooltip>
-                <plugin-context-menu @rename="rename" @publish="publish" @remove="remove"
-                    v-if="owned && !readonly"></plugin-context-menu>
-            </div>
+            <v-tooltip bottom v-if="plugin.public && owned && !readonly">
+                <template v-slot:activator="{ on, attrs }">
+                    <v-icon v-bind="attrs" v-on="on">
+                        mdi-earth
+                    </v-icon>
+                </template>
+                <span>Public</span>
+            </v-tooltip>
+        </td>
+        <td>
+            <plugin-context-menu :public="plugin.public" @rename="rename" @publish="publish" @remove="remove"
+                v-if="owned && !readonly"></plugin-context-menu>
         </td>
     </tr>
 </template>

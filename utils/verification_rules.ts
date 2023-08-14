@@ -8,10 +8,14 @@ const email = (value: string) => {
 
 const password = (v: string) => v.length >= 8 || "Must be at least 8 characters long";
 
-
+const number = (v: string) => {
+    if (!isNaN(parseFloat(v))) return true;
+    return "Not a number";
+  }
 
 export {
     required,
     email,
-    password
+    password,
+    number
 }

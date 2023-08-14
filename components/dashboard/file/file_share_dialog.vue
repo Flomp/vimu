@@ -5,6 +5,10 @@
                 Share file
             </v-card-title>
             <v-card-text class="black--text pb-0">
+                <v-alert outlined type="warning" prominent v-if="showPluginWarning">
+                    This file contains at least one unpublished plugin. It will not work correctly for other users.
+                    Please publish all used plugins before sharing.
+                </v-alert>
                 <div class="file-share-link d-flex align-center justify-space-around pa-3" v-if="file">
                     <span>https://vimu.app/editor/{{ file.id }}</span>
                     <v-btn color="primary" icon @click="copy">
@@ -42,13 +46,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, VModel, Vue } from "nuxt-property-decorator";
+import { Component, Prop, VModel, Vue, Watch } from "nuxt-property-decorator";
 import VimuBtn from "~/components/vimu/vimu_button.vue";
 import VimuSelect from "~/components/vimu/vimu_select.vue";
 import VimuTextField from "~/components/vimu/vimu_text_field.vue";
 import { File, FileShare } from "~/models/file";
 import { User } from "~/models/user";
-import { $pb, fileStore, notificationStore } from "~/store";
+import { $pb, fileStore, notificationStore, pluginStore } from "~/store";
 import UserSearch from "../user_search.vue";
 import FileShareCard from "./file_share_card.vue";
 
@@ -69,12 +73,39 @@ export default class FileShareDialog extends Vue {
     addLoading: boolean = false;
     removing: string = "";
 
+    showPluginWarning = false;
+
     get publicFile() {
         return this.file?.public ?? false;
     }
 
     set publicFile(value: boolean) {
         fileStore.update({ id: this.file.id, public: value });
+    }
+
+    @Watch("dialog")
+    onDialogChanged(value: boolean) {
+        if (value) {
+            this.showPluginWarning = false;
+            this.hasUnpublishedPlugins()
+        }
+    }
+
+    hasUnpublishedPlugins() {
+        if (!this.file) {
+            return;
+        }
+        let pluginNodes = Object.values(this.file.expand.data.json.nodes).filter((value) => value.data.plugin_id)
+
+        pluginNodes.forEach(async (n) => {
+            const pluginId = n.data.plugin_id as string
+            const publicPlugin = await pluginStore.isPublished(pluginId)
+            if (!publicPlugin) {
+                this.showPluginWarning = true
+                return;
+            }
+        })
+        this.showPluginWarning = false;
     }
 
     shareOptions = [
@@ -84,8 +115,8 @@ export default class FileShareDialog extends Vue {
 
     selectedShareOption = this.shareOptions[0].value;
 
-    
-    removeLoading(shareId : string) {
+
+    removeLoading(shareId: string) {
         return shareId == this.removing;
     }
 
@@ -101,11 +132,11 @@ export default class FileShareDialog extends Vue {
 
             const user = users[0];
             const collaborators_ = JSON.parse(JSON.stringify(this.file.collaborators))
-            if(this.file.expand.collaborators?.some(f => f.expand?.user.id === user.id)) {
+            if (this.file.expand.collaborators?.some(f => f.expand?.user.id === user.id)) {
                 notificationStore.sendNotification({ title: 'File already shared', color: 'error' })
                 return;
             }
-            if(this.file.owner == user.id) {
+            if (this.file.owner == user.id) {
                 notificationStore.sendNotification({ title: 'Cannot share file with author', color: 'error' })
                 return;
             }
@@ -134,9 +165,9 @@ export default class FileShareDialog extends Vue {
     }
 
     copy() {
-        const shareLink = `https://vimu.app/editor/${ this.file.id }`
+        const shareLink = `https://vimu.app/editor/${this.file.id}`
         navigator.clipboard.writeText(shareLink);
-        notificationStore.sendNotification({title: "Link copied to clipboard", color: "primary"})
+        notificationStore.sendNotification({ title: "Link copied to clipboard", color: "primary" })
     }
 }
 </script>

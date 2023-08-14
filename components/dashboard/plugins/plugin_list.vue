@@ -26,11 +26,12 @@
                             Created
                         </th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     <plugin-table-row v-for="plugin in plugins" :key="plugin.id" :plugin="plugin" :readonly="readonly"
-                        @click="open" @edit="edit" @remove="remove">
+                        @click="open" @edit="edit" @publish="publish" @remove="remove">
 
                     </plugin-table-row>
                 </tbody>

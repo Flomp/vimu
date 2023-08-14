@@ -1,5 +1,6 @@
 <template>
-  <v-checkbox v-model="value" @change="update" :label="label" :prependIcon="icon"></v-checkbox>
+  <vimu-select :label="label" :prependIcon="icon" class="mr-6"
+    v-model="value" @change="update" style="max-width: 200px" :items="items"></vimu-select>
 </template>
 
 <script lang="ts">
@@ -8,7 +9,7 @@ import { NodeEditor } from "rete";
 import { PluginControlAttribute } from "~/models/plugin";
 
 @Component({})
-export default class BoolControlComponent extends Vue {
+export default class SelectControlComponent extends Vue {
   @Prop() readonly!: boolean;
   @Prop() emitter!: NodeEditor;
   @Prop() ikey!: String;
@@ -25,7 +26,11 @@ export default class BoolControlComponent extends Vue {
   }
 
   get label() {
-    return this.attributes['label'].value;
+    return this.attributes['label'].value
+  }
+
+  get items() {
+    return this.attributes['items'].value.split(",") ?? []
   }
 
   mounted() {
@@ -34,7 +39,7 @@ export default class BoolControlComponent extends Vue {
 
   update() {
     if (this.ikey) {
-      this.putData(this.ikey, this.value);      
+      this.putData(this.ikey, this.value);
     }
     this.emitter.trigger("process");
   }

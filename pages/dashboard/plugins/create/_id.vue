@@ -1,11 +1,11 @@
 <template>
     <v-sheet class="page fill-height">
         <div id="plugin-grid" @mouseup="endDrag" @mousemove="onDrag" v-if="plugin">
-            <div class="pa-6 plugin-sidebar">
-                <plugin-sidebar :plugin-config="plugin.config" @element-click="sidebarElementClick" @add-input="addInput"
-                    @add-output="addOutput"></plugin-sidebar>
+            <div class="plugin-sidebar">
+                <plugin-sidebar :plugin="plugin" @element-click="sidebarElementClick" @plugin-click="selectPlugin"
+                    @add-input="addInput" @add-output="addOutput"></plugin-sidebar>
             </div>
-            <div id="editor" style="position:relative">
+            <div id="plugin-editor" style="position:relative">
                 <component-palette class="palette py-2" @menu-click="menuClick"></component-palette>
                 <div id="plugin-rete" class="pa-0 pixel-grid">
                 </div>
@@ -39,11 +39,9 @@ import PluginLogs from "~/components/dashboard/plugins/plugin_logs.vue";
 import PluginProperties from "~/components/dashboard/plugins/plugin_properties.vue";
 import PluginSidebar from "~/components/dashboard/plugins/plugin_sidebar.vue";
 import { MenuItem } from "~/components/editor/palette/menu_item";
-import EmptyComponent from "~/components/editor/rete/components/plugins/empty_component";
-import TextControl from "~/components/editor/rete/controls/plugins/text/text_control";
-import BoolControl from "~/components/editor/rete/controls/plugins/bool/bool_control";
+import PluginComponent from "~/components/editor/rete/components/plugins/plugin_component";
 import { sockets } from "~/components/editor/rete/sockets/sockets";
-import { Plugin, PluginCheckbox, PluginControl, PluginInput, PluginOutput, PluginSocket, PluginTextField } from "~/models/plugin";
+import { Plugin, PluginControl, PluginInput, PluginOutput, PluginSocket } from "~/models/plugin";
 import { pluginStore } from "~/store";
 import { download } from "~/utils/download";
 
@@ -64,6 +62,7 @@ export default class CreatePluginPage extends Vue {
     codeEditor!: PluginCodeEditor;
 
     pluginNode!: Node;
+    pluginComponent!: PluginComponent
     editor!: NodeEditor;
 
     isLeftDragging: boolean = false;
@@ -127,16 +126,16 @@ export default class CreatePluginPage extends Vue {
 
         (editor.view.area as any)._zoom.intensity = 0.03;
 
-        const emptyComponent = new EmptyComponent(editor);
+        this.pluginComponent = new PluginComponent(editor);
 
-        editor.register(emptyComponent);
-        engine.register(emptyComponent);
+        editor.register(this.pluginComponent);
+        engine.register(this.pluginComponent);
 
         const pluginNodeWidth = 186
         const pluginNodeHeight = 144
 
-        this.pluginNode = await emptyComponent.createNode();
-        this.pluginNode.position = [w / 2 - pluginNodeWidth / 2 + 80, h / 2 - pluginNodeHeight / 2]
+        this.pluginNode = await this.pluginComponent.createNode();
+        this.pluginNode.position = [w / 2 - pluginNodeWidth / 2, h / 2 - pluginNodeHeight / 2]
         editor.addNode(this.pluginNode);
 
         editor.on("zoom", ({ zoom, source }) => {
@@ -147,19 +146,16 @@ export default class CreatePluginPage extends Vue {
             const pluginNodeElement: HTMLElement = (this.pluginNode as any).vueContext?.$el
             pluginNodeElement?.classList.add("selected");
 
-            this.sidebarSelectedKey = "";
-            this.propertiesMode = "plugin";
-
         })
 
         this.editor = editor;
 
         document.addEventListener('keydown', e => {
-            const activeDOMElement = document.activeElement as HTMLInputElement;            
+            const activeDOMElement = document.activeElement as HTMLInputElement;
             if (activeDOMElement?.tagName == "TEXTAREA" || (activeDOMElement?.tagName == "INPUT" && ["number", "text"].includes(activeDOMElement.type))) {
                 return;
             }
-            if (e.code == "Backspace") {                
+            if (e.code == "Backspace") {
                 this.delete()
             }
         });
@@ -198,7 +194,8 @@ export default class CreatePluginPage extends Vue {
             const leftColWidth = event.clientX;
 
             const cols = [
-                leftColWidth,
+                220,
+                leftColWidth - 220,
                 dragbarWidth,
                 page!.clientWidth - 250 - leftColWidth - dragbarWidth,
                 250
@@ -224,6 +221,13 @@ export default class CreatePluginPage extends Vue {
         this.editor.selected.list.clear()
 
         this.select(data.element, data.index);
+    }
+
+    selectPlugin() {
+        console.log("here");
+        
+        this.sidebarSelectedKey = "";
+        this.propertiesMode = "plugin";
     }
 
     select(element: PluginControl | PluginSocket | null, index: number) {
@@ -265,7 +269,7 @@ export default class CreatePluginPage extends Vue {
         const pluginInput = <PluginInput>{ key: key, name: `Stream`, type: "stream" }
         const newPlugin: Plugin = JSON.parse(JSON.stringify(this.plugin));
         newPlugin.config.inputs.push(pluginInput);
-        pluginStore.update({plugin: newPlugin});
+        pluginStore.update({ plugin: newPlugin });
 
         this.codeEditor.insertLine(`${key}_data = input_data.get('${key}')`, 2, 0)
     }
@@ -275,27 +279,21 @@ export default class CreatePluginPage extends Vue {
         const pluginOutput = <PluginOutput>{ key: key, name: "Stream", type: "stream" }
         const newPlugin: Plugin = JSON.parse(JSON.stringify(this.plugin));
         newPlugin.config.outputs.push(pluginOutput);
-        pluginStore.update({plugin: newPlugin});
+        pluginStore.update({ plugin: newPlugin });
     }
 
     menuClick(item: MenuItem) {
         const key = "control_" + this.plugin?.config.controls.length
         const newPlugin: Plugin = JSON.parse(JSON.stringify(this.plugin));
 
-        switch (item.key) {
-            case "text":
-                const pluginTextField = new PluginTextField(key, "TextField", "");
-                newPlugin.config.controls.push(pluginTextField)
-                break;
-            case "bool":
-                const pluginCheckbox = new PluginCheckbox(key, "Checkbox", "");
-                newPlugin.config.controls.push(pluginCheckbox)
-                break;
-            default:
-                break;
+        const newControl = PluginControl.createControlInstance(item.key as any, key)
+        if (!newControl) {
+            throw `Control key ${item.key} not registered`
         }
+        newPlugin.config.controls.push(newControl)
+
         this.codeEditor.insertLine(`${key}_data = node.data.get('${key}')`, 2, 0)
-        pluginStore.update({plugin: newPlugin});
+        pluginStore.update({ plugin: newPlugin });
 
     }
 
@@ -317,7 +315,7 @@ export default class CreatePluginPage extends Vue {
             newPlugin.config.controls = newPlugin.config.controls.filter(i => i.key != key);
             this.codeEditor.updateContent(newPlugin.code.replace(`${key}_data = node.data.get('${key}')\n`, ""))
         }
-        pluginStore.update({plugin: newPlugin});
+        pluginStore.update({ plugin: newPlugin });
 
         this.sidebarSelectedKey = "";
         this.propertiesMode = "plugin"
@@ -414,18 +412,9 @@ export default class CreatePluginPage extends Vue {
         });
 
         newControls?.forEach((x) => {
-            switch (x.type) {
-                case "text":
-                    this.pluginNode.addControl(new TextControl(this.editor, x.key, false, x.attributes))
-                    break;
-                case "bool":
-                    this.pluginNode.addControl(new BoolControl(this.editor, x.key, false, x.attributes))
-                    break;
-
-                default:
-                    break;
-            }
+            this.pluginComponent.buildControl(this.pluginNode, x);
         })
+
         deletedControls.forEach(x => {
             this.pluginNode.removeControl(this.pluginNode.controls.get(x.key)!);
         });
@@ -435,7 +424,7 @@ export default class CreatePluginPage extends Vue {
 
     saveCode(value: string) {
         pluginStore.setPluginCode(value);
-        pluginStore.update({plugin: pluginStore.plugin!});
+        pluginStore.update({ plugin: pluginStore.plugin! });
     }
 }
 </script>
@@ -458,7 +447,7 @@ export default class CreatePluginPage extends Vue {
     display: grid;
     width: 100%;
     height: 100%;
-    grid-template-columns: 1fr 2px 1fr 250px;
+    grid-template-columns: 220px 1fr 2px 1fr 250px;
 
 }
 
@@ -467,12 +456,7 @@ export default class CreatePluginPage extends Vue {
 }
 
 .plugin-sidebar {
-    position: absolute;
-    width: 220px;
-    height: calc(100% - 67.5px);
-    z-index: 1;
     background-color: #ffffff;
-    top: 67.5px;
 }
 
 .vertical-dragbar {

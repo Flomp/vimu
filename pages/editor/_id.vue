@@ -546,7 +546,7 @@ export default class Editor extends Vue {
   }
 }
 </script>
-<style>
+<style scoped>
 #panel-grid {
   width: 100%;
   height: 100%;

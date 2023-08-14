@@ -84,7 +84,7 @@ export default class PluginStore extends VuexModule {
 
         const response = await $axios.post('plugin/test', { "plugin": this.plugin, "node": node })
 
-        if(!response) {
+        if (!response) {
             return;
         }
         let logs: any = []
@@ -97,7 +97,7 @@ export default class PluginStore extends VuexModule {
             })
         }
 
-        
+
 
         pluginStore.appendLogs(logs);
     }
@@ -161,6 +161,8 @@ if in_0_data is not None:
                 pluginStore.updateClient({ plugin: data.plugin, updatedPlugin: updatedPlugin })
             }
         } catch (error) {
+            console.error(error);
+
             return { plugin: null }
         }
     }
@@ -175,6 +177,16 @@ if in_0_data is not None:
         } catch (error) {
             notificationStore.sendNotification({ title: 'Error deleting plugin', color: 'error' })
             return false;
+        }
+    }
+
+    @Action
+    async isPublished(id: string): Promise<boolean> {
+        try {
+            let response = await $pb.collection('plugins').getOne<Plugin>(id, { $autoCancel: false })
+            return response.public
+        } catch (error) {
+            return false
         }
     }
 

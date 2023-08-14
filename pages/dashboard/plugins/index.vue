@@ -94,7 +94,7 @@ export default class PluginsPage extends Vue {
 
     filters = {
         query: "",
-        tab: ""
+        tab: `owner="${$pb.authStore.model?.id}"`,
     }
 
     deletingPlugin: Plugin | null = null;

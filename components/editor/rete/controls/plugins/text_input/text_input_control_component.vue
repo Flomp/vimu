@@ -1,5 +1,6 @@
 <template>
-  <v-checkbox v-model="value" @change="update" :label="label" :prependIcon="icon"></v-checkbox>
+  <vimu-text-field :label="label" :prependIcon="icon" class="mr-6"
+    v-model="value" @update="update" style="max-width: 200px"></vimu-text-field>
 </template>
 
 <script lang="ts">
@@ -8,7 +9,7 @@ import { NodeEditor } from "rete";
 import { PluginControlAttribute } from "~/models/plugin";
 
 @Component({})
-export default class BoolControlComponent extends Vue {
+export default class TextInputControlComponent extends Vue {
   @Prop() readonly!: boolean;
   @Prop() emitter!: NodeEditor;
   @Prop() ikey!: String;
@@ -23,9 +24,9 @@ export default class BoolControlComponent extends Vue {
   get icon() {
     return this.attributes['prependIcon'].value ? "mdi-" + this.attributes['prependIcon'].value : ""
   }
-
+  
   get label() {
-    return this.attributes['label'].value;
+    return this.attributes['label'].value
   }
 
   mounted() {
@@ -34,7 +35,7 @@ export default class BoolControlComponent extends Vue {
 
   update() {
     if (this.ikey) {
-      this.putData(this.ikey, this.value);      
+      this.putData(this.ikey, this.value);
     }
     this.emitter.trigger("process");
   }
