@@ -61,13 +61,15 @@
                         <span class="grey--text">{{ output.key }}: </span> {{ output.name }}
                     </v-list-item-title>
                 </v-list-item>
-                <h5 class="mt-4 mb-2 black--text">Controls</h5>
-                <v-list-item v-for="control, i in pluginConfig.controls" :key="'control_' + i" link
-                    @click="elementClick(control, i, 'controls')">
-                    <v-list-item-title class="drawer-title">
-                        <span class="grey--text">{{ control.key }}: </span> {{ control.name }}
-                    </v-list-item-title>
-                </v-list-item>
+                <template v-if="pluginConfig.controls.length > 0">
+                    <h5 class="mt-4 mb-2 black--text">Controls</h5>
+                    <v-list-item v-for="control, i in pluginConfig.controls" :key="'control_' + i" link
+                        @click="elementClick(control, i, 'controls')">
+                        <v-list-item-title class="drawer-title">
+                            <span class="grey--text">{{ control.key }}: </span> {{ control.name }}
+                        </v-list-item-title>
+                    </v-list-item>
+                </template>
             </v-list-item-group>
 
         </v-list>
@@ -75,7 +77,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Prop, VModel, Vue } from "nuxt-property-decorator";
+import { Component, Emit, Prop, Vue } from "nuxt-property-decorator";
 import { Plugin, PluginControl, PluginSocket } from "~/models/plugin";
 
 @Component({})

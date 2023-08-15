@@ -54,6 +54,11 @@ abstract class PluginControl {
 
 class PluginTextField extends PluginControl {
     attributes: Record<string, PluginControlAttribute> = {
+        "default": {
+            name: "Default Value",
+            value: "",
+            type: "string"
+        },
         "label": {
             name: "Label",
             value: "",
@@ -73,6 +78,11 @@ class PluginTextField extends PluginControl {
 
 class PluginNumberInput extends PluginControl {
     attributes: Record<string, PluginControlAttribute> = {
+        "default": {
+            name: "Default Value",
+            value: "",
+            type: "number"
+        },
         "min": {
             name: "Min",
             value: "",
@@ -102,6 +112,11 @@ class PluginNumberInput extends PluginControl {
 
 class PluginCheckbox extends PluginControl {
     attributes: Record<string, PluginControlAttribute> = {
+        "default": {
+            name: "Default Value",
+            value: "",
+            type: "bool"
+        },
         "label": {
             name: "Label",
             value: "",
@@ -121,6 +136,11 @@ class PluginCheckbox extends PluginControl {
 
 class PluginSelect extends PluginControl {
     attributes: Record<string, PluginControlAttribute> = {
+        "default": {
+            name: "Default Value",
+            value: "",
+            type: "string"
+        },
         "label": {
             name: "Label",
             value: "",

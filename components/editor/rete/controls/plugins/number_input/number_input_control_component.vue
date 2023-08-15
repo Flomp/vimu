@@ -46,7 +46,7 @@ export default class NumberInputControlComponent extends Vue {
   }
 
   mounted() {
-    this.value = this.getData(this.ikey);
+    this.value = this.getData(this.ikey) ?? this.attributes.default.value;
   }
 
   update() {

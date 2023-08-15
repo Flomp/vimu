@@ -14,6 +14,7 @@ export default class  extends Vue {
 <style>
 .framed-gif {
 	max-width: calc(100% - 48px);
+	max-height: 450px;
 	border-radius: 15px;
 	border: 2px solid;
 	margin: 24px;

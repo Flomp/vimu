@@ -42,6 +42,8 @@ One of **vimu**'s core features is the ability to collaborate. You can share a f
 To share a file, open the action menu and select "Share". By flipping the switch "Anyone with the link can view" to on, you can make your file public. You can now copy the link at the top of the dialog and send it to whoever you want to be able to access the file. To share a file with a specific user, type their username in the text field, select the desired access privileges and click "Add". The file will now appear in the user's <nuxt-link to="/docs/dashboard/shared">Shared Files</nuxt-link> section in the dashboard.
 Click the <i class="v-icon mdi mdi-close theme--light"></i> icon next to the user to unshare the file.
 
+Please be aware: if you want to share a file that contains <nuxt-link to="/docs/plugins/overview">plugin nodes</nuxt-link> you must publish them first. Otherwise, the file will not work correctly for your collaborators.
+
 ## Delete a file
 
 Open the action menu and select "Delete". Confirm the deletion in the dialog. A deleted file can _not_ be restored.

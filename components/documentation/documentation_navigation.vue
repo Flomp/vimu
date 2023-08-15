@@ -67,6 +67,16 @@
         <doc-nav-link to="/docs/nodes/transform_transpose">transform_transpose</doc-nav-link>
       </template>
     </doc-nav-link>
+    <doc-nav-link to="/docs/plugins" :main="true">
+      <template v-slot:default> Plugins</template>
+      <template v-slot:sub-items>
+        <doc-nav-link to="/docs/plugins/overview">Overview</doc-nav-link>
+        <doc-nav-link to="/docs/plugins/dashboard">Dashboard</doc-nav-link>
+        <doc-nav-link to="/docs/plugins/editor">Plugin Editor</doc-nav-link>
+        <doc-nav-link to="/docs/plugins/node">Plugin Node</doc-nav-link>
+        <doc-nav-link to="/docs/plugins/code">Writing code</doc-nav-link>
+      </template>
+    </doc-nav-link>
     <doc-nav-link to="/docs/self-hosting" :main="true">
       <template v-slot:default> Self-Hosting</template>
       <template v-slot:sub-items>

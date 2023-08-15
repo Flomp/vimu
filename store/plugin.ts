@@ -59,7 +59,15 @@ export default class PluginStore extends VuexModule {
     }
 
     @Mutation
-    setPluginAttribute(data: { controlIndex: number, attributeKey: string, value: any }) {
+    setPluginControlName(data: { controlIndex: number, value: any }) {
+        if (!this.plugin) {
+            return;
+        }
+        this.plugin.config.controls[data.controlIndex].name = data.value;
+    }
+
+    @Mutation
+    setPluginControlAttribute(data: { controlIndex: number, attributeKey: string, value: any }) {
         if (!this.plugin) {
             return;
         }

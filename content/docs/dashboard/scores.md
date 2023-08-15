@@ -15,7 +15,7 @@ Next to <nuxt-link to="/docs/dashboard/files">files</nuxt-link>, scores are the 
 Clicking on a score will open the preview panel. Here you can see the title of the score as well as its meta information. Additionally, you can review the sheet music. By clicking the "Create file" button, you can instantly create a new <nuxt-link to="/docs/dashboard/files#from-score">file</nuxt-link> that uses this score as its input.
 
 ## Ownership
-**vimu** differentiates between two types of scores: public scores from the library and personal ones that you own. Two navigate between the two, use the tab navigation near the top of the page ("My scores" <-> "Library").
+**vimu** differentiates between two types of scores: public scores from the library and personal ones that you own. To navigate between the two, use the tab navigation near the top of the page ("My scores" <-> "Library").
 
 ### Personal scores
 These are the scores that you have uploaded. In general, they are only accessible to you. There is one special case though: if you <nuxt-link to="/docs/dashboard/files#sharing">share a file</nuxt-link> that uses a personal score, this score will be available to every collaborator even if the score is not public.

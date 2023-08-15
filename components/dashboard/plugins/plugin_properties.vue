@@ -28,6 +28,9 @@
                     @blur="update" v-if="attribute.type == 'string'"></vimu-text-field>
                 <vimu-text-field :value="attribute.value" :dense="true" @input="setAttributeValue($event, key)"
                     @blur="update" type="number" :rules="[numberRule]" v-if="attribute.type == 'number'"></vimu-text-field>
+                <v-checkbox :label="attribute.value ? 'True' : 'False'" :input-value="attribute.value" dense
+                    @change="setAttributeValue($event, key); update()" v-if="attribute.type == 'bool'">
+                </v-checkbox>
             </template>
         </template>
     </div>
@@ -115,12 +118,18 @@ export default class PluginProperties extends Vue {
         return pluginStore.plugin?.config.controls[this.currentIndex].name
     }
 
+    set controlName(n: string | undefined) {
+        if (n) {
+            pluginStore.setPluginControlName({ controlIndex: this.currentIndex, value: n })
+        }
+    }
+
     get controlAttributes() {
         return pluginStore.plugin?.config.controls[this.currentIndex].attributes
     }
 
     setAttributeValue(value: any, key: string | number) {
-        pluginStore.setPluginAttribute({ controlIndex: this.currentIndex, attributeKey: key as string, value: value });
+        pluginStore.setPluginControlAttribute({ controlIndex: this.currentIndex, attributeKey: key as string, value: value });
     }
 
     update() {
