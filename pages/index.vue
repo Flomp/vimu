@@ -53,7 +53,8 @@
                 </v-row>
                 <v-row class="content-row">
                     <v-col>
-                        <vimu-article title="100% Open Source" callToAction="How to install" to="/docs/self-hosting/introduction">
+                        <vimu-article title="100% Open Source" callToAction="How to install"
+                            to="/docs/self-hosting/introduction">
                             We believe that software should be free for everyone. Thus <b>vimu</b> is fully open source.
                             If you do not want to use our hosted service read the docs and learn how to get <b>vimu</b>
                             up and
@@ -63,6 +64,19 @@
                     <v-col class="illustration">
                         <matrix-bunny></matrix-bunny>
                     </v-col>
+                </v-row>
+                <v-row class="content-row">
+                    <v-col class="illustration text-center">
+                        <bunny-engineer :width="220"></bunny-engineer>
+                    </v-col>
+                    <v-col>
+                        <vimu-article title="Infinitely extensible" callToAction="Read about Plugins"
+                            to="/docs/plugins/overview">
+                            The robust plugin system allows for limitless customization options. Create nodes that do exactly
+                            what you want and share them with your colleagues.
+                        </vimu-article>
+                    </v-col>
+
                 </v-row>
             </section>
             <section>
@@ -81,8 +95,7 @@
                             </vimu-card>
                         </v-col>
                         <v-col>
-                            <vimu-card title="Search for a melody" callToAction="Open Example"
-                                to="/editor/example-search">
+                            <vimu-card title="Search for a melody" callToAction="Open Example" to="/editor/example-search">
                                 Search for melody or rhythm fragments in a score. The search comes with many
                                 configurable options allowing you to find the exact matches you need.
                             </vimu-card>
@@ -108,7 +121,6 @@
         </v-container>
 
     </v-sheet>
-
 </template>
 
 <script lang="ts">
@@ -120,11 +132,11 @@ import IndexEastereggComponent from "~/components/index/rete/components/index/in
 import IndexHeroComponent from "~/components/index/rete/components/index/index_hero_component";
 import Terminal from "~/components/index/terminal.vue";
 import BunnyDeadCarrot from "~/components/vimu/illustrations/bunny_dead_carrot.vue";
+import BunnyEngineer from "~/components/vimu/illustrations/bunny_engineer.vue";
 import MatrixBunny from "~/components/vimu/illustrations/matrix_bunny.vue";
 import SpeedCarrot from "~/components/vimu/illustrations/speed_carrot.vue";
 import VimuArticle from "~/components/vimu/vimu_article.vue";
 import VimuCard from "~/components/vimu/vimu_card.vue";
-//@ts-ignore
 
 @Component({
     head: {
@@ -136,7 +148,8 @@ import VimuCard from "~/components/vimu/vimu_card.vue";
         Terminal,
         SpeedCarrot,
         MatrixBunny,
-        BunnyDeadCarrot
+        BunnyDeadCarrot,
+        BunnyEngineer
     },
 })
 export default class IndexPage extends Vue {

@@ -1,3 +1,8 @@
+---
+title: Plugins - Plugin Node
+description: Generally, a node in vimu consists of inputs, outputs, controls, and code that defines its computational logic. When designing a plugin node you can fully customize all of these aspects via the properties panel in the node editor.
+---
+
 # Plugin Node
 
 <framed-gif path="/imgs/plugin_node.png"></framed-gif>

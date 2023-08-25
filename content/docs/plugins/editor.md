@@ -1,3 +1,8 @@
+---
+title: Plugins - Plugin Editor
+description: The plugin editor allows you to edit both the appearance and the logic of a plugin node. Generally, a node consists of inputs, outputs, controls, and code that defines its computational logic. Please refer to the plugin node chapter for more details. The plugin editor consists of five panels (labeled A-E in the image above) that we will discuss in detail in the following sections.
+---
+
 # Plugin Editor
 
 <framed-gif path="/imgs/plugin_editor_labeled.png"></framed-gif>

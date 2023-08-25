@@ -25,7 +25,7 @@ export default class DocumentationSearch extends Vue {
     searchResult: string | null = null
 
     coloredText(text: string) {
-        if (!this.searchResult) {
+        if (!text || !this.searchResult) {
             return text;
         }
         const regex = new RegExp(this.searchResult, "gi");

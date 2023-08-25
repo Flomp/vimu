@@ -13,4 +13,7 @@
     <div class="col-12 col-sm-6">
         <documentation-content-card title="Plot a histogram" text="Learn how to plot graphs in vimu" to="/docs/tutorials/plot-histogram"></documentation-content-card>
     </div>
+    <div class="col-12 col-sm-6">
+        <documentation-content-card title="Plugin nodes" text="Create your first plugin node" to="/docs/tutorials/plugin"></documentation-content-card>
+    </div>
 </div>

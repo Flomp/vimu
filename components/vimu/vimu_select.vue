@@ -1,5 +1,5 @@
 <template>
-  <v-select class="vimu-select" :items="items" v-model="model" :hide-details="hideDetails" :dense="dense" outlined
+  <v-select class="vimu-select" :items="items" v-model="model" :hide-details="hideDetails" :dense="dense" :disabled="disabled" outlined
     @change="change" @blur="blur">
   </v-select>
 </template>
@@ -13,6 +13,7 @@ export default class VimuSelect extends Vue {
   @Prop() items: any;
   @Prop({ default: false }) readonly hideDetails!: boolean;
   @Prop({ default: false }) readonly dense!: boolean;
+  @Prop({ default: false }) readonly disabled!: boolean;
 
   @Emit()
   change(value: any) {

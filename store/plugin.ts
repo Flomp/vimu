@@ -220,4 +220,13 @@ if in_0_data is not None:
             }
         }
     }
+
+
+    get readonly() {
+        if (!this.plugin) {
+            return false;
+        }
+
+        return this.plugin.owner != $pb.authStore.model?.id
+    }
 }

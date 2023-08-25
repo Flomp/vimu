@@ -2,11 +2,11 @@
     <v-sheet class="page fill-height">
         <div id="plugin-grid" @mouseup="endDrag" @mousemove="onDrag" v-if="plugin">
             <div class="plugin-sidebar">
-                <plugin-sidebar :plugin="plugin" @element-click="sidebarElementClick" @plugin-click="selectPlugin"
+                <plugin-sidebar :plugin="plugin" :readonly="readonly" @element-click="sidebarElementClick" @plugin-click="selectPlugin"
                     @add-input="addInput" @add-output="addOutput"></plugin-sidebar>
             </div>
             <div id="plugin-editor" style="position:relative">
-                <component-palette class="palette py-2" @menu-click="menuClick"></component-palette>
+                <component-palette class="palette py-2" @menu-click="menuClick" v-if="!readonly"></component-palette>
                 <div id="plugin-rete" class="pa-0 pixel-grid">
                 </div>
             </div>
@@ -15,13 +15,13 @@
                 <code-palette class="palette-dark py-2 mb-2" :loading="runLoading" @save="exportCode"
                     @run="run"></code-palette>
                 <client-only>
-                    <plugin-code-editor :value="plugin.code" :timer="true" ref="codeEditor"
+                    <plugin-code-editor :value="plugin.code" :timer="true" :readonly="readonly" ref="codeEditor"
                         @update="saveCode"></plugin-code-editor>
                 </client-only>
                 <plugin-logs></plugin-logs>
             </div>
             <div class="pa-6">
-                <plugin-properties :mode="propertiesMode" :currentIndex="sidebarSelectedIndex"></plugin-properties>
+                <plugin-properties :mode="propertiesMode" :currentIndex="sidebarSelectedIndex" :readonly="readonly"></plugin-properties>
             </div>
         </div>
     </v-sheet>
@@ -42,7 +42,7 @@ import { MenuItem } from "~/components/editor/palette/menu_item";
 import PluginComponent from "~/components/editor/rete/components/plugins/plugin_component";
 import { sockets } from "~/components/editor/rete/sockets/sockets";
 import { Plugin, PluginControl, PluginInput, PluginOutput, PluginSocket } from "~/models/plugin";
-import { pluginStore } from "~/store";
+import { $pb, pluginStore } from "~/store";
 import { download } from "~/utils/download";
 
 @Component({
@@ -79,6 +79,10 @@ export default class CreatePluginPage extends Vue {
 
     get pluginWatcher() {
         return JSON.parse(JSON.stringify(this.plugin))
+    }
+
+    get readonly() {
+        return pluginStore.readonly;
     }
 
 

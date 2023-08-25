@@ -29,12 +29,17 @@ export default class BoolControlComponent extends Vue {
   }
 
   mounted() {
-    this.value = this.getData(this.ikey) ?? this.attributes.default.value;
+    if (this.getData(this.ikey)) {
+      this.value = this.getData(this.ikey)
+    } else if (this.attributes.default.value) {
+      this.value = this.attributes.default.value;
+      this.putData(this.ikey, this.value);
+    }
   }
 
   update() {
     if (this.ikey) {
-      this.putData(this.ikey, this.value);      
+      this.putData(this.ikey, this.value);
     }
     this.emitter.trigger("process");
   }

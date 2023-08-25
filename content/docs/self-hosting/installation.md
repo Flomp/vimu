@@ -43,12 +43,17 @@ With a bare-metal installation, you can either export the variables directly on 
 ### Variables
 <br>
 
-| Name | Description | Required | Used by |
-|:---|:---|:---|:---|
-| APP_URL | The URL under which vimu will be available (e.g. https://vimu.app) | Yes | vimu, vimu-engine, vimu-pocketbase |
-| API_URL | The URL under which vimu-engine will be available (e.g. https://api.vimu.app) | Yes | vimu |
-| POCKETBASE_URL | The URL under which vimu-pocketbase will be available (e.g. https://pb.vimu.app) | Yes | vimu |
-| REDIS_URL | URL to a redis installation (e.g. redis://localhost:6379). Only needed if you want vimu-engine to cache results | No | vimu-engine |
+| Name           | Description                                                                                                     | Required | Used by                            |
+| :------------- | :-------------------------------------------------------------------------------------------------------------- | :------- | :--------------------------------- |
+| APP_URL        | The URL under which vimu will be available (e.g. https://vimu.app)                                              | Yes      | vimu, vimu-engine, vimu-pocketbase |
+| API_URL        | The URL under which vimu-engine will be available (e.g. https://api.vimu.app)                                   | Yes      | vimu                               |
+| POCKETBASE_URL | The URL under which vimu-pocketbase will be available (e.g. https://pb.vimu.app)                                | Yes      | vimu, vimu-engine                  |
+| REDIS_URL      | URL to a redis installation (e.g. redis://localhost:6379). Only needed if you want vimu-engine to cache results | No       | vimu-engine                        |
+| ALLOW_PLUGINS  | Allow the usage of plugins on the server side (see security warning). Default: False                            | No       | vimu-engine                        |
+
+### Security
+
+<div role="alert" class="v-alert v-sheet v-alert--prominent v-alert--text error--text"><div class="v-alert__wrapper"><i class="v-icon v-alert__icon mdi mdi-alert error--text"></i><div class="v-alert__content"> Only enable the ALLOW_PLUGINS flag if you really know what you are doing. Plugins allow users to execute untrusted code on your server. Be extremely careful how you set up your environment to mitigate remote code execution attacks. Failing to do so can give an attacker complete control of your systems.  </div></div></div>
 
 ## Install with Docker
 

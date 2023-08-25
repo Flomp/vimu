@@ -10,6 +10,7 @@
         <doc-nav-link to="/docs/tutorials/search-melody">Search for melody</doc-nav-link>
         <doc-nav-link to="/docs/tutorials/roman-numeral">Roman numeral analysis</doc-nav-link>
         <doc-nav-link to="/docs/tutorials/plot-histogram">Plot histogram</doc-nav-link>
+        <doc-nav-link to="/docs/tutorials/plugin">Plugin nodes</doc-nav-link>
       </template>
     </doc-nav-link>
     <doc-nav-link to="/docs/dashboard" :main="true">
@@ -75,6 +76,7 @@
         <doc-nav-link to="/docs/plugins/editor">Plugin Editor</doc-nav-link>
         <doc-nav-link to="/docs/plugins/node">Plugin Node</doc-nav-link>
         <doc-nav-link to="/docs/plugins/code">Writing code</doc-nav-link>
+        <doc-nav-link to="/docs/plugins/api">API Reference</doc-nav-link>
       </template>
     </doc-nav-link>
     <doc-nav-link to="/docs/self-hosting" :main="true">

@@ -1,3 +1,8 @@
+---
+title: Plugins - Overview
+description: Within the realm of vimu's extensive node collection, it's not uncommon to encounter situations where a specific application doesn't align with any available nodes. This is precisely where vimu's plugin system steps in, offering a practical solution to cater to diverse needs.
+---
+
 # Overview
 
 <framed-gif path="/imgs/plugin_editor.png"></framed-gif>
@@ -12,8 +17,4 @@ At the core of the plugin system lies the plugin editor - a tool that provides a
 
 vimu's plugin system is based on Python as the scripting language. This choice offers familiarity and convenience for those already acquainted with Python programming. Transferring your existing code to vimu becomes straightforward, enabling you to swiftly develop and enhance your plugin nodes.
 
-A distinct advantage of plugin nodes is their immediate usability. As soon as a plugin node is crafted, it can be seamlessly integrated into your existing files. This rapid integration facilitates swift prototyping and experimentation, enabling you to refine your concepts with ease. Whether you're constructing a sophisticated analysis, data manipulation routine, or applying a novel algorithm, plugin nodes accelerate the realization of your creative ideas.
-
-In essence, vimu's plugin system acts as a conduit for innovation, allowing users to venture beyond the confines of predefined nodes. By combining Python's versatility with the plugin editor's adaptability, users have the tools to explore and create, shaping the virtual landscape in alignment with their distinct visions.
-
-Visit the <nuxt-link to="/dashboard/plugins">plugin section</nuxt-link> in the dashboard to get started.
+Visit the <nuxt-link to="/dashboard/plugins">plugin section</nuxt-link> in the dashboard to get started or read the <nuxt-link to="/docs/tutorials/plugin">tutorial</nuxt-link> for a step-by-step guide on how to create your first plugin node.

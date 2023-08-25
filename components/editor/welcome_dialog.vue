@@ -7,7 +7,7 @@
             <v-card-text>
                 <v-row>
                     <v-col class="text-center">
-                        <bunny-engineer :width="150"></bunny-engineer>
+                        <bunny-teacher-simple :width="150"></bunny-teacher-simple>
                     </v-col>
                     <v-col class="d-flex flex-column justify-center black--text">
                         <p>It looks like this is the first time you are using the <b>vimu</b> editor. </p>
@@ -28,13 +28,13 @@
 
 <script lang="ts">
 import { Component, Emit, VModel, Vue } from "nuxt-property-decorator";
-import BunnyEngineer from "~/components/vimu/illustrations/bunny_engineer.vue";
 import VimuBtn from "../vimu/vimu_button.vue";
+import BunnyTeacherSimple from "../vimu/illustrations/bunny_teacher_simple.vue";
 
 @Component({
     components: {
         VimuBtn,
-        BunnyEngineer
+        BunnyTeacherSimple
     }
 })
 export default class WelcomeDialog extends Vue {

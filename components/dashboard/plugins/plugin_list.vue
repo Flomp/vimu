@@ -5,8 +5,8 @@
             <v-row v-if="viewType == 'tiles'">
                 <template>
                     <v-col :cols="cols" :sm="sm" :md="md" :lg="lg" v-for="plugin in plugins" :key="plugin.id">
-                        <plugin-card :plugin="plugin" :readonly="readonly" @click="open" @edit="edit"
-                            @remove="remove" @publish="publish"></plugin-card>
+                        <plugin-card :plugin="plugin" :readonly="readonly" @click="open" @rename="rename" @remove="remove"
+                            @publish="publish"></plugin-card>
                     </v-col>
                 </template>
             </v-row>
@@ -31,7 +31,7 @@
                 </thead>
                 <tbody>
                     <plugin-table-row v-for="plugin in plugins" :key="plugin.id" :plugin="plugin" :readonly="readonly"
-                        @click="open" @edit="edit" @publish="publish" @remove="remove">
+                        @click="open" @rename="rename" @publish="publish" @remove="remove">
 
                     </plugin-table-row>
                 </tbody>
@@ -91,18 +91,18 @@ export default class PluginList extends Vue {
 
 
     @Emit()
-    open(score: Plugin): any {
-        return score;
+    open(plugin: Plugin): any {
+        return plugin;
     }
 
     @Emit()
-    create(score: Plugin) {
-        return score;
+    create(plugin: Plugin) {
+        return plugin;
     }
 
     @Emit()
-    edit(score: Plugin) {
-        return score;
+    rename(plugin: Plugin) {
+        return plugin;
     }
 
     @Emit()
@@ -111,8 +111,8 @@ export default class PluginList extends Vue {
     }
 
     @Emit()
-    remove(score: Plugin) {
-        return score;
+    remove(plugin: Plugin) {
+        return plugin;
     }
 
     @Emit()

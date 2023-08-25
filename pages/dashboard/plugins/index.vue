@@ -47,12 +47,14 @@
         <confirm-dialog v-model="deleteConfirmDialog" title="Are you sure?"
             text="You are about to permanently delete this plugin" action="Delete" @confirm="removePlugin">
         </confirm-dialog>
+        <file-rename-dialog v-model="renameDialog" renameable="plugin" :filename="pluginName" @save="saveRename"></file-rename-dialog>
     </v-sheet>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Watch } from "nuxt-property-decorator";
 import ConfirmDialog from "~/components/dashboard/confirm_dialog.vue";
+import FileRenameDialog from "~/components/dashboard/file/file_rename_dialog.vue";
 import PluginList from "~/components/dashboard/plugins/plugin_list.vue";
 import VimuBtn from "~/components/vimu/vimu_button.vue";
 import { Plugin } from "~/models/plugin";
@@ -68,7 +70,8 @@ import { $pb, pluginStore } from "~/store";
     components: {
         VimuBtn,
         PluginList,
-        ConfirmDialog
+        ConfirmDialog,
+        FileRenameDialog
     }
 })
 export default class PluginsPage extends Vue {
@@ -99,6 +102,10 @@ export default class PluginsPage extends Vue {
 
     deletingPlugin: Plugin | null = null;
     deleteConfirmDialog: boolean = false;
+
+    pluginName: string = ""
+    renamingPlugin: Plugin | null = null;
+    renameDialog: boolean = false;
 
     get plugins() {
         return pluginStore.plugins;
@@ -198,14 +205,27 @@ export default class PluginsPage extends Vue {
         this.$router.push('/dashboard/plugins/create/' + plugin.id);
     }
 
-    async renamePlugin() {
+    renamePlugin(plugin: Plugin) {
+        this.renameDialog = true;
+        this.renamingPlugin = plugin;
+        this.pluginName = plugin.name;        
+    }
 
+    async saveRename(newName: string) {
+        if (!this.renamingPlugin) {
+            return;
+        }
+        const updatedPlugin: Plugin = JSON.parse(JSON.stringify(this.renamingPlugin))
+        updatedPlugin.name = newName;
+        pluginStore.update({ plugin: updatedPlugin, updateClient: true });
+        this.renamingPlugin = null;
+        this.renameDialog = false;
     }
 
     async publishPlugin(plugin: Plugin) {
         const updatedPlugin: Plugin = JSON.parse(JSON.stringify(plugin))
         updatedPlugin.public = !updatedPlugin.public
-        pluginStore.update({plugin: updatedPlugin, updateClient: true});
+        pluginStore.update({ plugin: updatedPlugin, updateClient: true });
     }
 
     async removePlugin() {

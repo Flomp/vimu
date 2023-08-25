@@ -1,6 +1,6 @@
 <template>
-  <vimu-select :label="label" :prependIcon="icon" class="mr-6"
-    v-model="value" @change="update" style="max-width: 200px" :items="items"></vimu-select>
+  <vimu-select :label="label" :prependIcon="icon" class="mr-6" v-model="value" @change="update" style="max-width: 200px"
+    :items="items"></vimu-select>
 </template>
 
 <script lang="ts">
@@ -34,7 +34,12 @@ export default class SelectControlComponent extends Vue {
   }
 
   mounted() {
-    this.value = this.getData(this.ikey) ?? this.attributes.default.value;
+    if (this.getData(this.ikey)) {
+      this.value = this.getData(this.ikey)
+    } else if (this.attributes.default.value) {
+      this.value = this.attributes.default.value;
+      this.putData(this.ikey, this.value);
+    }
   }
 
   update() {

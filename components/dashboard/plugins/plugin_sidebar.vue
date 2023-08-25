@@ -43,7 +43,7 @@
                 <v-divider class="my-4"></v-divider>
                 <div class="d-flex justify-space-between align-center mb-2 ">
                     <h5 class="black--text">Inputs</h5>
-                    <v-btn @click="addInput" icon><v-icon>mdi-plus</v-icon></v-btn>
+                    <v-btn @click="addInput" icon v-if="!readonly"><v-icon>mdi-plus</v-icon></v-btn>
                 </div>
                 <v-list-item v-for="input, i in pluginConfig.inputs" :key="'in_' + i" link
                     @click="elementClick(input, i, 'inputs')">
@@ -53,7 +53,7 @@
                 </v-list-item>
                 <div class="d-flex justify-space-between align-center mb-2 ">
                     <h5 class="black--text">Outputs</h5>
-                    <v-btn @click="addOutput" icon><v-icon>mdi-plus</v-icon></v-btn>
+                    <v-btn @click="addOutput" icon v-if="!readonly"><v-icon>mdi-plus</v-icon></v-btn>
                 </div>
                 <v-list-item v-for="output, i in pluginConfig.outputs" :key="'out_' + i" link
                     @click="elementClick(output, i, 'outputs')">
@@ -79,11 +79,15 @@
 <script lang="ts">
 import { Component, Emit, Prop, Vue } from "nuxt-property-decorator";
 import { Plugin, PluginControl, PluginSocket } from "~/models/plugin";
+import { pluginStore } from "~/store";
 
 @Component({})
 export default class PluginSidebar extends Vue {
     @Prop()
     plugin!: Plugin;
+
+    @Prop()
+    readonly!: boolean;
 
     selectedItem: number = 0;
 

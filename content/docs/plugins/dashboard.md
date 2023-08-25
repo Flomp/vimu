@@ -1,3 +1,8 @@
+---
+title: Plugins - Dashboard
+description: The plugin dashboard comes with the standard design that you should be familiar with by now. You can use the respective controls to search for plugins and change the display style or the sorting.
+---
+
 # Dashboard
 
 <framed-gif path="/imgs/plugin_dashboard.png"></framed-gif>

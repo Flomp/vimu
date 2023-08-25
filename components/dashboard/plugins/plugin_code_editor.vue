@@ -14,6 +14,8 @@ export default class PluginCodeEditor extends Vue {
     readonlyLines!: number[];
     @Prop()
     timer!: boolean;
+    @Prop()
+    readonly!: boolean;
 
 
     ace!: any;
@@ -31,7 +33,8 @@ export default class PluginCodeEditor extends Vue {
         this.codeEditor = this.ace.edit("plugin-code-editor", {
             mode: "ace/mode/python",
             theme: "ace/theme/github_dark",
-            selectionStyle: "text"
+            selectionStyle: "text",
+            readOnly: this.readonly
         })
 
         this.ace.require("ace/ext/language_tools");

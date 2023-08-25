@@ -1,3 +1,8 @@
+---
+title: Plugins - Writing code
+description: Writing code for a plugin node is quite straightforward. The code is written in python.
+---
+
 # Writing code
 
 Writing code for a plugin node is quite straightforward. The code is written in python. In it, you have access to the `input_data`, `output_data`, and the `node` object which provide all data associated with your node. For a detailed look into all object properties please check the <nuxt-link to="/docs/plugins/api">API Reference</nuxt-link>. Below we list some typical actions you might want to perform.
@@ -20,7 +25,7 @@ control_0_data = node.data.get('control_0')
 
 ## Set output data
 
-Outputs are not allowed to be empty. Every output of your node must contain data that matches its <nuxt-link to="/docs/plugins/node#inputsoutputs">data type</nuxt-link>. To do so you must set the value of the `output_data` dictionary at the respective output's key (e.g. "out_0"). Make sure the data matches the data type of your output. Otherwise, the server will throw an assertion error.
+Outputs must not be empty. Every output of your node must contain data that matches its <nuxt-link to="/docs/plugins/node#inputsoutputs">data type</nuxt-link>. To do so you must set the value of the `output_data` dictionary at the respective output's key (e.g. "out_0"). Make sure the data matches the data type of your output. Otherwise, the server will throw an assertion error.
 
 ```python
 # assuming 'out_0' is a string output
