@@ -8,12 +8,12 @@
                 <h1 class="vimu-title">Drag, Connect, Analyze</h1>
 
                 <div class="d-flex showcase">
-                    <video class="elevation-4" style="border-radius: 10px;" width="50%" autoplay muted loop
-                        alt="Showcase Clip" preload="none">
+                    <video class="elevation-4" style="border-radius: 10px;" autoplay muted loop alt="Showcase Clip"
+                        preload="none">
                         <source src="/movs/editor.webm" type="video/webm">
                     </video>
-                    <img format="webp" class="elevation-4" src="/imgs/scores_small.png" width="50%"
-                        style="border-radius: 10px;" loading="lazy" quality="100" alt="Score Page" />
+                    <img format="webp" class="elevation-4" src="/imgs/scores_small.png" style="border-radius: 10px;"
+                        loading="lazy" quality="100" alt="Score Page" />
 
                 </div>
             </div>
@@ -72,7 +72,8 @@
                     <v-col>
                         <vimu-article title="Infinitely extensible" callToAction="Read about Plugins"
                             to="/docs/plugins/overview">
-                            The robust plugin system allows for limitless customization options. Create nodes that do exactly
+                            The robust plugin system allows for limitless customization options. Create nodes that do
+                            exactly
                             what you want and share them with your colleagues.
                         </vimu-article>
                     </v-col>
@@ -128,6 +129,7 @@ import { Component, Ref, Vue } from "nuxt-property-decorator";
 import Rete from "rete";
 import ConnectionPlugin from "rete-connection-plugin";
 import Vuetify from "vuetify";
+import { heroSocket } from "~/components/editor/rete/sockets/sockets";
 import IndexEastereggComponent from "~/components/index/rete/components/index/index_easteregg_component";
 import IndexHeroComponent from "~/components/index/rete/components/index/index_hero_component";
 import Terminal from "~/components/index/terminal.vue";
@@ -218,13 +220,17 @@ export default class IndexPage extends Vue {
         }
 
         const heroNode = await hero.createNode();
+        const out0 = new Rete.Output("out_0", "", heroSocket, false);
         heroNode.position = [paddingX, w <= heroNodeWidth ? 24 : h / 2 - heroNodeHeight / 2];
-        editor.addNode(heroNode);
         if (w >= 1000) {
             const eastereggNode = await easteregg.createNode();
             eastereggNode.position = [w - paddingX - eastereggNodeWidth, h / 2 - eastereggNodeHeight / 2];
             editor.addNode(eastereggNode);
+            heroNode.addOutput(out0);
         }
+
+        editor.addNode(heroNode);
+
 
 
         editor.selectNode(heroNode)
@@ -236,6 +242,12 @@ export default class IndexPage extends Vue {
         editor.on(["connectioncreate", "connectionremove"], () => {
             engine.process(editor.toJSON())
         });
+
+        if (w < 1000) {
+            editor.on("nodetranslate", () => {
+                return false;
+            })
+        }
 
         editor.on(["process"], (params) => {
             const trigger = (params as any).trigger
@@ -273,9 +285,15 @@ export default class IndexPage extends Vue {
 }
 
 .showcase {
-    margin: 64px 0 0 64px;
+    padding: 16px;
+    padding-top: 64px;
     gap: 48px;
     width: 140%;
+}
+
+.showcase video,
+img {
+    width: 50%;
 }
 
 .content-row {
@@ -285,6 +303,25 @@ export default class IndexPage extends Vue {
 
 .illustration {
     display: block;
+}
+
+@media only screen and (max-width: 1000px) {
+    .the-visual-musicology-editor {
+        margin: 12px;
+    }
+
+    .showcase {
+        padding: 16px;
+        padding-top: 64px;
+        gap: 48px;
+        flex-wrap: wrap;
+        width: 100%;
+    }
+
+    .showcase video,
+    img {
+        width: 100%;
+    }
 }
 
 @media only screen and (max-width: 686px) {

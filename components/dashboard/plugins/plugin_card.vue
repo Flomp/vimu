@@ -79,4 +79,12 @@ export default class PluginCard extends Vue {
 }
 </script>
 
-<style></style>
+<style>
+.hover-card {
+    cursor: pointer;
+}
+
+.hover-card:hover {
+    background-color: #f1f1f1;
+}
+</style>

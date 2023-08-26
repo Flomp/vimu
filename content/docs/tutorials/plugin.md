@@ -37,7 +37,7 @@ We can customize the control further by giving it a default value, a label, and 
 
 <framed-gif path="/gifs/plugin_code.gif"></framed-gif>
 
-So far our node simply looks good but does not do what we want it to do. For that, we need to write some python code in the code panel. Luckily the auto-generated code already provides most of the building blocks. Currently, we simply take the input data and set it as the output data as is without changing anything. Instead, we would like to transpose the input data before setting it as our output. To do so we need to change the code in line 5 to `new_output_data = in_0_data.transpose(control_0_data)`. Notice that we can safely call `transpose` because the input data type is set to "Stream". This means we are guaranteed to receive a music21.stream.base.Stream object as our input.
+So far our node simply looks good but does not do what we want it to do. For that, we need to write some python code in the code panel. Luckily the auto-generated code already provides most of the building blocks. Currently, we simply take the input data and set it as the output data as is without changing anything. Instead, we would like to transpose the input data before setting it as our output. To do so we need to change the code in line 5 to `new_output_data = in_0_data.transpose(control_0_data)`. We call music21's transpose method on the input stream and pass the data we receive from our number control as a parameter. Notice that we can safely call `transpose` because the input data type is set to "Stream". This means we are guaranteed to receive a music21.stream.base.Stream object as our input.
 
 So our complete code example looks like this:
 

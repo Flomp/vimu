@@ -1,6 +1,5 @@
 import Rete, { Node, NodeEditor } from "rete";
 import { NodeData, WorkerInputs, WorkerOutputs } from "rete/types/core/data";
-import { heroSocket } from "../../../../editor/rete/sockets/sockets";
 import IndexHeroControl from "../../controls/index/index_hero_control/index_hero_control";
 
 export default class IndexHeroComponent extends Rete.Component {
@@ -12,11 +11,8 @@ export default class IndexHeroComponent extends Rete.Component {
   }
 
   async builder(node: Node) {
-    var out0 = new Rete.Output("out_0", "", heroSocket, false);
-
     node
       .addControl(new IndexHeroControl(this.editor, "key", true))
-      .addOutput(out0)
   }
 
   async worker(nodeData: NodeData, inputs: WorkerInputs, outputs: WorkerOutputs) {
