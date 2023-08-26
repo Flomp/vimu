@@ -6,7 +6,7 @@
       <v-chip color="primary" v-if="active">Current plan</v-chip>
     </div>
     <p class="pricing-description">For professional use and collaboration</p>
-    <p><span class="price">4.99€</span><span class="vimu-subtitle">/month</span></p>
+    <p><span class="price">3.99€</span><span class="vimu-subtitle">/month</span></p>
     <v-divider class="mb-4"></v-divider>
     <div class="pb-4">
       <div class="d-flex my-3" v-for="perk, i in perks" :key="i">

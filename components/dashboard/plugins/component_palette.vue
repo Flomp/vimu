@@ -50,4 +50,17 @@ export default class ComponentPalette extends Vue {
 }
 </script>
 
-<style></style>
+<style>
+.palette-button {
+    padding: 0 !important;
+    margin: 0 8px;
+    height: auto !important;
+}
+
+.palette-button-text {
+    text-transform: none;
+    letter-spacing: normal;
+    font-size: 0.75rem;
+
+}
+</style>

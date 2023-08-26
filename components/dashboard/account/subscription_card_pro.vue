@@ -3,7 +3,7 @@
         <h5 class="vimu-card-title">vimu Pro</h5>
         <v-row>
             <v-col>
-                <p><span class="price">4.99€</span><span class="vimu-subtitle">/month</span></p>
+                <p><span class="price">3.99€</span><span class="vimu-subtitle">/month</span></p>
                 <p>You are subscribed to <b>vimu</b> Pro.</p>
             </v-col>
             <v-col>
