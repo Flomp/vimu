@@ -1,22 +1,10 @@
 <template>
   <v-row style="width:100px">
     <v-col cols="auto">
-      <v-text-field
-        label="Start"
-        v-model="notes[0]"
-        @input="change"
-        type="number"
-        :rules="[numberRule]"
-      ></v-text-field>
+      <v-text-field label="Start" v-model="notes[0]" @input="change" type="number" :rules="[numberRule]"></v-text-field>
     </v-col>
     <v-col cols="auto">
-      <v-text-field
-        label="End"
-        v-model="notes[1]"
-        @input="change"
-        type="number"
-        :rules="[numberRule]"
-      ></v-text-field>
+      <v-text-field label="End" v-model="notes[1]" @input="change" type="number" :rules="[numberRule]"></v-text-field>
     </v-col>
   </v-row>
 </template>
@@ -37,12 +25,15 @@ export default class SelectNotesControlComponent extends Vue {
   notes: number[] = [0, 3];
 
   mounted() {
-    this.change();
+    if (this.getData(this.ikey)) {
+      this.notes = this.getData(this.ikey)
+    }
+    this.putData(this.ikey, this.notes);
   }
 
   change() {
     if (this.ikey) this.putData(this.ikey, this.notes);
-    
+
     this.emitter.trigger("process");
   }
 
@@ -53,5 +44,4 @@ export default class SelectNotesControlComponent extends Vue {
 }
 </script>
 
-<style>
-</style>
+<style></style>
