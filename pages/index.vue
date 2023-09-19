@@ -292,7 +292,7 @@ export default class IndexPage extends Vue {
 }
 
 .showcase video,
-img {
+.showcase img {
     width: 50%;
 }
 
@@ -319,7 +319,7 @@ img {
     }
 
     .showcase video,
-    img {
+    .showcase img {
         width: 100%;
     }
 }
