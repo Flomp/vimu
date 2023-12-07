@@ -19,7 +19,7 @@ export default class TeamAvatar extends Vue {
         if(this.team.icon && this.team.icon.length) {
             return $pb.getFileUrl(this.team as any, this.team.icon)
         }
-        return `https://avatars.dicebear.com/api/initials/:${this.team.name}.svg`
+        return `https://api.dicebear.com/7.x/initials/svg?seed=${this.team.name}`
     }
 }
 </script>

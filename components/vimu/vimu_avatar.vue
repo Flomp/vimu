@@ -16,7 +16,7 @@ export default class VimuAvatar extends Vue {
     @Prop() readonly loading!: boolean;
 
     get avatarURL() {
-        return `https://avatars.dicebear.com/api/croodles/:${this.seed}.svg`
+        return `https://api.dicebear.com/7.x/croodles/svg?seed=${this.seed}`
     }
 }
 </script>
